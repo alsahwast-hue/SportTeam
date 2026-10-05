@@ -1342,6 +1342,62 @@ function hashPass(p) {
   return 'h' + Math.abs(h).toString(36);
 }
 
+/* ===== مدة التجربة ===== */
+const TRIAL_DAYS = 30;
+const BUY_PHONE  = '96895209623';   // 968 + 95209623 (رمز عُمان)
+let expiredUser  = { name: '', phone: '' };
+
+async function getTrialInfo() {
+  const start = await dbGet(STORES.meta, 'trialStart');
+  if (!start) return { started: false, expired: false };
+
+  // حماية بسيطة من إرجاع ساعة الجهاز للخلف
+  const last = await dbGet(STORES.meta, 'lastSeen');
+  const now  = Math.max(Date.now(), last ? last.value : 0);
+  await dbPut(STORES.meta, { key: 'lastSeen', value: now });
+
+  const end = start.value + TRIAL_DAYS * 24 * 60 * 60 * 1000;
+  return { started: true, expired: now >= end, end };
+}
+
+/* مسح كل البيانات ما عدا المستخدمين */
+async function wipeAllExceptUsers() {
+  for (const s of [STORES.reserves, STORES.bookings, STORES.team, STORES.subs, STORES.exp]) {
+    await dbClear(s);
+  }
+  try { localStorage.removeItem('teamInfo'); } catch (e) {}
+}
+
+function showExpired(name, phone) {
+  cancelRegistration();
+  expiredUser = { name: name || '', phone: phone || '' };
+  document.getElementById('loginMsg').innerHTML = `
+    <div class="error-msg">⛔ انتهت صلاحية البرنامج<br>الرجاء التواصل عبر واتساب</div>
+    <button class="btn green" style="margin-top:10px" onclick="buyProgram()">🛒 شراء البرنامج</button>`;
+}
+
+function buyProgram() {
+  const text =
+`السلام عليكم، أرغب بشراء برنامج حجز الملعب.
+
+بيانات المستخدم:
+الاسم: ${expiredUser.name || '-'}
+الهاتف: ${expiredUser.phone || '-'}`;
+  window.open('https://wa.me/' + BUY_PHONE + '?text=' + encodeURIComponent(text), '_blank');
+}
+
+/* فحص دوري أثناء استخدام البرنامج */
+async function checkExpiryNow() {
+  if (!currentUser) return;
+  const t = await getTrialInfo();
+  if (!t.expired) return;
+  await wipeAllExceptUsers();
+  const u = { name: currentUser.name, phone: currentUser.phone };
+  logout();
+  showExpired(u.name, u.phone);
+}
+setInterval(checkExpiryNow, 60000);
+
 /* بناء كائن Response مزيّف */
 function makeResponse(obj) {
   return Promise.resolve(new Response(JSON.stringify(obj), {
@@ -1461,47 +1517,64 @@ async function localFetch(url, options = {}) {
   if (url.startsWith(USER_API)) {
     const action = body.action;
 
-    if (action === 'login') {
-      const all = await dbGetAll(STORES.users);
-      const u = all.find(x => String(x.UserTel) === String(body.phone));
-      if (!u) {
-        // رقم غير مسجل → اطلب التسجيل مع كود تحقق
-        const code = String(Math.floor(100000 + Math.random() * 900000));
-        await dbPut(STORES.meta, { key: 'reg_' + body.phone, value: code });
-        return makeResponse({ success: false, needsRegistration: true, code });
-      }
-      if (u.Password !== hashPass(body.password)) {
-        return makeResponse({ success: false, message: 'كلمة المرور غير صحيحة' });
-      }
-      return makeResponse({
-        success: true,
-        userId: u.UserID, name: u.UserName, phone: u.UserTel,
-        state: u.UserState, perms: {
-          bookings: !!u.PermBookings, users: !!u.PermUsers,
-          subs: !!u.PermSubs, team: !!u.PermTeam, exp: !!u.PermExp
-        }
-      });
-    }
+ if (action === 'login') {
+  const trial = await getTrialInfo();
+  if (trial.expired) {
+    await wipeAllExceptUsers();
+    const users = await dbGetAll(STORES.users);
+    const u = users.find(x => String(x.UserTel) === String(body.phone));
+    return makeResponse({
+      success: false, expired: true,
+      name: u ? u.UserName : '', phone: body.phone
+    });
+  }
 
-    if (action === 'register') {
-      const meta = await dbGet(STORES.meta, 'reg_' + body.phone);
-      if (!meta || meta.value !== String(body.code)) {
-        return makeResponse({ success: false, message: 'كود التحقق غير صحيح' });
-      }
- const all = await dbGetAll(STORES.users);
-const id = await nextId('UserID', 1);
-const user = {
-  UserID: String(id),
-  UserName: body.name,
-  UserTel: body.phone,
-  Password: hashPass(body.password),
-  UserState: 'Admin',          // ✅ كل مستخدم جديد = Admin
-  PermBookings: true,          // ✅ كل الصلاحيات مفعّلة
-  PermUsers:    true,
-  PermSubs:     true,
-  PermTeam:     true,
-  PermExp:      true
-};
+  // ===== الكود الأصلي (يجب أن يبقى) =====
+  const all = await dbGetAll(STORES.users);
+  const u = all.find(x => String(x.UserTel) === String(body.phone));
+  if (!u) {
+    // رقم غير مسجل → اطلب التسجيل مع كود تحقق
+    const code = String(Math.floor(100000 + Math.random() * 900000));
+    await dbPut(STORES.meta, { key: 'reg_' + body.phone, value: code });
+    return makeResponse({ success: false, needsRegistration: true, code });
+  }
+  if (u.Password !== hashPass(body.password)) {
+    return makeResponse({ success: false, message: 'كلمة المرور غير صحيحة' });
+  }
+  return makeResponse({
+    success: true,
+    userId: u.UserID, name: u.UserName, phone: u.UserTel,
+    state: u.UserState, perms: {
+      bookings: !!u.PermBookings, users: !!u.PermUsers,
+      subs: !!u.PermSubs, team: !!u.PermTeam, exp: !!u.PermExp
+    }
+  });
+}
+
+if (action === 'register') {
+  const meta = await dbGet(STORES.meta, 'reg_' + body.phone);
+  if (!meta || meta.value !== String(body.code)) {
+    return makeResponse({ success: false, message: 'كود التحقق غير صحيح' });
+  }
+
+  // ✅ بداية التجربة (مرة واحدة فقط عند أول تسجيل)
+  if (!(await dbGet(STORES.meta, 'trialStart'))) {
+    await dbPut(STORES.meta, { key: 'trialStart', value: Date.now() });
+  }
+
+  const id = await nextId('UserID', 1);
+  const user = {
+    UserID: String(id),
+    UserName: body.name,
+    UserTel: body.phone,
+    Password: hashPass(body.password),
+    UserState: 'Admin',
+    PermBookings: true,
+    PermUsers:    false,   // ✅ لا تظهر نافذة المستخدمين
+    PermSubs:     true,
+    PermTeam:     true,
+    PermExp:      true
+  };
       await dbPut(STORES.users, user);
       await dbDelete(STORES.meta, 'reg_' + body.phone);
       return makeResponse({
@@ -1550,13 +1623,13 @@ const user = {
     return makeResponse({ success: false, message: 'إجراء غير معروف' });
   }
 
-  async function checkAdmin(phone, password) {
-    const all = await dbGetAll(STORES.users);
-    const u = all.find(x => String(x.UserTel) === String(phone));
-    if (!u || u.UserState !== 'Admin') return null;
-    if (u.Password !== hashPass(password)) return null;
-    return u;
-  }
+async function checkAdmin(phone, password) {
+  const all = await dbGetAll(STORES.users);
+  const u = all.find(x => String(x.UserTel) === String(phone));
+  if (!u || u.UserState !== 'Admin' || !u.PermUsers) return null;   // ← أضيفت PermUsers
+  if (u.Password !== hashPass(password)) return null;
+  return u;
+}
 
   /* ============ TEAM ============ */
   if (url.startsWith(TEAM_API)) {
@@ -1728,6 +1801,8 @@ window.fetch = function(url, options) {
    ============================================================ */
 (async () => {
   await openDB();
+    const t = await getTrialInfo();
+  if (t.expired) await wipeAllExceptUsers();
   const users = await dbGetAll(STORES.users);
   if (users.length === 0) {
     await dbPut(STORES.users, {
@@ -1865,6 +1940,9 @@ async function login() {
     } else if (data.needsRegistration) {
       show('login');
       showRegisterStep(data.code);
+       } else if (data.expired) { 
+         show('login');
+      showExpired(data.name, data.phone);
     } else {
       show('login');
       document.getElementById('loginMsg').innerHTML =
