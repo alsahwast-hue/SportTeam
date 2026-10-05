@@ -727,6 +727,17 @@ body.has-install-bar { padding-bottom: 80px; }
 .day-slots-box { border:2px solid #0b6fc2; border-radius:12px; background:#fff; overflow:hidden; }
 .day-slots-head { background:#0b6fc2; color:#fff; text-align:center; padding:8px; font-weight:700; }
 .day-slots-empty { text-align:center; color:#888; padding:24px 10px; font-size:14px; }
+/* ===== أزرار تبديل العرض ===== */
+.view-toggle { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.view-toggle button {
+  padding:11px 6px; border:2px solid #2a5298; border-radius:10px;
+  background:#fff; color:#1e3c72; font-family:'Cairo',sans-serif;
+  font-size:14px; font-weight:700; cursor:pointer; transition:.15s;
+}
+.view-toggle button.active {
+  background:linear-gradient(135deg,#1e3c72,#2a5298); color:#fff;
+  box-shadow:0 4px 12px rgba(42,82,152,.35);
+}
 
 </style>
 </head>
@@ -821,29 +832,63 @@ body.has-install-bar { padding-bottom: 80px; }
   <div class="info-line" style="display:none"><span>اسم المستخدم:</span><span id="userName" style="display:none">-</span></div>
 
 <div class="field">
-  <label>📅 اضغط على التاريخ لتظهر التوقيتات</label>
-  <input type="hidden" id="bookDate">
-
-  <div class="mcal">
-    <div class="mcal-head">
-      <button type="button" class="mcal-nav" onclick="changeMonth(-1)">›</button>
-      <div class="mcal-title" id="mcalTitle">-</div>
-      <button type="button" class="mcal-nav" onclick="changeMonth(1)">‹</button>
-    </div>
-    <div class="mcal-week">
-      <span>الأحد</span><span>الإثنين</span><span>الثلاثاء</span><span>الأربعاء</span>
-      <span>الخميس</span><span>الجمعة</span><span>السبت</span>
-    </div>
-    <div class="mcal-grid" id="mcalGrid"></div>
-    <div class="mcal-legend">
-      <span><i class="dot ok"></i> متاح</span>
-      <span><i class="dot full"></i> محجوز بالكامل</span>
-    </div>
+  <div class="view-toggle">
+    <button type="button" id="viewBtnCards" onclick="setViewMode('cards')">🗂️ عرض باليوم</button>
+    <button type="button" id="viewBtnMonth" class="active" onclick="setViewMode('month')">📅 عرض بالتاريخ</button>
+    
   </div>
+  <input type="hidden" id="bookDate">
 </div>
 
-<div class="field">
-  <div id="daySlots" class="day-slots-box"></div>
+<!-- ===== العرض 1: التقويم الشهري ===== -->
+<div id="viewMonth">
+  <div class="field">
+    <label>📅 اختر التاريخ</label>
+    <div class="mcal">
+      <div class="mcal-head">
+        <button type="button" class="mcal-nav" onclick="changeMonth(-1)">›</button>
+        <div class="mcal-title" id="mcalTitle">-</div>
+        <button type="button" class="mcal-nav" onclick="changeMonth(1)">‹</button>
+      </div>
+      <div class="mcal-week">
+        <span>الأحد</span><span>الإثنين</span><span>الثلاثاء</span><span>الأربعاء</span>
+        <span>الخميس</span><span>الجمعة</span><span>السبت</span>
+      </div>
+      <div class="mcal-grid" id="mcalGrid"></div>
+      <div class="mcal-legend">
+        <span><i class="dot ok"></i> متاح</span>
+        <span><i class="dot full"></i> محجوز بالكامل</span>
+      </div>
+    </div>
+  </div>
+  <div class="field">
+    <div id="daySlots" class="day-slots-box"></div>
+  </div>
+</div>
+<!-- ===== العرض 2: حاويات الأيام ===== -->
+<div id="viewCards" style="display:none">
+  <div class="field">
+    <label>📅 اختر التاريخ</label>
+    <div class="date-row">
+      <input type="date" id="cardsDate" onchange="onCardsDateChange()">
+      <select id="calCols" onchange="setCalCols(this.value)" title="عدد الأعمدة">
+        <option value="1">1 عمود</option>
+        <option value="2" selected>2 عمودان</option>
+        <option value="3">3 أعمدة</option>
+        <option value="4">4 أعمدة</option>
+      </select>
+      <button type="button" class="btn small red"
+        onclick="document.getElementById('cardsDate').value='';onCardsDateChange();">✖</button>
+    </div>
+  </div>
+  <div class="field">
+    <div id="calendar" class="calendar"></div>
+  </div>
+</div>
+  <div class="field" style="margin-top:14px">
+    <textarea id="note" rows="2" style="display: none;"></textarea>
+  </div>
+  <div id="bookMsg"></div>
 </div>
 
   <input type="hidden" id="slotSelect">
@@ -857,7 +902,6 @@ body.has-install-bar { padding-bottom: 80px; }
   </div>
   <div id="bookMsg"></div>
 </div>
-
 <!-- ============ شاشة الإدارة ============ -->
 <div class="screen wide" id="admin">
 <div class="topbar">
@@ -1172,12 +1216,536 @@ body.has-install-bar { padding-bottom: 80px; }
 /* ============================================================
    إعدادات السكربتات
    ============================================================ */
-const REGISTER_API = "https://script.google.com/macros/s/AKfycbzuk9WJ7jJzbs61oY0YCPXrSGKvCmp5QaLamDhz-r2_TtxW-GYHWqmhaHxR8JVjcRar/exec";
-const RESERVE_API  = "https://script.google.com/macros/s/AKfycbwQdRj3hIdBtYs6ei8Zd2iaxlbSwgFqb5UZTf9L8umf8Vtk6dzCyRFtb6z_jyQfVqbeLA/exec";
-const TEAM_API     = "https://script.google.com/macros/s/AKfycbyEVzkei2njKyAiYXR-SKtJe41LCecsuEsmQCFNWcOq5BSpI0YW-wZtvmvNQG0Z8MNAdw/exec";
-const USER_API     = "https://script.google.com/macros/s/AKfycbzWLFdXIY0YyHOh0zT264fDPmWzBMH-Gi2Ai-2VEh9kNvbzDWd4dHRHTg-HA4ueIfIVqg/exec"; // ← رابط جديد
-const SUBS_API = "https://script.google.com/macros/s/AKfycbybytMzwgNeviYc096B0GTpNio4YIycqjAFknhMNouHuQu2HUB4w7I8QpXt2YzAvSPWUw/exec";
-const EXP_API = "https://script.google.com/macros/s/AKfycbz_lz2jkVm-o5OE_TrrREbHAN0NZKqcFeUXL1HiF-SkB0fxAuSgLYd6bO0ZxHBRA-ppEw/exec";
+/* ============================================================
+   طبقة التخزين المحلي (IndexedDB) - تحل محل Google Sheets
+   ============================================================ */
+const REGISTER_API = "local://register";
+const RESERVE_API  = "local://reserve";
+const TEAM_API     = "local://team";
+const USER_API     = "local://user";
+const SUBS_API     = "local://subs";
+const EXP_API      = "local://exp";
+
+const DB_NAME    = 'StadiumBookingDB';
+const DB_VERSION = 1;
+const STORES = {
+  users:    'users',      // keyPath: UserID
+  reserves: 'reserves',   // keyPath: ResID
+  bookings: 'bookings',   // keyPath: RegID
+  team:     'team',       // keyPath: TeamID
+  subs:     'subs',       // keyPath: SubID
+  exp:      'exp',        // keyPath: ExpID
+  meta:     'meta'        // keyPath: key (للعدادات)
+};
+
+let _db = null;
+
+function openDB() {
+  if (_db) return Promise.resolve(_db);
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+    req.onupgradeneeded = (e) => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains(STORES.users))
+        db.createObjectStore(STORES.users, { keyPath: 'UserID' });
+      if (!db.objectStoreNames.contains(STORES.reserves))
+        db.createObjectStore(STORES.reserves, { keyPath: 'ResID' });
+      if (!db.objectStoreNames.contains(STORES.bookings))
+        db.createObjectStore(STORES.bookings, { keyPath: 'RegID' });
+      if (!db.objectStoreNames.contains(STORES.team))
+        db.createObjectStore(STORES.team, { keyPath: 'TeamID' });
+      if (!db.objectStoreNames.contains(STORES.subs))
+        db.createObjectStore(STORES.subs, { keyPath: 'SubID' });
+      if (!db.objectStoreNames.contains(STORES.exp))
+        db.createObjectStore(STORES.exp, { keyPath: 'ExpID' });
+      if (!db.objectStoreNames.contains(STORES.meta))
+        db.createObjectStore(STORES.meta, { keyPath: 'key' });
+    };
+    req.onsuccess = () => { _db = req.result; resolve(_db); };
+    req.onerror   = () => reject(req.error);
+  });
+}
+
+/* أدوات مساعدة للتعامل مع المخازن */
+async function dbGetAll(store) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(store, 'readonly');
+    const req = tx.objectStore(store).getAll();
+    req.onsuccess = () => resolve(req.result || []);
+    req.onerror   = () => reject(req.error);
+  });
+}
+
+async function dbGet(store, key) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(store, 'readonly');
+    const req = tx.objectStore(store).get(key);
+    req.onsuccess = () => resolve(req.result);
+    req.onerror   = () => reject(req.error);
+  });
+}
+
+async function dbPut(store, value) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(store, 'readwrite');
+    tx.objectStore(store).put(value);
+    tx.oncomplete = () => resolve(value);
+    tx.onerror    = () => reject(tx.error);
+  });
+}
+
+async function dbDelete(store, key) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(store, 'readwrite');
+    tx.objectStore(store).delete(key);
+    tx.oncomplete = () => resolve(true);
+    tx.onerror    = () => reject(tx.error);
+  });
+}
+
+async function dbClear(store) {
+  const db = await openDB();
+  return new Promise((resolve, reject) => {
+    const tx = db.transaction(store, 'readwrite');
+    tx.objectStore(store).clear();
+    tx.oncomplete = () => resolve(true);
+    tx.onerror    = () => reject(tx.error);
+  });
+}
+
+/* عدّاد تصاعدي محفوظ في meta */
+async function nextId(prefix, startAt = 1) {
+  const db = await openDB();
+  return new Promise(async (resolve, reject) => {
+    const tx = db.transaction(STORES.meta, 'readwrite');
+    const store = tx.objectStore(STORES.meta);
+    const req = store.get(prefix);
+    req.onsuccess = () => {
+      const cur = req.result ? (req.result.value || 0) : (startAt - 1);
+      const next = cur + 1;
+      store.put({ key: prefix, value: next });
+      resolve(next);
+    };
+    req.onerror = () => reject(req.error);
+  });
+}
+
+/* تشفير بسيط لكلمة المرور (ليس آمناً لكن يخفي النص) */
+function hashPass(p) {
+  let h = 0;
+  const s = String(p || '');
+  for (let i = 0; i < s.length; i++) { h = ((h << 5) - h) + s.charCodeAt(i); h |= 0; }
+  return 'h' + Math.abs(h).toString(36);
+}
+
+/* بناء كائن Response مزيّف */
+function makeResponse(obj) {
+  return Promise.resolve(new Response(JSON.stringify(obj), {
+    status: 200,
+    headers: { 'Content-Type': 'application/json' }
+  }));
+}
+
+/* استخراج query params من URL */
+function parseQuery(url) {
+  const i = url.indexOf('?');
+  const out = {};
+  if (i === -1) return out;
+  new URLSearchParams(url.slice(i + 1)).forEach((v, k) => out[k] = v);
+  return out;
+}
+
+/* ============================================================
+   المُوجّه المحلي (Router) — يقلّد ردود السيرفر بالكامل
+   ============================================================ */
+async function localFetch(url, options = {}) {
+  const method = (options.method || 'GET').toUpperCase();
+  const body   = options.body ? JSON.parse(options.body) : {};
+  const q      = parseQuery(url);
+
+  /* ============ RESERVE ============ */
+  if (url.startsWith(RESERVE_API)) {
+    const action = method === 'GET' ? q.action : body.action;
+
+    if (action === 'list') {
+      const rows = await dbGetAll(STORES.reserves);
+      rows.sort((a, b) => (a.ResDate || '').localeCompare(b.ResDate || ''));
+      return makeResponse({ success: true, rows });
+    }
+
+    if (action === 'add') {
+      const id = await nextId('ResID', 1);
+      const row = {
+        ResID: String(id),
+        ResTeamName: body.ResTeamName || '',
+        ResTeamPhoto: body.ResTeamPhoto || '',
+        ResDate: body.ResDate || '',
+        ResDay: body.ResDay || '',
+        ResTimeFrom: body.ResTimeFrom || '',
+        ResTimeTO: body.ResTimeTo || body.ResTimeTO || '',
+        ResCost: body.ResCost || '',
+        ResShow: body.ResShow || 'متاح'
+      };
+      await dbPut(STORES.reserves, row);
+      return makeResponse({ success: true, ResID: row.ResID });
+    }
+
+    if (action === 'update') {
+      const old = await dbGet(STORES.reserves, String(body.ResID));
+      if (!old) return makeResponse({ success: false, message: 'غير موجود' });
+      const row = { ...old,
+        ResDate: body.ResDate, ResDay: body.ResDay,
+        ResTimeFrom: body.ResTimeFrom,
+        ResTimeTO: body.ResTimeTo || body.ResTimeTO,
+        ResCost: body.ResCost, ResShow: body.ResShow
+      };
+      await dbPut(STORES.reserves, row);
+      return makeResponse({ success: true });
+    }
+
+    if (action === 'toggle') {
+      const old = await dbGet(STORES.reserves, String(body.ResID));
+      if (!old) return makeResponse({ success: false, message: 'غير موجود' });
+      old.ResShow = body.ResShow;
+      await dbPut(STORES.reserves, old);
+      return makeResponse({ success: true });
+    }
+
+    if (action === 'bulkToggle') {
+      const ids = body.ResIDs || [];
+      for (const id of ids) {
+        const old = await dbGet(STORES.reserves, String(id));
+        if (old) { old.ResShow = body.ResShow; await dbPut(STORES.reserves, old); }
+      }
+      return makeResponse({ success: true });
+    }
+
+    if (action === 'delete') {
+      await dbDelete(STORES.reserves, String(body.ResID));
+      return makeResponse({ success: true });
+    }
+
+    if (action === 'markBooked') {
+      const old = await dbGet(STORES.reserves, String(body.ResID));
+      if (!old) return makeResponse({ success: false, message: 'غير موجود' });
+      old.ResShow = 'محجوز';
+      await dbPut(STORES.reserves, old);
+      return makeResponse({ success: true });
+    }
+
+    if (action === 'releaseSlot') {
+      const all = await dbGetAll(STORES.reserves);
+      const d = normalizeDate(body.ResDate);
+      const f = to24(body.ResTimeFrom);
+      const t = to24(body.ResTimeTo);
+      let found = 0;
+      for (const r of all) {
+        if (normalizeDate(r.ResDate) === d &&
+            to24(r.ResTimeFrom) === f &&
+            to24(r.ResTimeTO || r.ResTimeTo) === t) {
+          r.ResShow = 'متاح';
+          await dbPut(STORES.reserves, r);
+          found++;
+        }
+      }
+      return makeResponse({ success: found > 0, message: found ? '' : 'لم يتم العثور' });
+    }
+    return makeResponse({ success: false, message: 'إجراء غير معروف' });
+  }
+
+  /* ============ USER ============ */
+  if (url.startsWith(USER_API)) {
+    const action = body.action;
+
+    if (action === 'login') {
+      const all = await dbGetAll(STORES.users);
+      const u = all.find(x => String(x.UserTel) === String(body.phone));
+      if (!u) {
+        // رقم غير مسجل → اطلب التسجيل مع كود تحقق
+        const code = String(Math.floor(100000 + Math.random() * 900000));
+        await dbPut(STORES.meta, { key: 'reg_' + body.phone, value: code });
+        return makeResponse({ success: false, needsRegistration: true, code });
+      }
+      if (u.Password !== hashPass(body.password)) {
+        return makeResponse({ success: false, message: 'كلمة المرور غير صحيحة' });
+      }
+      return makeResponse({
+        success: true,
+        userId: u.UserID, name: u.UserName, phone: u.UserTel,
+        state: u.UserState, perms: {
+          bookings: !!u.PermBookings, users: !!u.PermUsers,
+          subs: !!u.PermSubs, team: !!u.PermTeam, exp: !!u.PermExp
+        }
+      });
+    }
+
+    if (action === 'register') {
+      const meta = await dbGet(STORES.meta, 'reg_' + body.phone);
+      if (!meta || meta.value !== String(body.code)) {
+        return makeResponse({ success: false, message: 'كود التحقق غير صحيح' });
+      }
+ const all = await dbGetAll(STORES.users);
+const id = await nextId('UserID', 1);
+const user = {
+  UserID: String(id),
+  UserName: body.name,
+  UserTel: body.phone,
+  Password: hashPass(body.password),
+  UserState: 'Admin',          // ✅ كل مستخدم جديد = Admin
+  PermBookings: true,          // ✅ كل الصلاحيات مفعّلة
+  PermUsers:    true,
+  PermSubs:     true,
+  PermTeam:     true,
+  PermExp:      true
+};
+      await dbPut(STORES.users, user);
+      await dbDelete(STORES.meta, 'reg_' + body.phone);
+      return makeResponse({
+        success: true,
+        userId: user.UserID, name: user.UserName, phone: user.UserTel,
+        state: user.UserState, perms: {
+          bookings: !!user.PermBookings, users: !!user.PermUsers,
+          subs: !!user.PermSubs, team: !!user.PermTeam, exp: !!user.PermExp
+        }
+      });
+    }
+
+    if (action === 'listUsers') {
+      const admin = await checkAdmin(body.adminPhone, body.adminPassword);
+      if (!admin) return makeResponse({ success: false, message: 'غير مصرح' });
+      const rows = await dbGetAll(STORES.users);
+      return makeResponse({ success: true, rows });
+    }
+
+    if (action === 'updateUser') {
+      const admin = await checkAdmin(body.adminPhone, body.adminPassword);
+      if (!admin) return makeResponse({ success: false, message: 'غير مصرح' });
+      const u = await dbGet(STORES.users, String(body.UserID));
+      if (!u) return makeResponse({ success: false, message: 'المستخدم غير موجود' });
+      u.UserName = body.UserName;
+      u.UserTel  = body.UserTel;
+      u.UserState = body.UserState;
+      if (body.NewPassword) u.Password = hashPass(body.NewPassword);
+      if (body.perms) {
+        u.PermBookings = !!body.perms.bookings;
+        u.PermUsers    = !!body.perms.users;
+        u.PermSubs     = !!body.perms.subs;
+        u.PermTeam     = !!body.perms.team;
+        u.PermExp      = !!body.perms.exp;
+      }
+      await dbPut(STORES.users, u);
+      return makeResponse({ success: true, user: u });
+    }
+
+    if (action === 'deleteUser') {
+      const admin = await checkAdmin(body.adminPhone, body.adminPassword);
+      if (!admin) return makeResponse({ success: false, message: 'غير مصرح' });
+      await dbDelete(STORES.users, String(body.UserID));
+      return makeResponse({ success: true });
+    }
+    return makeResponse({ success: false, message: 'إجراء غير معروف' });
+  }
+
+  async function checkAdmin(phone, password) {
+    const all = await dbGetAll(STORES.users);
+    const u = all.find(x => String(x.UserTel) === String(phone));
+    if (!u || u.UserState !== 'Admin') return null;
+    if (u.Password !== hashPass(password)) return null;
+    return u;
+  }
+
+  /* ============ TEAM ============ */
+  if (url.startsWith(TEAM_API)) {
+    const action = method === 'GET' ? q.action : body.action;
+
+    if (action === 'get') {
+      const all = await dbGetAll(STORES.team);
+      return makeResponse({ success: true, team: all[0] || null });
+    }
+    if (action === 'uploadLogo') {
+      return makeResponse({ success: true, url: body.base64 });
+    }
+    if (action === 'save') {
+      let id = body.TeamID;
+      if (!id) id = String(await nextId('TeamID', 1));
+      const row = {
+        TeamID: id,
+        TeamName: body.TeamName,
+        TeamLogo: body.TeamLogo,
+        TeamCloub: body.TeamCloub,
+        TeamCloubLogo: body.TeamCloubLogo,
+        CloubOld: body.CloubOld,
+        TeamOld: body.TeamOld
+      };
+      await dbPut(STORES.team, row);
+      return makeResponse({ success: true, TeamID: id });
+    }
+    return makeResponse({ success: false, message: 'إجراء غير معروف' });
+  }
+
+  /* ============ SUBS ============ */
+  if (url.startsWith(SUBS_API)) {
+    const action = method === 'GET' ? q.action : body.action;
+
+    if (action === 'listSubs') {
+      const rows = await dbGetAll(STORES.subs);
+      rows.sort((a, b) => String(a.SubID).localeCompare(String(b.SubID), undefined, { numeric: true }));
+      return makeResponse({ success: true, rows });
+    }
+    if (action === 'addSub') {
+      const id = String(await nextId('SubID', 1));
+      const row = { SubID: id,
+        SubName: body.SubName, SubTel: body.SubTel, SubCost: body.SubCost };
+      for (let i = 1; i <= 12; i++) row['Sub' + i] = '';
+      await dbPut(STORES.subs, row);
+      return makeResponse({ success: true, SubID: id });
+    }
+    if (action === 'updateSub') {
+      const old = await dbGet(STORES.subs, String(body.SubID));
+      if (!old) return makeResponse({ success: false, message: 'غير موجود' });
+      old.SubName = body.SubName;
+      old.SubTel = body.SubTel;
+      old.SubCost = body.SubCost;
+      await dbPut(STORES.subs, old);
+      return makeResponse({ success: true });
+    }
+    if (action === 'togglePaySub') {
+      const old = await dbGet(STORES.subs, String(body.SubID));
+      if (!old) return makeResponse({ success: false, message: 'غير موجود' });
+      const key = 'Sub' + body.SubMonth;
+      const cur = String(old[key] || '').trim();
+      const isPaid = cur === 'مدفوع' || cur === '1' || cur.toLowerCase() === 'true';
+      old[key] = isPaid ? '' : 'مدفوع';
+      await dbPut(STORES.subs, old);
+      return makeResponse({ success: true, paid: !isPaid });
+    }
+    if (action === 'deleteSub') {
+      await dbDelete(STORES.subs, String(body.SubID));
+      return makeResponse({ success: true });
+    }
+    return makeResponse({ success: false, message: 'إجراء غير معروف' });
+  }
+
+  /* ============ EXP ============ */
+  if (url.startsWith(EXP_API)) {
+    const action = method === 'GET' ? q.action : body.action;
+
+    if (action === 'listExp') {
+      const rows = await dbGetAll(STORES.exp);
+      return makeResponse({ success: true, rows });
+    }
+    if (action === 'addExp') {
+      const id = String(await nextId('ExpID', 1000));
+      const row = { ExpID: id,
+        ExpFor: body.ExpFor, ExpCost: body.ExpCost,
+        ExpDate: body.ExpDate, Expfrom: body.Expfrom };
+      await dbPut(STORES.exp, row);
+      return makeResponse({ success: true, ExpID: id });
+    }
+    if (action === 'updateExp') {
+      const old = await dbGet(STORES.exp, String(body.ExpID));
+      if (!old) return makeResponse({ success: false, message: 'غير موجود' });
+      old.ExpFor = body.ExpFor;
+      old.ExpCost = body.ExpCost;
+      old.ExpDate = body.ExpDate;
+      old.Expfrom = body.Expfrom;
+      await dbPut(STORES.exp, old);
+      return makeResponse({ success: true });
+    }
+    if (action === 'deleteExp') {
+      await dbDelete(STORES.exp, String(body.ExpID));
+      return makeResponse({ success: true });
+    }
+    return makeResponse({ success: false, message: 'إجراء غير معروف' });
+  }
+
+  /* ============ REGISTER (Bookings) ============ */
+  if (url.startsWith(REGISTER_API)) {
+    const action = method === 'GET' ? q.action : body.action;
+
+    if (action === 'booking') {
+      const id = String(await nextId('RegID', 1));
+      const regNo = 'BK' + String(id).padStart(5, '0');
+      const row = {
+        RegID: id, RegNo: regNo,
+        RegUserName: body.userName, RegUserTel: body.userPhone,
+        RegUserID: body.userId, RegUserState: body.userState,
+        RegDate: body.date, Regday: body.day,
+        RegTimeFrom: body.from, RegTimeTo: body.to,
+        RegCost: body.cost, RegNote: body.note || '',
+        RegState: 'في الإجراء'
+      };
+      await dbPut(STORES.bookings, row);
+      return makeResponse({ success: true, regNo });
+    }
+
+    if (action === 'listBookings') {
+      const rows = await dbGetAll(STORES.bookings);
+      return makeResponse({ success: true, rows });
+    }
+
+    if (action === 'updateBookingState') {
+      const old = await dbGet(STORES.bookings, String(body.RegID));
+      if (!old) return makeResponse({ success: false, message: 'غير موجود' });
+      old.RegState = body.RegState;
+      old.RegNote  = body.RegNote || '';
+      await dbPut(STORES.bookings, old);
+      return makeResponse({ success: true });
+    }
+
+    if (action === 'deleteBooking') {
+      await dbDelete(STORES.bookings, String(body.RegID));
+      return makeResponse({ success: true });
+    }
+
+    return makeResponse({ success: false, message: 'إجراء غير معروف' });
+  }
+
+  return makeResponse({ success: false, message: 'API غير معروف: ' + url });
+}
+
+/* ============================================================
+   اعتراض fetch — يحوّل كل الطلبات المحلية إلى localFetch
+   ============================================================ */
+const _originalFetch = window.fetch.bind(window);
+window.fetch = function(url, options) {
+  if (typeof url === 'string' &&
+      (url.startsWith('local://') || url.startsWith(REGISTER_API) ||
+       url.startsWith(RESERVE_API)  || url.startsWith(TEAM_API) ||
+       url.startsWith(USER_API)     || url.startsWith(SUBS_API) ||
+       url.startsWith(EXP_API))) {
+    return localFetch(url, options);
+  }
+  return _originalFetch(url, options);
+};
+
+/* ============================================================
+   إنشاء حساب Admin افتراضي عند أول تشغيل (اختياري)
+   ============================================================ */
+(async () => {
+  await openDB();
+  const users = await dbGetAll(STORES.users);
+  if (users.length === 0) {
+    await dbPut(STORES.users, {
+      UserID: '1',
+      UserName: 'المدير',
+      UserTel: '97330807',
+      Password: hashPass('45784578'),
+      UserState: 'Admin',
+      PermBookings: true,
+      PermUsers: true,
+      PermSubs: true,
+      PermTeam: true,
+      PermExp: true
+    });
+    console.log('✅ تم إنشاء حساب المدير الافتراضي: 90000000 / admin123');
+  }
+})();
+
 
 /* ============ متغيرات عامة ============ */
 let teamLogoBase64 = '';
@@ -1422,7 +1990,7 @@ function logout() {
   // 2) أغلق أي نافذة مفتوحة
   document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
   document.body.style.overflow = '';
-
+  
   // 3) صفّر البيانات المخزنة في الذاكرة حتى لا تظهر لمستخدم آخر
   subsLoaded = false;     subsRowsCache = [];
   bookingsLoaded = false; bookingsRowsCache = [];
@@ -1436,6 +2004,7 @@ function logout() {
   document.getElementById('welcomePhone').textContent = '-';
   document.getElementById('bookMsg').innerHTML = '';
   document.getElementById('bookDate').value = '';
+  document.getElementById('cardsDate').value = '';
   clearSelectedSlot();
 
   cancelRegistration();   // يخفي خطوة التسجيل ويمسح رسائل الشاشة
@@ -1555,10 +2124,106 @@ function getDayInfo() {
   return info;
 }
 
-function renderCalendar() {
-  renderMonthGrid();
-  renderDaySlots();
+let viewMode = 'month';
+
+function setViewMode(mode) {
+  viewMode = (mode === 'cards') ? 'cards' : 'month';
+  try { localStorage.setItem('viewMode', viewMode); } catch (e) {}
+
+  document.getElementById('viewBtnMonth').classList.toggle('active', viewMode === 'month');
+  document.getElementById('viewBtnCards').classList.toggle('active', viewMode === 'cards');
+  document.getElementById('viewMonth').style.display = viewMode === 'month' ? '' : 'none';
+  document.getElementById('viewCards').style.display = viewMode === 'cards' ? '' : 'none';
+
+  clearSelectedSlot();
+  renderCalendar();
 }
+
+function renderCalendar() {
+  if (viewMode === 'month') {
+    renderMonthGrid();
+    renderDaySlots();
+  } else {
+    renderCards();
+  }
+}
+
+function onCardsDateChange() {
+  clearSelectedSlot();
+  renderCards();
+}
+
+/* ===== عرض الحاويات (يوم لكل حاوية) ===== */
+function renderCards() {
+  const calBox = document.getElementById('calendar');
+  if (!calBox) return;
+  const filter = document.getElementById('cardsDate').value;
+  const todayStr = toDateStr(new Date());
+
+  const groups = {};
+  allSlotsCache.forEach(s => {
+    const d = normalizeDate(s.ResDate);
+    if (!d) return;
+    if (filter) { if (d !== filter) return; }
+    else if (!SHOW_PAST_DAYS && d < todayStr) return;
+    (groups[d] = groups[d] || []).push(s);
+  });
+
+  const dates = Object.keys(groups).sort();
+  if (!dates.length) {
+    calBox.innerHTML = `<div class="calendar-empty">${
+      filter ? 'لا توجد أوقات بتاريخ ' + fmtDMY(filter) : 'لا توجد أوقات متاحة حالياً'}</div>`;
+    return;
+  }
+
+  let html = '';
+  dates.forEach(d => {
+    const slots = groups[d].sort((a, b) =>
+      (to24(a.ResTimeFrom) || '').localeCompare(to24(b.ResTimeFrom) || ''));
+    const isPast = d < todayStr;
+    const dayName = DAYS_AR[new Date(d + 'T00:00:00').getDay()];
+
+    html += `<div class="cal-card">
+      <div class="cal-card-head"><div class="d">${fmtDMY(d)}</div><div class="n">${dayName}</div></div>
+      <div class="cal-slots">`;
+
+    slots.forEach(s => {
+      const available = String(s.ResShow).trim() === 'متاح';
+      const disabled = !available || isPast;
+      const isSel = selectedSlot && String(selectedSlot.ResID) === String(s.ResID) && selectedSlot.dateStr === d;
+      const from = String(s.ResTimeFrom || '').replace(/\s/g, '');
+      const to = String(s.ResTimeTO || s.ResTimeTo || '').replace(/\s/g, '');
+
+      html += `<button class="slot-btn ${disabled ? 'booked' : ''} ${isSel ? 'selected' : ''}"
+        ${disabled ? 'disabled' : ''} onclick="pickSlot('${s.ResID}','${d}')">
+        <b>${from}-${to}</b><span>${s.ResCost} ر.ع</span></button>`;
+    });
+
+    html += `</div></div>`;
+  });
+
+  calBox.innerHTML = html;
+}
+
+/* ===== عدد أعمدة الحاويات (1 - 4) ===== */
+function setCalCols(n) {
+  n = Math.min(4, Math.max(1, parseInt(n, 10) || 2));
+  const cal = document.getElementById('calendar');
+  cal.style.setProperty('--cols', n);
+  cal.dataset.cols = n;
+  document.getElementById('calCols').value = n;
+  try { localStorage.setItem('calCols', n); } catch (e) {}
+}
+
+(function initView() {
+  let n = 2, m = 'month';
+  try {
+    n = parseInt(localStorage.getItem('calCols'), 10) || 2;
+    m = localStorage.getItem('viewMode') || 'month';
+  } catch (e) {}
+  setCalCols(n);
+  setViewMode(m);
+})();
 
 function renderMonthGrid() {
   const grid = document.getElementById('mcalGrid');
@@ -1790,11 +2455,13 @@ async function submitBooking() {
 if (data.success) {
       show('booking');
       document.getElementById('bookMsg').innerHTML =
-        `<div class="success-msg">✅ تم الحجز بنجاح<br>رقم الطلب: ${data.regNo}</div>`;
+        `<div class="success-msg">✅الطلب في الاجراء، سيتم تأكيد الحجز في نافذة طلباتي<br>رقم الطلب: ${data.regNo}</div>`;
 
       clearSelectedSlot();
       document.getElementById('bookDate').value = '';
       document.getElementById('note').value = '';
+      document.getElementById('bookDate').value = '';
+      document.getElementById('cardsDate').value = '';
 
       await loadSlots();   // يعيد رسم التقويم والأوقات
       document.getElementById('bookMsg').scrollIntoView({ behavior: 'smooth', block: 'center' });
