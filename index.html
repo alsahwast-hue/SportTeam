@@ -13,23 +13,40 @@
 <meta name="mobile-web-app-capable" content="yes">
 <style>
   * { box-sizing: border-box; font-family: 'Cairo', sans-serif; margin: 0; padding: 0; }
-  body { background: linear-gradient(135deg, #1e3c72, #2a5298); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
+  body { background: linear-gradient(135deg, #04a1a7, #036159); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; }
   .screen { display: none; width: 100%; max-width: 560px; background: #fff; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,.3); overflow: hidden; }
   .screen.active { display: block; }
   .screen.wide { max-width: 1000px; }
 
   /* ===== Splash ===== */
-  #splash { text-align: center; padding: 60px 30px; background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); color: #fff; }
+  #splash { text-align: center; padding: 60px 30px; background: linear-gradient(135deg, #696586, #697bca, #526af3); color: #fff; }
 
-  #splash .logo-wrap {
-    position: relative;
-    width: 160px;
-    height: 160px;
-    margin: 0 auto 25px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+ #splash .logo-wrap {
+  width: 170px;
+  height: 170px;
+  margin: 0 auto 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 600px;
+}
+
+#splash .flag-logo {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  transform-origin: left center;          /* كأنه مثبت من جهة السارية */
+  animation: flagWave 3s ease-in-out infinite;
+  filter: drop-shadow(0 6px 10px rgba(0,0,0,.35));
+}
+
+@keyframes flagWave {
+  0%   { transform: rotateY(0deg)   skewY(0deg)  scaleX(1);    }
+  25%  { transform: rotateY(14deg)  skewY(3deg)  scaleX(.96);  }
+  50%  { transform: rotateY(0deg)   skewY(0deg)  scaleX(1);    }
+  75%  { transform: rotateY(-14deg) skewY(-3deg) scaleX(.96);  }
+  100% { transform: rotateY(0deg)   skewY(0deg)  scaleX(1);    }
+}
   #splash .logo-wrap::before {
     content: '';
     position: absolute;
@@ -50,7 +67,7 @@
     width: 140px;
     height: 140px;
     border-radius: 50%;
-    background: #fff;
+    background:none;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -65,14 +82,14 @@
     height: 100%;
     object-fit: cover;
     animation: spinGlobeReverse 8s linear infinite;
-    filter: drop-shadow(0 0 2px rgba(0,0,0,.2));
+    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.2));
   }
   #splash .logo::after {
     content: '';
     position: absolute;
     inset: 0;
     border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.35) 0%, rgba(255,255,255,0) 40%, rgba(0,0,0,.25) 100%);
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.35) 0%, rgba(56, 241, 232, 0.849) 40%, rgba(72, 224, 235, 0.747) 100%);
     pointer-events: none;
   }
   @keyframes spinGlobe {
@@ -119,7 +136,7 @@
   .field input[readonly] { background: #f5f7fa; color: #555; }
 
   /* ===== Buttons ===== */
-  .btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #1e3c72, #2a5298); color: #fff; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; transition: .2s; }
+  .btn { width: 100%; padding: 14px; background: linear-gradient(135deg, #04a1a7, #036159); color: #fff; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; transition: .2s; }
   .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(42,82,152,.4); }
   .btn.gold  { background: linear-gradient(135deg, #f0b90b, #d4a017); color: #000; }
   .btn.goldEdit  { background: linear-gradient(135deg, #f7ff88d8, #f7ff88d8); color: #000; }
@@ -136,7 +153,7 @@
 #admin .topbar { padding: 10px 10px; gap: 6px; }
 #admin .topbar button:not(.admin-close-btn) { margin-inline-start: 0; }
   /* ===== Topbar ===== */
-  .topbar { background: #1e3c72; color: #fff; padding: 10px 20px; display: flex;  align-items: center; flex-wrap: wrap; gap: 2px; }
+  .topbar { background: #036159; color: #fff; padding: 10px 20px; display: flex;  align-items: center; flex-wrap: wrap; gap: 2px; }
   .topbar .user-info { font-size: 14px; }
   .topbar .user-info strong { color: #f0b90b; }
   .topbar button { background: #f0b90b; border: none; padding: 8px 14px; border-radius: 8px; font-weight: 700; cursor: pointer; margin-inline-start: 6px; }
@@ -210,7 +227,7 @@
   .admin-toolbar { display: flex; gap: 2px; flex-wrap: wrap; margin-bottom: 2px; margin-top: 2px;}
 
   .admin-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 5px; }
-  .admin-table th { background: #1e3c72; color: #fff; padding: 10px 6px; font-size: 12px; }
+  .admin-table th { background: #036159; color: #fff; padding: 10px 6px; font-size: 12px; }
   .admin-table td { padding: 6px; border-bottom: 1px solid #eee; text-align: center; vertical-align: middle; }
   .admin-table tr:nth-child(even) td { background: #f9f9f9; }
 
@@ -270,7 +287,7 @@
   }
 
   .modal-header {
-    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    background: linear-gradient(135deg, #04a1a7, #036159);
     color: #fff; padding: 18px 22px;
     display: flex; justify-content: space-between; align-items: center;
     border-radius: 20px 20px 0 0;
@@ -338,7 +355,7 @@
 }
 /* ===== Subscriptions Table ===== */
 .subs-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
-.subs-table th { background: #1e3c72; color: #fff; padding: 8px 4px; font-size: 11px; text-align: center; white-space: nowrap; }
+.subs-table th { background: #036159; color: #fff; padding: 8px 4px; font-size: 11px; text-align: center; white-space: nowrap; }
 .subs-table td { padding: 5px 3px; border-bottom: 1px solid #eee; text-align: center; vertical-align: middle; }
 .subs-table tr:nth-child(even) td { background: #f9f9f9; }
 .subs-table input[type="text"],
@@ -389,13 +406,13 @@
 .subs-table .sub-month.loading::after {
   content: ''; position: absolute; inset: 0; margin: auto;
   width: 16px; height: 16px; border-radius: 50%;
-  border: 2px solid #ddd; border-top-color: #2a5298;
+  border: 2px solid #ddd; border-top-color: #036159;
   animation: spin .7s linear infinite;
 }
 
 /* صف المجاميع */
 .subs-table tfoot td {
-  background: #1e3c72 !important; color: #fff; font-weight: 700;
+  background: #036159 !important; color: #fff; font-weight: 700;
   font-size: 12px; padding: 8px 4px; text-align: center;
   border-top: 3px solid #f0b90b;
 }
@@ -417,7 +434,7 @@
 .report-card .val { font-size: 22px; font-weight: 700; }
 
 .report-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-top: 12px; }
-.report-table th { background: #1e3c72; color: #fff; padding: 8px 6px; font-size: 12px; }
+.report-table th { background: #036159; color: #fff; padding: 8px 6px; font-size: 12px; }
 .report-table td { padding: 7px 6px; border-bottom: 1px solid #eee; text-align: center; }
 .report-table tr:nth-child(even) td { background: #f9f9f9; }
 .report-table .paid   { color: #1e8449; font-weight: 700; }
@@ -446,7 +463,7 @@
 }
 /* ===== Bookings Table ===== */
 .bookings-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
-.bookings-table th { background: #1e3c72; color: #fff; padding: 8px 4px; font-size: 11px; text-align: center; white-space: nowrap; }
+.bookings-table th { background: #036159; color: #fff; padding: 8px 4px; font-size: 11px; text-align: center; white-space: nowrap; }
 .bookings-table td { padding: 6px 4px; border-bottom: 1px solid #eee; text-align: center; vertical-align: middle; }
 .bookings-table tr:nth-child(even) td { background: #f9f9f9; }
 .bookings-table select.state-select {
@@ -511,8 +528,8 @@
   width: 18px; height: 18px; cursor: pointer; accent-color: #1e3c72;
 }
 .users-table input[type="checkbox"]:disabled { cursor: default; opacity: .7; }
-.badge.admin { background: #e8defa; color: #4b2a8a; }
-.badge.user  { background: #e3ecf9; color: #1e3c72; }
+.badge.admin { background: #e8defa; color: #036159; }
+.badge.user  { background: #e3ecf9; color: #036159; }
 /* ===== خطوة التسجيل ===== */
 .reg-note { text-align: center; color: #1e3c72; font-weight: 700; margin-bottom: 14px; }
 .reg-code-box {
@@ -679,7 +696,7 @@ body.has-install-bar { padding-bottom: 80px; }
 .mcal-title { font-weight:700; color:#1e3c72; font-size:16px; }
 .mcal-nav {
   width:36px; height:36px; border:none; border-radius:50%;
-  background:#1e3c72; color:#fff; font-size:22px; line-height:1; cursor:pointer;
+  background:#036159; color:#fff; font-size:22px; line-height:1; cursor:pointer;
 }
 .mcal-nav:hover { background:#2a5298; }
 .mcal-week, .mcal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
@@ -805,7 +822,12 @@ body.has-install-bar { padding-bottom: 80px; }
   color: #1e3c72;
   background: #fff;
 }
-
+#splash .splash-ball {
+  width: 140px;
+  height: 140px;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 10px rgba(0,0,0,.35));
+}
 
 </style>
 </head>
@@ -814,10 +836,7 @@ body.has-install-bar { padding-bottom: 80px; }
 <!-- ============ شاشة الشعار ============ -->
 <div class="screen active" id="splash">
   <div class="logo-wrap">
-    <div class="logo-ring"></div>
-    <div class="logo">
-      <img src="" id="teamLogo" alt="شعار الفريق">
-    </div>
+    <img src="soccer_ball.gif" class="splash-ball" alt="كرة القدم">
   </div>
   <h1 id="teamName">جارٍ التحميل...</h1>
   <p>نظام حجز الملعب</p>
@@ -1929,11 +1948,21 @@ window.fetch = function(url, options) {
 /* ============================================================
    إنشاء حساب Admin افتراضي عند أول تشغيل (اختياري)
    ============================================================ */
-(async () => {
-  await openDB();
-    const t = await getTrialInfo();
-  if (t.expired) await wipeAllExceptUsers();
+(function startApp() {
+  // 1) اعرض النسخة المخزنة فوراً (إن وجدت)
+  let cached = null;
+  try { cached = JSON.parse(localStorage.getItem('teamInfo')); } catch (e) {}
+  try { applyTeamToSplash(cached); } catch (e) {}
 
+  // 2) حدّث بيانات الفريق في الخلفية دون انتظار
+  try { loadTeamInfoOnStart().catch(() => {}); } catch (e) {}
+
+  // 3) بعد ثانية ونصف انتقل لتسجيل الدخول دائماً
+  setTimeout(() => {
+    show('login');
+    try { fillSavedLogin(); } catch (e) {}
+    document.getElementById('loginMsg').innerHTML = '';
+  }, 3000);
 })();
 
 
@@ -1971,34 +2000,9 @@ const DEFAULT_LOGO = 'data:image/svg+xml;utf8,' + encodeURIComponent(
 
 function applyTeamToSplash(team) {
   const nameEl = document.getElementById('teamName');
-  const logoEl = document.getElementById('teamLogo');
   nameEl.textContent = (team && team.TeamName) ? team.TeamName : 'نظام الحجز';
-  logoEl.onerror = () => { logoEl.onerror = null; logoEl.src = DEFAULT_LOGO; };
-  logoEl.src = (team && team.TeamLogo) ? team.TeamLogo : DEFAULT_LOGO;
   applyHeaderLogos(team);
 }
-
-(async () => {
-  // 1) اعرض النسخة المخزنة فوراً (إن وجدت)
-  let cached = null;
-  try { cached = JSON.parse(localStorage.getItem('teamInfo')); } catch (e) {}
-  applyTeamToSplash(cached);
-
-  // 2) حدّث بيانات الفريق من السيرفر
-  const started = Date.now();
-  await Promise.race([
-    loadTeamInfoOnStart(),
-    new Promise(r => setTimeout(r, cached ? 2000 : 6000))
-  ]);
-
-  // 3) أبقِ الـ splash ظاهراً ثانية ونصف على الأقل ثم انتقل لتسجيل الدخول دائماً
-  const remaining = Math.max(0, 1500 - (Date.now() - started));
- setTimeout(() => {
-  show('login');
-  fillSavedLogin();   // ← املأ الحقول
-  document.getElementById('loginMsg').innerHTML = '';
-}, remaining);
-})();
 
 function applyHeaderLogos(team) {
   const set = (boxId, imgId, yearId, url, year, label) => {
