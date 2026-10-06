@@ -1483,6 +1483,8 @@ async function wipeAllExceptUsers() {
   try { localStorage.removeItem('teamInfo'); } catch (e) {}
 }
 
+
+
 function showExpired(name, phone) {
   cancelRegistration();
   expiredUser = { name: name || '', phone: phone || '' };
@@ -2045,6 +2047,7 @@ async function login() {
   }
 
   show('loading');
+  await seedReady;            // ← أضف بيانات افتراضية
   const slotsPromise = loadSlots();
   try {
     const res = await fetch(USER_API, {
@@ -2133,6 +2136,7 @@ async function completeRegistration() {
   }
 
   show('loading');
+  await seedReady;            // ← أضف بيانات افتراضية
   const slotsPromise = loadSlots();  
   try {
     const res = await fetch(USER_API, {
@@ -5224,6 +5228,109 @@ async function deleteExp(id, btnEl) {
     btnEl.classList.remove('loading'); btnEl.disabled = false; btnEl.dataset.busy = '0';
   }
 }
+
+
+
+/* ============================================================
+   بيانات افتراضية (تُزرع مرة واحدة فقط)
+   ============================================================ */
+async function seedDemoData() {
+  try {
+    if (await dbGet(STORES.meta, 'demoSeeded')) return;
+
+    const [r, s, b] = await Promise.all([
+      dbGetAll(STORES.reserves), dbGetAll(STORES.subs), dbGetAll(STORES.bookings)
+    ]);
+    // إن كانت هناك بيانات فعلية لا نزرع شيئاً
+    if (r.length || s.length || b.length) {
+      await dbPut(STORES.meta, { key: 'demoSeeded', value: true });
+      return;
+    }
+
+    const DAYS = ['الأحد','الإثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+    const dateOf = off => { const d = new Date(); d.setDate(d.getDate() + off); return d; };
+
+    /* ---------- 1) أوقات الحجز: 7 أيام × 5 فترات ---------- */
+    const SLOTS = [
+      ['16:00', '17:00', '10.000'],
+      ['17:00', '18:00', '10.000'],
+      ['18:00', '19:00', '12.000'],
+      ['19:00', '20:00', '15.000'],
+      ['20:00', '21:00', '15.000']
+    ];
+
+    // الحجوزات التجريبية (off = عدد الأيام من اليوم، idx = رقم الفترة)
+    const BOOKINGS = [
+      { name: 'أحمد البلوشي',  tel: '96891111111', off: 0, idx: 3, state: 'تم الحجز' },
+      { name: 'سالم الهنائي',  tel: '96892222222', off: 1, idx: 2, state: 'في الإجراء' },
+      { name: 'خالد الرواحي',  tel: '96893333333', off: 1, idx: 4, state: 'تم الحجز' },
+      { name: 'يوسف الكندي',   tel: '96894444444', off: 2, idx: 1, state: 'ملغي' },
+      { name: 'محمد الشكيلي',  tel: '96895555555', off: 3, idx: 3, state: 'في الإجراء' }
+    ];
+    const NOTES = {
+      'تم الحجز':   'تم تأكيد الحجز الرجاء ارسال ايصال الدفع الى الرقم : ',
+      'في الإجراء': 'الطلب في الاجراء سيتم تحديث الحالة بعد الدفع وارسال الايصال',
+      'ملغي':       'نأسف لكم تم الغاء الحجز بسبب: '
+    };
+
+    for (let off = 0; off < 7; off++) {
+      const d = dateOf(off);
+      for (let idx = 0; idx < SLOTS.length; idx++) {
+        const bk = BOOKINGS.find(x => x.off === off && x.idx === idx);
+        const taken = bk && bk.state !== 'ملغي';
+        const id = await nextId('ResID', 1);
+        await dbPut(STORES.reserves, {
+          ResID: String(id),
+          ResTeamName: '', ResTeamPhoto: '',
+          ResDate: toDateStr(d),
+          ResDay: DAYS[d.getDay()],
+          ResTimeFrom: to12(SLOTS[idx][0]),
+          ResTimeTO:   to12(SLOTS[idx][1]),
+          ResCost: SLOTS[idx][2],
+          ResShow: taken ? 'محجوز' : 'متاح'
+        });
+      }
+    }
+
+    /* ---------- 2) الحجوزات (الطلبات) ---------- */
+    for (const bk of BOOKINGS) {
+      const d = dateOf(bk.off);
+      const id = await nextId('RegID', 1);
+      await dbPut(STORES.bookings, {
+        RegID: String(id),
+        RegNo: 'BK' + String(id).padStart(5, '0'),
+        RegUserName: bk.name, RegUserTel: bk.tel,
+        RegUserID: '0', RegUserState: 'User',
+        RegDate: toDateStr(d), Regday: DAYS[d.getDay()],
+        RegTimeFrom: SLOTS[bk.idx][0], RegTimeTo: SLOTS[bk.idx][1],
+        RegCost: SLOTS[bk.idx][2],
+        RegNote: NOTES[bk.state],
+        RegState: bk.state
+      });
+    }
+
+    /* ---------- 3) الاشتراكات ---------- */
+    const MEMBERS = [
+      { name: 'أحمد البلوشي',  tel: '96891111111', cost: '5.000', paid: 10 },
+      { name: 'سالم الهنائي',  tel: '96892222222', cost: '5.000', paid: 8  },
+      { name: 'خالد الرواحي',  tel: '96893333333', cost: '7.500', paid: 10 },
+      { name: 'يوسف الكندي',   tel: '96894444444', cost: '5.000', paid: 4  },
+      { name: 'محمد الشكيلي',  tel: '96895555555', cost: '10.000', paid: 0 }
+    ];
+    for (const m of MEMBERS) {
+      const id = String(await nextId('SubID', 1));
+      const row = { SubID: id, SubName: m.name, SubTel: m.tel, SubCost: m.cost };
+      for (let i = 1; i <= 12; i++) row['Sub' + i] = i <= m.paid ? 'مدفوع' : '';
+      await dbPut(STORES.subs, row);
+    }
+
+    await dbPut(STORES.meta, { key: 'demoSeeded', value: true });
+  } catch (e) {
+    console.warn('فشل زرع البيانات الافتراضية:', e);
+  }
+}
+const seedReady = seedDemoData();
+
 
 
 /* ============================================================
