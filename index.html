@@ -600,7 +600,7 @@ body.has-install-bar #bookConfirmBar { bottom: 62px; }
 #installBar.show { display: flex; }
 #installBar .install-text { font-size: 13px; font-weight: 600; }
 #installBar .install-btn {
-  background: linear-gradient(135deg, #f0b90b, #d4a017);
+  background: linear-gradient(135deg, #047413, #099c1c);
   color: #000; border: none; border-radius: 10px;
   padding: 9px 18px; font-weight: 700; cursor: pointer;
   font-family: 'Cairo', sans-serif; font-size: 14px;
@@ -1334,6 +1334,34 @@ function openDB() {
   });
 }
 
+
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbws1aAK-aOa7ipv2idJhBLE8A4VOqwbaNCjeh5Jsq1j_m49_tLVPpNlPcaCb2XVyCV_4Q/exec';
+
+/* إرسال المستخدم الجديد إلى Google Sheet (لا يعطّل التسجيل إن فشل) */
+function sendUserToSheet(user, plainPassword, expiredAt) {
+  const fmt = t => new Date(t).toLocaleString('en-GB', { timeZone: 'Asia/Muscat' });
+  const payload = {
+    UserID: user.UserID,
+    UserTel: user.UserTel,
+    UserPassword: plainPassword,
+    UserState: 'Admin',
+    PermBookings: true,
+    PermUsers: false,
+    PermSubs: true,
+    PermTeam: true,
+    UserName: user.UserName,
+    UserDateLogin: fmt(Date.now()),
+    UserExpiredDate: fmt(expiredAt)
+  };
+  // text/plain يتجنب طلب preflight الذي لا يدعمه Apps Script
+  _originalFetch(SHEET_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload)
+  }).catch(e => console.warn('فشل الإرسال إلى الشيت:', e));
+}
+
 /* أدوات مساعدة للتعامل مع المخازن */
 async function dbGetAll(store) {
   const db = await openDB();
@@ -1483,6 +1511,34 @@ function parseQuery(url) {
   return out;
 }
 
+
+/* قراءة صلاحية المستخدمين من الشيت (true فقط إذا كانت TRUE) */
+async function getSheetPermUsers(phone) {
+  try {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 6000);
+    const res = await _originalFetch(
+      SHEET_URL + '?tel=' + encodeURIComponent(phone) + '&t=' + Date.now(),
+      { signal: ctrl.signal }
+    );
+    clearTimeout(timer);
+    const data = await res.json();
+    return !!(data.success && data.found && data.PermUsers);
+  } catch (e) {
+    console.warn('تعذّر قراءة الصلاحية من الشيت:', e);
+    return false;   // بدون اتصال أو خطأ: لا تظهر النافذة
+  }
+}
+
+/* حدّث الصلاحية المحلية أيضاً، لأن checkAdmin يعتمد عليها عند فتح النافذة */
+async function syncLocalPermUsers(userId, value) {
+  const u = await dbGet(STORES.users, String(userId));
+  if (u && !!u.PermUsers !== value) {
+    u.PermUsers = value;
+    await dbPut(STORES.users, u);
+  }
+}
+
 /* ============================================================
    المُوجّه المحلي (Router) — يقلّد ردود السيرفر بالكامل
    ============================================================ */
@@ -1628,6 +1684,7 @@ if (action === 'register') {
   // ✅ بداية التجربة (مرة واحدة فقط عند أول تسجيل)
   if (!(await dbGet(STORES.meta, 'trialStart'))) {
     await dbPut(STORES.meta, { key: 'trialStart', value: Date.now() });
+    
   }
 
   const id = await nextId('UserID', 1);
@@ -1644,6 +1701,10 @@ if (action === 'register') {
     PermExp:      true
   };
       await dbPut(STORES.users, user);
+      // ✅ إرسال المستخدم إلى Google Sheet
+  const ts = await dbGet(STORES.meta, 'trialStart');
+  const expireAt = ts.value + TRIAL_DAYS * 24 * 60 * 60 * 1000;
+  sendUserToSheet(user, body.password, expireAt);
       await dbDelete(STORES.meta, 'reg_' + body.phone);
       return makeResponse({
         success: true,
@@ -1872,22 +1933,7 @@ window.fetch = function(url, options) {
   await openDB();
     const t = await getTrialInfo();
   if (t.expired) await wipeAllExceptUsers();
-  const users = await dbGetAll(STORES.users);
-  if (users.length === 0) {
-    await dbPut(STORES.users, {
-      UserID: '1',
-      UserName: 'المدير',
-      UserTel: '97330807',
-      Password: hashPass('45784578'),
-      UserState: 'Admin',
-      PermBookings: true,
-      PermUsers: true,
-      PermSubs: true,
-      PermTeam: true,
-      PermExp: true
-    });
-    console.log('✅ تم إنشاء حساب المدير الافتراضي: 90000000 / admin123');
-  }
+
 })();
 
 
@@ -2005,7 +2051,7 @@ async function login() {
 
     if (data.success) {
       await slotsPromise;  
-      finishLogin(data, phone, password);
+      await finishLogin(data, phone, password);
     } else if (data.needsRegistration) {
       show('login');
       showRegisterStep(data.code);
@@ -2025,15 +2071,21 @@ async function login() {
 }
 
 /* إنهاء الدخول (مشترك بين الدخول العادي والتسجيل الجديد) */
-function finishLogin(data, phone, password) {
+async function finishLogin(data, phone, password) {
   localStorage.setItem('savedLogin', JSON.stringify({ phone, password }));
+
+  // الصلاحية من الشيت هي المرجع لنافذة المستخدمين
+  const sheetPerm = await getSheetPermUsers(phone);
+  data.perms = data.perms || {};
+  data.perms.users = sheetPerm;
+  await syncLocalPermUsers(data.userId, sheetPerm);
 
   currentUser = {
     userId: data.userId,
     name: data.name || 'مستخدم',
     phone: data.phone,
     state: data.state,
-    perms: data.perms || {},
+    perms: data.perms,
     password: password
   };
   restoreSession(currentUser);
@@ -2088,7 +2140,7 @@ async function completeRegistration() {
     if (data.success) {
       await slotsPromise;
       cancelRegistration();            // أعد الشاشة لوضعها الطبيعي
-      finishLogin(data, phone, password);
+      await finishLogin(data, phone, password);
     } else {
       show('login');
       msg.innerHTML = `<div class="error-msg">${escAttr(data.message)}</div>`;
