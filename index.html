@@ -365,12 +365,14 @@
 /* ===== Subscriptions extras ===== */
 .subs-searchbar {
   display: flex; flex-wrap:  nowrap; gap: 2px;
-  background: #f5f7fa; padding: 10px 12px; border-radius: 10px;
+  background: #f5f7fa; padding: 10px 10px; border-radius: 10px;
   margin-bottom: 10px; align-items: center;
 }
-.subs-searchbar input,
+.subs-searchbar  input{  padding: 4px 6px; border: 2px solid #e0e0e0; border-radius: 8px;
+  font-family: 'Cairo', sans-serif; font-size: 13px; width: 70px; background: #fff;
+}
 .subs-searchbar select {
-  padding: 4px 6px; border: 2px solid #e0e0e0; border-radius: 8px;
+  padding: 4px 2px; border: 2px solid #e0e0e0; border-radius: 8px;
   font-family: 'Cairo', sans-serif; font-size: 13px; background: #fff;
 }
 .subs-searchbar input:focus,
@@ -739,6 +741,72 @@ body.has-install-bar { padding-bottom: 80px; }
   box-shadow:0 4px 12px rgba(42,82,152,.35);
 }
 
+/* ===== صف الملاحظة في طلباتي ===== */
+.bookings-table tr.note-row td {
+  padding: 4px 8px 10px;
+  background: #fff !important;
+  border-bottom: 2px solid #dde3ee;
+}
+.my-note {
+  display: block;
+  width: 90%;
+  max-width: 520px;
+  margin: 0 auto;            /* في الوسط */
+  padding: 6px 8px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 12px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: #f0f2f5;
+  color: #555;
+  resize: none;
+  cursor: not-allowed;       /* غير متاح */
+}
+/* ===== اقتراحات الملاحظة المنبثقة ===== */
+.bookings-table td.state-cell { position: relative; }
+
+.note-suggest {
+  display: none;
+  position: fixed;          /* بدل absolute حتى لا تُقصّ داخل الجدول */
+  z-index: 3000;
+  background: #fff;
+  border: 1px solid #d4a017;
+  border-radius: 8px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.25);
+  overflow-y: auto;
+  max-height: 260px;
+  text-align: right;
+}
+.note-suggest.show { display: block; }
+.note-suggest .ns-title {
+  background: #1e3c72; color: #fff;
+  font-size: 11px; font-weight: 700; padding: 5px 8px;
+}
+.note-suggest .ns-item {
+  display: block; width: 100%;
+  padding: 8px; border: none; border-bottom: 1px solid #eee;
+  background: #fff; cursor: pointer; text-align: right;
+  font-family: 'Cairo', sans-serif; font-size: 12px; color: #333;
+}
+.note-suggest .ns-item:last-child { border-bottom: none; }
+.note-suggest .ns-item:hover { background: #fffbe6; }
+.note-suggest .ns-item b { display: block; color: #1e3c72; font-size: 11px; }
+.subs-searchbar > * { flex-shrink: 0; }
+.subs-searchbar { overflow-x: auto; }
+#subsYearSelect {
+  min-width: 80px;
+  padding: 4px 4px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-family: 'Cairo', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1e3c72;
+  background: #fff;
+}
+
+
 </style>
 </head>
 <body>
@@ -1010,7 +1078,7 @@ body.has-install-bar { padding-bottom: 80px; }
         <button class="btn small green" id="addSubToggleBtn" data-open="0" onclick="startAddSubRow()">➕ إضافة عضو</button>
         <button class="btn small" onclick="loadSubs()">🔄 تحديث</button>
         <button class="btn small gold" onclick="openReportsModal()">📊 التقارير</button>
-        <span class="subs-count" id="subsCount" style="margin:0 auto 0 0;"></span>
+      <span class="subs-count" id="subsCount" style="margin:0 auto 0 0;"></span>
       </div>
 
       <div id="subsList">جارٍ التحميل...</div>
@@ -1343,7 +1411,7 @@ function hashPass(p) {
 }
 
 /* ===== مدة التجربة ===== */
-const TRIAL_DAYS = 30;
+const TRIAL_DAYS = 10;
 const BUY_PHONE  = '96895209623';   // 968 + 95209623 (رمز عُمان)
 let expiredUser  = { name: '', phone: '' };
 
@@ -1749,7 +1817,8 @@ async function checkAdmin(phone, password) {
         RegUserID: body.userId, RegUserState: body.userState,
         RegDate: body.date, Regday: body.day,
         RegTimeFrom: body.from, RegTimeTo: body.to,
-        RegCost: body.cost, RegNote: body.note || '',
+        RegCost: body.cost,
+        RegNote: body.note || 'الطلب في الاجراء سيتم تحديث الحالة بعد الدفع وارسال الايصال',
         RegState: 'في الإجراء'
       };
       await dbPut(STORES.bookings, row);
@@ -3259,10 +3328,12 @@ async function loadTeamInfoOnStart() {
    ============================================================ */
 
 
-function openSubsModal() {
+async function openSubsModal() {
   document.getElementById('subsModal').classList.add('active');
   document.body.style.overflow = 'hidden';
-  if (!subsLoaded) loadSubs();
+  await checkSubsRollover();
+  await fillSubsYearSelect();
+  if (!subsLoaded || subsViewYear) loadSubs(); else renderSubsTable(subsRowsCache, false);
 }
 
 function closeSubsModal() {
@@ -3276,6 +3347,17 @@ document.getElementById('subsModal').addEventListener('click', function(e) {
 
 function loadSubs() {
   const box = document.getElementById('subsList');
+
+  /* ===== سنة محفوظة: اقرأ من الأرشيف (للعرض فقط) ===== */
+  if (subsViewYear) {
+    box.innerHTML = '<div class="spinner" style="margin:20px auto"></div>';
+    dbGet(STORES.meta, 'subsArchive_' + subsViewYear).then(r => {
+      subsRowsCache = (r && r.value) || [];
+      renderSubsTable(subsRowsCache, false);
+    });
+    return;
+  }
+
   box.innerHTML = '<div class="spinner" style="margin:20px auto"></div>';
   const btn = document.getElementById('addSubToggleBtn');
   const showInputRow = btn.dataset.open === '1';
@@ -3298,13 +3380,17 @@ function loadSubs() {
 
 /* ===== أسماء الشهور حسب السنة الحالية (تتغير تلقائياً) ===== */
 function getSubsMonths() {
-  const y = new Date().getFullYear();
+  const y = subsViewYear || subsYear;
   return Array.from({ length: 12 }, (_, i) => `${i + 1}/${y}`);
 }
 
 function renderSubsTable(rows, showInputRow = false) {
   const box = document.getElementById('subsList');
   const months = getSubsMonths();
+
+  /* ===== وضع القراءة فقط (سنة محفوظة) ===== */
+  const readOnly = !!subsViewYear;
+  if (readOnly) showInputRow = false;
 
   /* ===== هل نعرض شهراً واحداً فقط؟ ===== */
   const singleMonth = subsSearchMonth ? parseInt(subsSearchMonth, 10) : 0;
@@ -3324,16 +3410,17 @@ function renderSubsTable(rows, showInputRow = false) {
 
   /* ===== شريط البحث ===== */
   document.getElementById('subsCount').textContent =
-  `النتائج: ${filtered.length} من ${rows.length}`;
+    `النتائج: ${filtered.length} من ${rows.length}`;
   let html = `
     <div class="subs-searchbar">
       <input type="text" id="subsNameSearch" placeholder="اسم أو الهاتف"
-             value="${subsSearchName}"
+             value="${escAttr(subsSearchName)}"
              oninput="subsSearchName=this.value;renderSubsTable(subsRowsCache, ${showInputRow});">
       <select id="subsMonthSearch" onchange="subsSearchMonth=this.value;renderSubsTable(subsRowsCache, ${showInputRow});">
         <option value="">الكل</option>
         ${months.map((m,i)=>`<option value="${i+1}" ${subsSearchMonth==String(i+1)?'selected':''}>${m}</option>`).join('')}
       </select>
+         <select id="subsYearSelect" onchange="onSubsYearChange(this.value)"></select>
       <button class="btn small red" onclick="subsSearchName='';subsSearchMonth='';renderSubsTable(subsRowsCache,false);">✖</button>
     </div>
   `;
@@ -3384,9 +3471,9 @@ function renderSubsTable(rows, showInputRow = false) {
     totalCost += cost;
 
     html += `<tr data-subid="${subId}">`;
-    html += `<td class="cell-subname">${r.SubName || '-'}</td>`;
-    html += `<td class="cell-subtel">${r.SubTel || '-'}</td>`;
-    html += `<td class="cell-subcost">${r.SubCost || '-'}</td>`;
+    html += `<td class="cell-subname">${escAttr(r.SubName) || '-'}</td>`;
+    html += `<td class="cell-subtel">${escAttr(r.SubTel) || '-'}</td>`;
+    html += `<td class="cell-subcost">${escAttr(r.SubCost) || '-'}</td>`;
 
     visibleMonths.forEach(i => {
       const val = String(r['Sub' + i] || '').trim();
@@ -3401,15 +3488,15 @@ function renderSubsTable(rows, showInputRow = false) {
       const txt = isPaid ? '✓' : '✗';
 
       html += `<td>
-        <button class="sub-month ${cls}"
+        <button class="sub-month ${cls}" ${readOnly ? 'disabled style="cursor:default"' : ''}
           data-subid="${subId}" data-month="${i}"
           onclick="toggleSubPayment('${subId}', ${i}, this)">${txt}</button>
       </td>`;
     });
 
-    html += `<td class="sub-actions">
+    html += `<td class="sub-actions">${readOnly ? '—' : `
       <button class="btn small goldEdit" onclick="editSubRow('${subId}')">✏️</button>
-      <button class="btn small red" onclick="deleteSubRow('${subId}')">🗑</button>
+      <button class="btn small red" onclick="deleteSubRow('${subId}')">🗑</button>`}
     </td></tr>`;
   });
 
@@ -3428,6 +3515,7 @@ function renderSubsTable(rows, showInputRow = false) {
   </tfoot></table></div>`;
 
   box.innerHTML = html;
+  fillSubsYearSelect();
 }
 
 
@@ -3542,6 +3630,8 @@ async function toggleSubPayment(subId, monthIndex, btnEl) {
 
 /* ===== تحديث صامت: بدون سبينر وبدون مسح الجدول ===== */
 async function silentLoadSubs() {
+  if (subsViewYear) return;   // لا تحديث صامت أثناء عرض سنة محفوظة
+
   try {
     const res = await fetch(SUBS_API + '?action=listSubs&t=' + Date.now());
     const data = await res.json();
@@ -3619,6 +3709,94 @@ async function deleteSubRow(subId) {
     else alert(data.message);
   } catch (e) { alert('خطأ: ' + e.message); }
 }
+
+const OMAN_OFFSET_H = 4;
+function omanNow() {
+  const d = new Date(Date.now() + OMAN_OFFSET_H * 3600 * 1000);
+  return { y: d.getUTCFullYear(), m: d.getUTCMonth() + 1, d: d.getUTCDate(),
+           h: d.getUTCHours(),    mi: d.getUTCMinutes() };
+}
+
+let subsYear = omanNow().y;     // السنة الحالية لأعمدة الاشتراكات
+let subsViewYear = null;        // null = السنة الحالية، أو سنة محفوظة للعرض فقط
+let subsRolloverBusy = false;
+
+async function initSubsYear() {
+  const r = await dbGet(STORES.meta, 'subsYear');
+  if (r) subsYear = r.value;
+  else await dbPut(STORES.meta, { key: 'subsYear', value: subsYear });
+}
+
+/* هل حان وقت الأرشفة؟ (31/12 الساعة 11:58 م أو بعدها، أو دخلنا سنة جديدة والبرنامج مغلق) */
+function subsRolloverDue() {
+  const n = omanNow();
+  if (n.y > subsYear) return true;
+  return n.y === subsYear && n.m === 12 && n.d === 31 &&
+         (n.h > 23 || (n.h === 23 && n.mi >= 58));
+}
+
+async function checkSubsRollover() {
+  if (subsRolloverBusy) return;
+  subsRolloverBusy = true;
+  try {
+    await initSubsYear();
+    let changed = false, first = true;
+
+    while (subsRolloverDue()) {
+      if (first) {
+        const rows = await dbGetAll(STORES.subs);
+        // 1) احفظ نسخة السنة المنتهية
+        await dbPut(STORES.meta, { key: 'subsArchive_' + subsYear, value: rows });
+        // 2) صفّر خانات الدفع للسنة الجديدة
+        for (const r of rows) {
+          for (let i = 1; i <= 12; i++) r['Sub' + i] = '';
+          await dbPut(STORES.subs, r);
+        }
+        first = false;
+      }
+      subsYear++;
+      await dbPut(STORES.meta, { key: 'subsYear', value: subsYear });
+      changed = true;
+    }
+
+    if (changed) {
+      subsViewYear = null;
+      subsLoaded = false;
+      await fillSubsYearSelect();
+      if (document.getElementById('subsModal').classList.contains('active')) loadSubs();
+    }
+  } catch (e) {
+    console.warn('فشل أرشفة الاشتراكات:', e);
+  } finally {
+    subsRolloverBusy = false;
+  }
+}
+
+/* القائمة المنسدلة: السنة الحالية + السنوات المحفوظة */
+async function fillSubsYearSelect() {
+  const sel = document.getElementById('subsYearSelect');
+  if (!sel) return;
+  const all = await dbGetAll(STORES.meta);
+  const years = all.filter(x => String(x.key).startsWith('subsArchive_'))
+                   .map(x => parseInt(String(x.key).split('_')[1], 10))
+                   .sort((a, b) => b - a);
+
+  sel.innerHTML = `<option value="">${subsYear} (الحالي)</option>` +
+    years.map(y => `<option value="${y}">${y} (محفوظة)</option>`).join('');
+  sel.value = subsViewYear ? String(subsViewYear) : '';
+}
+
+function onSubsYearChange(v) {
+  subsViewYear = v ? parseInt(v, 10) : null;
+  const addBtn = document.getElementById('addSubToggleBtn');
+  if (addBtn.dataset.open === '1') cancelAddSubRow();
+  addBtn.style.display = subsViewYear ? 'none' : '';   // لا إضافة في السنوات المحفوظة
+  loadSubs();
+}
+
+setInterval(checkSubsRollover, 20000);
+checkSubsRollover();
+
 
 /* ============================================================
    التقارير
@@ -3863,17 +4041,22 @@ function renderBookingsTable(rows) {
       <td>${from}</td>
       <td>${to}</td>
       <td>${cost}</td>
-      <td>
+           <td class="state-cell">
         <select class="state-select ${stateCls}"
           data-original="${state}"
+          onfocus="openNoteField('${regId}')"
+          onclick="openNoteField('${regId}')"
           onchange="onBookingStateChange('${regId}', this)">
           <option value="في الإجراء" ${state === 'في الإجراء' ? 'selected' : ''}>في الإجراء</option>
           <option value="تم الحجز"  ${state === 'تم الحجز'  ? 'selected' : ''}>تم الحجز</option>
           <option value="ملغي"      ${state === 'ملغي'      ? 'selected' : ''}>ملغي</option>
         </select>
-        <input type="text" class="note-input" id="bkNote_${regId}"
+     <input type="text" class="note-input" id="bkNote_${regId}"
           data-original="${escAttr(note)}" value="${escAttr(note)}"
-          placeholder="أضف ملاحظة...">
+          placeholder="أضف ملاحظة..."
+          onfocus="showNoteSuggest('${regId}')"
+          onclick="showNoteSuggest('${regId}')">
+        <div class="note-suggest" id="bkSug_${regId}"></div>
       </td>
       <td style="white-space:nowrap">
         <button class="btn small green" id="saveBk_${regId}" disabled
@@ -3887,7 +4070,100 @@ function renderBookingsTable(rows) {
   box.innerHTML = html;
 }
 
+const NOTE_SUGGESTIONS = [
+  { state: 'في الإجراء', text: 'الطلب في الاجراء سيتم تحديث الحالة بعد الدفع وارسال الايصال' },
+  { state: 'تم الحجز',  text: 'تم تأكيد الحجز الرجاء ارسال ايصال الدفع الى الرقم : ' },
+  { state: 'ملغي',      text: 'نأسف لكم تم الغاء الحجز بسبب: ' }
+];
+
+/* أغلق كل الصفوف الأخرى وأعد حالتها وملاحظتها إلى الأصل */
+function closeOtherRows(currentRegId) {
+  hideAllNoteSuggest();
+  document.querySelectorAll('.state-cell').forEach(td => {
+    const sel  = td.querySelector('.state-select');
+    const note = td.querySelector('.note-input');
+    if (!sel || !note) return;
+    if (note.id === 'bkNote_' + currentRegId) return;   // الصف الحالي
+
+    // أعد الحالة إلى الأصل
+    sel.value = sel.dataset.original;
+    sel.classList.remove('pending', 'confirmed', 'cancelled');
+    if (sel.value === 'تم الحجز') sel.classList.add('confirmed');
+    else if (sel.value === 'ملغي') sel.classList.add('cancelled');
+    else sel.classList.add('pending');
+
+    // أعد الملاحظة وأغلق الحقل
+    note.value = note.dataset.original;
+    note.classList.remove('show');
+
+    // عطّل زر الحفظ لهذا الصف
+    const tr  = td.closest('tr');
+    const btn = tr ? tr.querySelector('button[id^="saveBk_"]') : null;
+    if (btn) btn.disabled = true;
+  });
+}
+
+function openNoteField(regId) {
+  closeOtherRows(regId);
+  const noteEl = document.getElementById('bkNote_' + regId);
+  if (noteEl) noteEl.classList.add('show');
+}
+
+function hideAllNoteSuggest() {
+  document.querySelectorAll('.note-suggest.show')
+    .forEach(el => el.classList.remove('show'));
+}
+
+document.addEventListener('scroll', hideAllNoteSuggest, true);
+
+function showNoteSuggest(regId) {
+  const box    = document.getElementById('bkSug_' + regId);
+  const noteEl = document.getElementById('bkNote_' + regId);
+  if (!box || !noteEl) return;
+  hideAllNoteSuggest();
+  noteEl.classList.add('show');
+  box.innerHTML = `<div class="ns-title">💡 اقتراحات الملاحظة</div>` +
+    NOTE_SUGGESTIONS.map((s, i) =>
+      `<button type="button" class="ns-item"
+         onmousedown="event.preventDefault()"
+         onclick="applyNoteSuggest('${regId}', ${i})">
+         <b>${s.state}</b>${s.text}
+       </button>`).join('');
+
+  // أظهرها أولاً لقياس حجمها ثم ضعها أسفل الحقل
+  box.classList.add('show');
+
+  const r  = noteEl.getBoundingClientRect();
+  const w  = Math.min(Math.max(r.width, 280), window.innerWidth - 16);
+  let left = r.left + r.width / 2 - w / 2;
+  left = Math.max(8, Math.min(left, window.innerWidth - w - 8));
+
+  let top = r.bottom + 4;
+  // إن لم يتسع المكان أسفل الحقل، اعرضها فوقه
+  if (top + box.offsetHeight > window.innerHeight - 8) {
+    top = Math.max(8, r.top - box.offsetHeight - 4);
+  }
+
+  box.style.width = w + 'px';
+  box.style.left  = left + 'px';
+  box.style.top   = top + 'px';
+}
+
+
+
+function applyNoteSuggest(regId, idx) {
+  const noteEl = document.getElementById('bkNote_' + regId);
+  if (!noteEl) return;
+  noteEl.classList.add('show');
+  noteEl.value = NOTE_SUGGESTIONS[idx].text;
+  hideAllNoteSuggest();
+  const len = noteEl.value.length;
+  noteEl.setSelectionRange(len, len);
+}
+
 function onBookingStateChange(regId, selEl) {
+  closeOtherRows(regId);          // ← أغلق باقي الصفوف
+
   selEl.classList.remove('pending', 'confirmed', 'cancelled');
   if (selEl.value === 'تم الحجز') selEl.classList.add('confirmed');
   else if (selEl.value === 'ملغي') selEl.classList.add('cancelled');
@@ -3897,18 +4173,33 @@ function onBookingStateChange(regId, selEl) {
   const btn = document.getElementById('saveBk_' + regId);
   if (btn) btn.disabled = !changed;
 
-  // أظهر حقل الملاحظة عند تغيير الحالة، وأخفِه عند الرجوع للأصلية
   const noteEl = document.getElementById('bkNote_' + regId);
-  if (noteEl) {
-    if (changed) {
-      noteEl.classList.add('show');
-      noteEl.focus();
-    } else {
-      noteEl.classList.remove('show');
-      noteEl.value = noteEl.dataset.original;   // تجاهل أي نص لم يُحفظ
-    }
+  if (!noteEl) return;
+
+  if (changed) {
+    noteEl.classList.add('show');
+    noteEl.focus();
+  } else {
+    noteEl.classList.remove('show');
+    noteEl.value = noteEl.dataset.original;
+    hideAllNoteSuggest();
   }
 }
+
+/* إغلاق الاقتراحات عند النقر خارجها */
+document.addEventListener('click', (e) => {
+  const cell = e.target.closest('.state-cell');
+  if (!cell) hideAllNoteSuggest();
+
+  document.querySelectorAll('.state-cell').forEach(td => {
+    if (td === cell) return;
+    const sel  = td.querySelector('.state-select');
+    const note = td.querySelector('.note-input');
+    if (sel && note && sel.value === sel.dataset.original) {
+      note.classList.remove('show');
+    }
+  });
+});
 
 /* ============ حفظ الحالة عند الضغط على زر الحفظ ============ */
 async function saveBookingState(regId, btnEl) {
@@ -3950,7 +4241,8 @@ async function saveBookingState(regId, btnEl) {
       if (noteEl) {
         noteEl.dataset.original = newNote;
         noteEl.value = newNote;
-        noteEl.classList.remove('show');   // أغلق الحقل بعد الحفظ
+        noteEl.classList.remove('show'); 
+         hideAllNoteSuggest();  // أغلق الحقل بعد الحفظ
       }
 
       if (row) {
@@ -4267,7 +4559,7 @@ function renderMyBookings() {
       <th>الحالة</th>
     </tr></thead><tbody>`;
 
-  list.forEach(r => {
+   list.forEach(r => {
     const state = String(r.RegState || 'في الإجراء').trim();
     let cls = 'pending';
     if (state === 'تم الحجز') cls = 'confirmed';
@@ -4281,6 +4573,12 @@ function renderMyBookings() {
       <td>${escAttr(r.RegTimeTo || '-')}</td>
       <td>${r.RegCost ? escAttr(r.RegCost) + ' ر.ع' : '-'}</td>
       <td><span class="badge ${cls}">${escAttr(state)}</span></td>
+    </tr>
+    <tr class="note-row">
+      <td colspan="7">
+        <textarea class="my-note" rows="1" disabled
+          placeholder="لا توجد ملاحظات">${escAttr(r.RegNote || '')}</textarea>
+      </td>
     </tr>`;
   });
 
