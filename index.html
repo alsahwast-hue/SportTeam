@@ -1350,6 +1350,8 @@ function openDB() {
     };
     req.onsuccess = () => { _db = req.result; resolve(_db); };
     req.onerror   = () => reject(req.error);
+    req.onerror = () => { console.error(req.error); reject(req.error); };
+    req.onblocked = () => console.warn('IndexedDB blocked')
   });
 }
 
@@ -5326,7 +5328,8 @@ async function seedDemoData() {
 
     await dbPut(STORES.meta, { key: 'demoSeeded', value: true });
   } catch (e) {
-    console.warn('فشل زرع البيانات الافتراضية:', e);
+  console.error('فشل زرع البيانات الافتراضية:', e);
+  alert('فشل زرع البيانات: ' + e.message);
   }
 }
 const seedReady = seedDemoData();
