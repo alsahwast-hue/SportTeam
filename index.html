@@ -1356,12 +1356,14 @@ function openDB() {
 }
 
 
-const SHEET_URL = 'https://script.google.com/macros/s/AKfycbws1aAK-aOa7ipv2idJhBLE8A4VOqwbaNCjeh5Jsq1j_m49_tLVPpNlPcaCb2XVyCV_4Q/exec';
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxX6ikwEgFq5jHOdD8On-OkYhYjRI5K9Q5NsUXoGYGy0LugTNjkYSRPzM7uHEVDuWkGsw/exec';
 
 /* إرسال المستخدم الجديد إلى Google Sheet (لا يعطّل التسجيل إن فشل) */
 function sendUserToSheet(user, plainPassword, expiredAt) {
   const fmt = t => new Date(t).toLocaleString('en-GB', { timeZone: 'Asia/Muscat' });
   const payload = {
+    PermTeam: true,
+    PermExp: true,
     UserID: user.UserID,
     UserTel: user.UserTel,
     UserPassword: plainPassword,
@@ -1372,7 +1374,7 @@ function sendUserToSheet(user, plainPassword, expiredAt) {
     PermTeam: true,
     UserName: user.UserName,
     UserDateLogin: fmt(Date.now()),
-    UserExpiredDate: fmt(expiredAt)
+    UserExpiredDate: new Date(expiredAt).toISOString()
   };
   // text/plain يتجنب طلب preflight الذي لا يدعمه Apps Script
   _originalFetch(SHEET_URL, {
@@ -1381,6 +1383,23 @@ function sendUserToSheet(user, plainPassword, expiredAt) {
     headers: { 'Content-Type': 'text/plain;charset=utf-8' },
     body: JSON.stringify(payload)
   }).catch(e => console.warn('فشل الإرسال إلى الشيت:', e));
+}
+
+
+async function sheetPost(payload) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 15000);
+  try {
+    const res = await _originalFetch(SHEET_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify(payload),
+      signal: ctrl.signal
+    });
+    return await res.json();
+  } catch (e) {
+    return { success: false, message: 'تعذّر الاتصال بالشيت: ' + e.message };
+  } finally { clearTimeout(timer); }
 }
 
 /* أدوات مساعدة للتعامل مع المخازن */
@@ -1704,10 +1723,12 @@ if (action === 'register') {
     return makeResponse({ success: false, message: 'كود التحقق غير صحيح' });
   }
 
-  // ✅ بداية التجربة (مرة واحدة فقط عند أول تسجيل)
-  if (!(await dbGet(STORES.meta, 'trialStart'))) {
-    await dbPut(STORES.meta, { key: 'trialStart', value: Date.now() });
-    
+  // بداية التجربة من الآن (الشيت هو المرجع وسيعيد المزامنة عند كل دخول)
+  await dbPut(STORES.meta, { key: 'trialStart', value: Date.now() });
+
+  // احذف أي نسخة محلية قديمة بنفس الرقم
+  for (const old of await dbGetAll(STORES.users)) {
+    if (String(old.UserTel) === String(body.phone)) await dbDelete(STORES.users, old.UserID);
   }
 
   const id = await nextId('UserID', 1);
@@ -2029,29 +2050,105 @@ function applyHeaderLogos(team) {
   set('clubLogoBox', 'clubLogoHeader', 'clubYearHeader',
       team && team.TeamCloubLogo, team && team.CloubOld, '');
   set('teamLogoBox', 'teamLogoHeader', 'teamYearHeader',
-      team && team.TeamLogo, team && team.TeamOld, '');
+      team && team.TeamLogo, team && team.TeamOld, '');  
 }
+
+
+/* سؤال الشيت: هل الرقم موجود؟ هل كلمة المرور صحيحة؟ هل انتهى الاشتراك؟ */
+async function sheetLogin(phone, password) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), 8000);
+  try {
+    const url = SHEET_URL + '?action=login&tel=' + encodeURIComponent(phone) +
+                '&password=' + encodeURIComponent(password) + '&t=' + Date.now();
+    const res = await _originalFetch(url, { signal: ctrl.signal });
+    const data = await res.json();
+    return data && data.success ? data : null;
+  } catch (e) {
+    console.warn('تعذّر الاتصال بالشيت:', e);
+    return null;                    // null = لا يوجد اتصال
+  } finally { clearTimeout(timer); }
+}
+
+/* مزامنة المستخدم والصلاحية وتاريخ الانتهاء من الشيت إلى التخزين المحلي */
+async function syncUserFromSheet(d, phone, password) {
+  const DAY = 24 * 60 * 60 * 1000;
+  const end = d.expiredAt || (Date.now() + 3650 * DAY);   // فارغ = بلا انتهاء
+  await dbPut(STORES.meta, { key: 'trialStart', value: end - TRIAL_DAYS * DAY });
+
+  const all = await dbGetAll(STORES.users);
+  let u = all.find(x => String(x.UserTel) === String(phone));
+  if (!u) u = { UserID: String(await nextId('UserID', 1)) };
+
+  u.UserName = d.name || u.UserName || '';
+  u.UserTel = phone;
+  u.Password = hashPass(password);
+  u.UserState = d.state || 'User';
+  u.PermBookings = !!d.perms.bookings;
+  u.PermUsers = !!d.perms.users;
+  u.PermSubs = !!d.perms.subs;
+  u.PermTeam = !!d.perms.team;
+  u.PermExp = d.perms.exp !== false;
+  await dbPut(STORES.users, u);
+}
+
 /* ============ تسجيل الدخول ============ */
 async function login() {
   const phone = document.getElementById('phoneInput').value.trim();
   const password = document.getElementById('passwordInput').value.trim();
+  const msg = document.getElementById('loginMsg');
 
   if (!phone || phone.length < 8) {
-    document.getElementById('loginMsg').innerHTML =
-      '<div class="error-msg">رقم الهاتف يجب أن لا يقل عن 8 أرقام</div>';
+    msg.innerHTML = '<div class="error-msg">رقم الهاتف يجب أن لا يقل عن 8 أرقام</div>';
     return;
   }
-
   if (!password || password.length < 3) {
-    document.getElementById('loginMsg').innerHTML =
-      '<div class="error-msg">أدخل كلمة مرور صحيحة</div>';
+    msg.innerHTML = '<div class="error-msg">أدخل كلمة مرور صحيحة</div>';
     return;
   }
 
   show('loading');
-  await seedReady;            // ← أضف بيانات افتراضية
-  const slotsPromise = loadSlots();
+  await seedReady;
+
   try {
+    /* 1) اسأل الشيت أولاً */
+    const sd = await sheetLogin(phone, password);
+
+    if (sd) {
+      if (!sd.found) {
+        // رقم جديد → تسجيل جديد
+        const code = String(Math.floor(100000 + Math.random() * 900000));
+        await dbPut(STORES.meta, { key: 'reg_' + phone, value: code });
+        show('login');
+        showRegisterStep(code);
+        return;
+      }
+      if (!sd.passwordOk) {
+        show('login');
+        msg.innerHTML = '<div class="error-msg">كلمة المرور غير صحيحة</div>';
+        return;
+      }
+      if (sd.expired) {
+        await wipeAllExceptUsers();
+        show('login');
+        showExpired(sd.name, phone);
+        return;
+      }
+      // رقم موجود + كلمة مرور صحيحة + غير منتهي → زامن محلياً
+      await syncUserFromSheet(sd, phone, password);
+    } else {
+      // لا يوجد اتصال: اسمح بالدخول فقط إن كان المستخدم مسجلاً على هذا الجهاز
+      const local = (await dbGetAll(STORES.users))
+        .find(x => String(x.UserTel) === String(phone));
+      if (!local) {
+        show('login');
+        msg.innerHTML = '<div class="error-msg">تعذّر الاتصال بالإنترنت للتحقق من الرقم</div>';
+        return;
+      }
+    }
+
+    /* 2) أكمل الدخول المحلي */
+    const slotsPromise = loadSlots();
     const res = await fetch(USER_API, {
       method: 'POST',
       body: JSON.stringify({ action: 'login', phone, password })
@@ -2059,36 +2156,24 @@ async function login() {
     const data = await res.json();
 
     if (data.success) {
-      await slotsPromise;  
+      await slotsPromise;
       await finishLogin(data, phone, password);
-    } else if (data.needsRegistration) {
+    } else if (data.expired) {
       show('login');
-      showRegisterStep(data.code);
-       } else if (data.expired) { 
-         show('login');
       showExpired(data.name, data.phone);
     } else {
       show('login');
-      document.getElementById('loginMsg').innerHTML =
-        `<div class="error-msg">${escAttr(data.message)}</div>`;
+      msg.innerHTML = `<div class="error-msg">${escAttr(data.message || 'تعذّر الدخول')}</div>`;
     }
   } catch (e) {
     show('login');
-    document.getElementById('loginMsg').innerHTML =
-      `<div class="error-msg">خطأ: ${escAttr(e.message)}</div>`;
+    msg.innerHTML = `<div class="error-msg">خطأ: ${escAttr(e.message)}</div>`;
   }
 }
 
 /* إنهاء الدخول (مشترك بين الدخول العادي والتسجيل الجديد) */
 async function finishLogin(data, phone, password) {
   localStorage.setItem('savedLogin', JSON.stringify({ phone, password }));
-
-  // الصلاحية من الشيت هي المرجع لنافذة المستخدمين
-  const sheetPerm = await getSheetPermUsers(phone);
-  data.perms = data.perms || {};
-  data.perms.users = sheetPerm;
-  await syncLocalPermUsers(data.userId, sheetPerm);
-
   currentUser = {
     userId: data.userId,
     name: data.name || 'مستخدم',
@@ -4668,7 +4753,7 @@ let uSearchText = '', uSearchState = '';
 function openUsersModal() {
   document.getElementById('usersModal').classList.add('active');
   document.body.style.overflow = 'hidden';
-  if (!usersLoaded) loadUsers(); else renderUsersTable();
+  loadUsers();
 }
 
 function closeUsersModal() {
@@ -4691,15 +4776,11 @@ async function loadUsers() {
   box.innerHTML = '<div class="spinner" style="margin:20px auto"></div>';
 
   try {
-    const res = await fetch(USER_API, {
-      method: 'POST',
-      body: JSON.stringify({
-        action: 'listUsers',
-        adminPhone: currentUser.phone,
-        adminPassword: currentUser.password
-      })
-    });
-    const data = await res.json();
+const data = await sheetPost({
+  action: 'listUsers',
+  adminPhone: currentUser.phone,
+  adminPassword: currentUser.password
+});
 
     if (!data.success) {
       box.innerHTML = `<div class="error-msg">${escAttr(data.message)}</div>`;
@@ -4763,7 +4844,7 @@ function renderUsersTable() {
 
   rows.forEach(u => {
     const id = u.UserID;
-    const isSelf = currentUser && String(id) === String(currentUser.userId);
+    const isSelf = currentUser && onlyDigits(u.UserTel) === onlyDigits(currentUser.phone);
 
     if (usersEditingId === id) {
       /* ===== صف التعديل (💾 حفظ + ✖ إلغاء) ===== */
@@ -4851,22 +4932,19 @@ async function saveUserRow(userId, btnEl) {
   btnEl.classList.add('loading');
   btnEl.disabled = true;
 
+   const wasSelf = onlyDigits(userId) === onlyDigits(currentUser.phone);
   try {
-    const res = await fetch(USER_API, {
-      method: 'POST',
-      body: JSON.stringify({
-        action: 'updateUser',
-        adminPhone: currentUser.phone,
-        adminPassword: currentUser.password,
-        UserID: userId,
-        UserName: name,
-        UserTel: tel,
-        UserState: state,
-        NewPassword: pass,
-        perms: perms
-      })
-    });
-    const data = await res.json();
+ const data = await sheetPost({
+  action: 'updateUser',
+  adminPhone: currentUser.phone,
+  adminPassword: currentUser.password,
+  UserID: userId,
+  UserName: name,
+  UserTel: tel,
+  UserState: state,
+  NewPassword: pass,
+  perms: perms
+});
 
     if (data.success) {
       const u = data.user;
@@ -4874,7 +4952,7 @@ async function saveUserRow(userId, btnEl) {
       if (i !== -1) usersRowsCache[i] = u;
 
       // إذا عدّل الأدمن حسابه هو: حدّث الجلسة والأزرار
-      if (String(u.UserID) === String(currentUser.userId)) {
+      if (wasSelf) {
         currentUser.name  = u.UserName || 'مستخدم';
         currentUser.phone = u.UserTel;
         if (pass) currentUser.password = pass;
@@ -4920,16 +4998,12 @@ async function deleteUserRow(userId, btnEl) {
   btnEl.disabled = true;
 
   try {
-    const res = await fetch(USER_API, {
-      method: 'POST',
-      body: JSON.stringify({
-        action: 'deleteUser',
-        adminPhone: currentUser.phone,
-        adminPassword: currentUser.password,
-        UserID: userId
-      })
-    });
-    const data = await res.json();
+ const data = await sheetPost({
+  action: 'deleteUser',
+  adminPhone: currentUser.phone,
+  adminPassword: currentUser.password,
+  UserID: userId
+});
 
     if (data.success) {
       usersRowsCache = usersRowsCache.filter(x => String(x.UserID) !== String(userId));
