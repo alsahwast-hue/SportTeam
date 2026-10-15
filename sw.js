@@ -1,4 +1,4 @@
-const CACHE = 'court-booking-v3';   // ← رفعنا الرقم لإجبار المتصفح على تحديث الـ SW
+const CACHE = 'court-booking-v4';   // ← رفعنا الرقم لإجبار المتصفح على تحديث الـ SW
 const ASSETS = [
   './', './index.html', './manifest.json',
   './icon-192.png', './icon-512.png', './soccer_ball.gif'
