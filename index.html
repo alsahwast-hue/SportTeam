@@ -828,6 +828,161 @@ body.has-install-bar { padding-bottom: 80px; }
   object-fit: contain;
   filter: drop-shadow(0 6px 10px rgba(0,0,0,.35));
 }
+/* ===== تنسيق الحجوزات الجديد ===== */
+.bookings-table { border-collapse: separate; }
+.bookings-table select.state-select.waiting { background:#6d9aec; color:#fff; border-color:#1e3c72; }
+.badge.waiting { background:#1e3c72; color:#fff; }
+.report-card.waiting { background: linear-gradient(135deg,#6d9aec,#6d9aec); }
+.report-table .waiting { color:#1e3c72; font-weight:700; }
+
+.bookings-table .note-input.note-yellow { background:#fff3cd; border-color:#ffc107; color:#000; }
+.bookings-table .note-input.note-green  { background:#d4edda; border-color:#28a745; color:#000; }
+.bookings-table .note-input.note-red    { background:#f8d7da; border-color:#dc3545; color:#000; }
+.bookings-table .note-input.note-navy   { background:#6d9aec; border-color:#1e3c72; color:#fff; }
+
+.my-note-box { padding:8px 10px; border-radius:6px; background:#f5f7fa; border:1px solid #e0e0e0; text-align:center; }
+.my-note-box .my-note-label { font-weight:700; margin-inline-end:6px; }
+.my-note-box.note-yellow { background:#fff3cd; border-color:#ffc107; color:#000; }
+.my-note-box.note-green  { background:#d4edda; border-color:#28a745; color:#000; }
+.my-note-box.note-red    { background:#f8d7da; border-color:#dc3545; color:#000; }
+.my-note-box.note-navy   { background:#6d9aec; border-color:#1e3c72; color:#fff; }
+
+.bookings-table tr.bk-main td,
+.bookings-table tr.bk-note-row td,
+.bookings-table tr.booking-row td,
+.bookings-table tr.my-note-row td { background:#fff; padding:1px 10px; }
+.bookings-table tr.bk-main td,
+.bookings-table tr.booking-row td { border-top:2px solid #000; }
+.bookings-table tr.bk-main td:first-child,
+.bookings-table tr.booking-row td:first-child { border-right:2px solid #000; }
+.bookings-table tr.bk-main td:last-child,
+.bookings-table tr.booking-row td:last-child { border-left:2px solid #000; }
+.bookings-table tr.bk-note-row td,
+.bookings-table tr.my-note-row td {
+  border-bottom:2px solid #000; border-right:2px solid #000; border-left:2px solid #000; text-align:center;
+}
+
+.bookings-table .note-input {
+  display:block; width:100%; max-width:520px; margin:0 auto;
+  padding:6px 10px; font-size:13px; font-family:'Cairo',sans-serif;
+  border:1px solid #d4a017; border-radius:6px; background:#fff; text-align:center;
+}
+.bookings-table .note-input:focus { outline:none; border-color:#2a5298; }
+.bookings-table .note-input:disabled { background:#eee; }
+
+.note-suggest {
+  position:fixed; z-index:5000; background:#fff; border:2px solid #f0b90b; border-radius:10px;
+  box-shadow:0 10px 30px rgba(0,0,0,.25); max-height:260px; overflow-y:auto; display:none; direction:rtl;
+}
+.note-suggest.show { display:block; }
+.note-suggest .ns-item {
+  padding:10px 12px; cursor:pointer; border-bottom:1px solid #eee;
+  font-size:13px; font-weight:600; color:#1e3c72; line-height:1.5; text-align:right; display:block; width:auto;
+}
+.note-suggest .ns-item:last-child { border-bottom:none; }
+.note-suggest .ns-item:hover { background:#fffbe6; }
+
+#bookingsYearFilter {
+  padding:6px 8px; border:2px solid #e0e0e0; border-radius:8px;
+  font-family:'Cairo',sans-serif; font-size:13px; font-weight:700;
+  background:#fff; color:#1e3c72; cursor:pointer; width:auto;
+}
+/* ===== بيانات الفريق: عمودان ===== */
+.team-row { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:10px; }
+#teamModal .team-row .field input { padding:9px 6px; font-size:13px; min-width:0; }
+#teamModal .team-row .field label { font-size:13px; }
+.modal-header h3.clickable { cursor:pointer; text-decoration:underline dotted; text-underline-offset:5px; }
+.modal-header h3.clickable:hover { color:#f0b90b; }
+
+/* ===== جدول الأعضاء ===== */
+.ply-thumb { width:38px; height:38px; border-radius:50%; object-fit:cover; border:2px solid #2a5298; background:#f8faff; }
+.ply-thumb.none { display:inline-flex; align-items:center; justify-content:center; font-size:18px; color:#2a5298; }
+.ply-table td, .ply-table th { white-space:nowrap; }
+.ply-table input[type="text"], .ply-table input[type="tel"],
+.ply-table input[type="number"], .ply-table input[type="date"], .ply-table select {
+  font-family:'Cairo',sans-serif; font-size:12px; padding:6px 4px; width:100%; min-width:90px;
+  border:1px solid #d4a017; border-radius:6px; text-align:center; background:#fff;
+}
+.ply-table input[type="number"] { min-width:60px; }
+.ply-thumb.editable { cursor:pointer; border:2px dashed #f0b90b; }
+.ply-thumb.editable:hover { transform:scale(1.15); }
+.ply-photo-hint { display:block; font-size:10px; color:#888; margin-top:2px; }
+
+/* ===== نافذة الطباعة ===== */
+.print-opts { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:14px 0 18px; }
+.print-opt {
+  border:3px solid #e0e0e0; border-radius:14px; padding:12px 6px; text-align:center; cursor:pointer;
+  transition:.15s; background:#fff; display:flex; flex-direction:column; align-items:center; gap:8px;
+  font-weight:700; color:#1e3c72;
+}
+.print-opt input { display:none; }
+.print-opt svg { width:100%; max-width:110px; height:110px; }
+.print-opt:has(input:checked) { border-color:#f0b90b; background:#fffbe6; box-shadow:0 0 0 3px rgba(240,185,11,.3); }
+#printModal { z-index:3000; }
+
+/* ===== الخطة ===== */
+#tacticModal { z-index:2600; }
+#tcPickModal { z-index:2700; }
+.tc-controls { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:5px; }
+.tc-pitch { position:relative; width:100%; max-width:340px; margin:0 auto; height:min(80vw,380px); border-radius:12px; overflow:visible; }
+.tc-pitch > svg { position:absolute; inset:0; width:100%; height:100%; display:block; border-radius:12px; }
+.tc-slot { position:absolute; width:14%; transform:translate(-50%,-50%); cursor:pointer; text-align:center; }
+.tc-circle {
+  width:100%; aspect-ratio:1/1; border-radius:50%; border:3px solid #fff; background:#e8eefb; overflow:hidden;
+  display:flex; align-items:center; justify-content:center; font-size:clamp(14px,4vw,24px); color:#1e3c72;
+  box-shadow:0 3px 8px rgba(0,0,0,.35); transition:.15s;
+}
+.tc-circle.empty { background:rgba(255,255,255,.2); border-style:dashed; color:#fff; font-weight:700; }
+.tc-circle img { width:100%; height:100%; object-fit:cover; }
+.tc-slot:hover .tc-circle { transform:scale(1.08); border-color:#f0b90b; }
+.tc-name {
+  position:absolute; top:100%; left:50%; transform:translateX(-50%); margin-top:3px; width:max-content; max-width:150%;
+  background:rgba(15,32,39,.85); color:#fff; font-size:clamp(9px,2.5vw,12px); font-weight:700;
+  padding:1px 6px; border-radius:8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.tc-bench-title { text-align:center; font-weight:700; color:#1e3c72; margin:14px 0 6px; }
+.tc-bench { display:flex; flex-wrap:wrap; justify-content:center; gap:28px 10px; background:#16323d; border-radius:12px; padding:16px 8px 32px; }
+.tc-bench .tc-slot { position:relative; transform:none; width:48px; }
+.tc-pick-list { max-height:50vh; overflow-y:auto; margin:10px 0; border:1px solid #eee; border-radius:10px; }
+.tc-pick-item { display:flex; align-items:center; gap:10px; padding:8px 10px; border-bottom:1px solid #eee; cursor:pointer; }
+.tc-pick-item:last-child { border-bottom:none; }
+.tc-pick-item:hover { background:#fffbe6; }
+.tc-pick-item .nm { flex:1; font-weight:700; color:#1e3c72; font-size:14px; }
+.tc-pick-item .ps { font-size:12px; color:#666; font-weight:600; }
+.tc-pick-empty { text-align:center; color:#888; padding:24px 10px; font-size:14px; }
+.tc-formation-row { display:flex; align-items:center; gap:10px; margin-bottom:6px; }
+.tc-formation-row label { font-weight:700; color:#1e3c72; white-space:nowrap; margin:0; }
+.tc-formation-row input { flex:1; min-width:0; padding:12px; border:2px solid #e0e0e0; border-radius:10px; font-size:15px; font-weight:700; text-align:center; background:#fff; }
+.tc-formation-row input:focus { border-color:#2a5298; outline:none; }
+.tc-formation-err { color:#c0392b; font-size:12px; font-weight:700; min-height:16px; margin-bottom:6px; }
+
+/* ===== المباريات ===== */
+.mt-table input[type="date"], .mt-table input[type="time"], .mt-table input[type="text"], .mt-table select {
+  font-family:'Cairo',sans-serif; font-size:12px; padding:6px 4px; width:100%; min-width:100px;
+  border:1px solid #d4a017; border-radius:6px; text-align:center; background:#fff;
+}
+.mt-table td, .mt-table th { white-space:nowrap; }
+.mt-logo { width:40px; height:40px; border-radius:50%; object-fit:contain; background:#fff; border:2px solid #2a5298; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; }
+.mt-logo.none { cursor:default; color:#2a5298; font-size:16px; }
+.mt-logo.editable { border:2px dashed #f0b90b; cursor:pointer; }
+.mt-logo.editable:hover { transform:scale(1.12); }
+.mt-photos { display:flex; gap:8px; justify-content:center; }
+.mt-photos small { display:block; font-size:10px; color:#666; }
+.mt-detail td { background:#f5f7fa !important; white-space:normal !important; text-align:right !important; padding:10px !important; }
+.mt-sides { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+@media (max-width:700px){ .mt-sides { grid-template-columns:1fr; } }
+.mt-side { background:#fff; border:2px solid #2a5298; border-radius:12px; padding:10px; }
+.mt-side h4 { color:#1e3c72; text-align:center; margin-bottom:8px; font-size:15px; }
+.mt-sub { font-weight:700; color:#1e3c72; font-size:13px; margin:8px 0 4px; }
+.mt-ent { display:grid; grid-template-columns:2fr .8fr 1fr auto; gap:4px; margin-bottom:4px; }
+.mt-ent.card { grid-template-columns:2fr 1.1fr .7fr 1fr auto; }
+.mt-ent input, .mt-ent select { min-width:0; padding:6px 4px; border:1px solid #d4a017; border-radius:6px; font-family:'Cairo',sans-serif; font-size:12px; width:100%; }
+.mt-total { display:flex; align-items:center; gap:8px; margin-top:10px; background:#fffbe6; border:1px solid #f0b90b; border-radius:8px; padding:6px 10px; }
+.mt-total label { font-weight:700; color:#1e3c72; font-size:13px; white-space:nowrap; }
+.mt-total input { width:80px; padding:6px; border:1px solid #d4a017; border-radius:6px; text-align:center; font-weight:700; }
+.mt-view-line { font-size:13px; margin:3px 0; }
+#matchAdModal { z-index:2600; }
+#matchAdBox canvas { width:100%; height:auto; border-radius:12px; display:block; }
 
 </style>
 </head>
@@ -1022,10 +1177,14 @@ body.has-install-bar { padding-bottom: 80px; }
 <!-- ============ نافذة بيانات الفريق ============ -->
 <div class="modal-overlay" id="teamModal">
   <div class="modal">
-    <div class="modal-header">
-      <h3>👥 بيانات الفريق</h3>
-      <button class="close-btn" onclick="closeTeamModal()">✖</button>
-    </div>
+   <div class="modal-header">
+  <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+    <h3 class="clickable" onclick="openPlayersList()" title="عرض جدول الأعضاء">👥 بيانات الفريق</h3>
+    <h3 class="clickable" onclick="openTacticModal()" title="تشكيل الخطة">⚽ خطة</h3>
+    <h3 class="clickable" onclick="openMatchList()" title="المباريات">🏟️ المباريات</h3>
+  </div>
+  <button class="close-btn" onclick="closeTeamModal()">✖</button>
+</div>
     <div class="modal-body">
       <div class="modal-loading" id="teamLoading">
         <div class="spinner"></div>
@@ -1059,23 +1218,18 @@ body.has-install-bar { padding-bottom: 80px; }
         </div>
       </div>
 
-      <div class="field">
-        <label>اسم الفريق</label>
-        <input type="text" id="teamNameField" placeholder="مثال: فريق الأهلي">
-      </div>
-
-      <div class="field">
-        <label>اسم النادي</label>
-        <input type="text" id="teamClubField" placeholder="مثال: نادي ظفار">
-      </div>
-        <div class="field">
-        <label>سنة تأسيس النادي</label>
-        <input type="number" id="cloubOldField" placeholder="مثال: 1980" min="1900" max="2100">
-      </div>
-      <div class="field">
-        <label>سنة الفريق (التأسيس)</label>
-        <input type="number" id="teamOldField" placeholder="مثال: 1995" min="1900" max="2100">
-      </div>
+     <div class="team-row">
+  <div class="field"><label>اسم الفريق</label>
+    <input type="text" id="teamNameField" placeholder="مثال: فريق الأهلي"></div>
+  <div class="field"><label>سنة تأسيس الفريق</label>
+    <input type="number" id="teamOldField" placeholder="مثال: 1995" min="1900" max="2100"></div>
+</div>
+<div class="team-row">
+  <div class="field"><label>اسم النادي</label>
+    <input type="text" id="teamClubField" placeholder="مثال: نادي ظفار"></div>
+  <div class="field"><label>سنة تأسيس النادي</label>
+    <input type="number" id="cloubOldField" placeholder="مثال: 1980" min="1900" max="2100"></div>
+</div>
 
       <button class="btn gold" id="saveTeamBtn" onclick="saveTeamData()">💾 حفظ بيانات الفريق</button>
       <div id="teamFormMsg" class="team-form-msg"></div>
@@ -1083,6 +1237,170 @@ body.has-install-bar { padding-bottom: 80px; }
   </div>
 </div>
 
+<!-- ============ جدول الأعضاء ============ -->
+<div class="modal-overlay" id="plyListModal" style="padding:0;">
+  <div class="modal" style="max-width:100%;width:100%;height:100vh;max-height:100vh;border-radius:0;display:flex;flex-direction:column;">
+    <div class="modal-header" style="border-radius:0;flex-shrink:0;">
+      <h3>🪪 أعضاء الفريق</h3>
+      <button class="close-btn" onclick="closePlayersList()">✖</button>
+    </div>
+    <div class="modal-body" style="flex:1;overflow-y:auto;padding:18px;">
+      <div class="admin-toolbar" style="margin-bottom:12px;">
+        <button class="btn small green" id="plyAddBtn" onclick="startAddPlayer()">➕ إضافة عضو</button>
+        <button class="btn small" onclick="loadPlayersList()">🔄 تحديث</button>
+        <span class="subs-count" style="margin-inline-start:auto;" id="plyListCount"></span>
+      </div>
+      <div class="subs-searchbar">
+        <input type="text" id="plyListSearch" placeholder="اسم أو هاتف أو رقم بطاقة"
+               oninput="plySearch=this.value;plyEditingId=null;renderPlayersList();">
+        <input type="file" id="plyRowPhotoInput" accept="image/*" style="display:none" onchange="plyRowPickPhoto(event)">
+        <button class="btn small red" onclick="plySearch='';document.getElementById('plyListSearch').value='';plyEditingId=null;renderPlayersList();">✖</button>
+      </div>
+      <div id="plyListBox">جارٍ التحميل...</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ اتجاه الطباعة ============ -->
+<div class="modal-overlay" id="printModal">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-header">
+      <h3>🖨️ طباعة البطاقة</h3>
+      <button class="close-btn" onclick="closePrintDialog()">✖</button>
+    </div>
+    <div class="modal-body">
+      <div class="reg-note">اختر اتجاه الطباعة (مقاس بطاقة ID)</div>
+      <div class="print-opts">
+        <label class="print-opt">
+          <input type="radio" name="printOrient" value="portrait" checked>
+          <svg viewBox="0 0 60 90" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="2" width="56" height="86" rx="5" fill="#fff" stroke="#1e3c72" stroke-width="2"/>
+            <path d="M2 7a5 5 0 0 1 5-5h46a5 5 0 0 1 5 5v16H2z" fill="#1e3c72"/>
+            <circle cx="12" cy="13" r="5" fill="#f0b90b"/><circle cx="48" cy="13" r="5" fill="#f0b90b"/>
+            <rect x="22" y="10" width="16" height="3" rx="1.5" fill="#fff"/>
+            <rect x="19" y="28" width="22" height="26" rx="3" fill="#cfd8ea"/>
+            <rect x="14" y="59" width="32" height="4" rx="2" fill="#1e3c72"/>
+            <rect x="10" y="67" width="40" height="3" rx="1.5" fill="#9aa8c7"/>
+            <rect x="10" y="73" width="40" height="3" rx="1.5" fill="#9aa8c7"/>
+            <rect x="10" y="79" width="40" height="3" rx="1.5" fill="#9aa8c7"/>
+          </svg>
+          <span>عمودي</span>
+        </label>
+        <label class="print-opt">
+          <input type="radio" name="printOrient" value="landscape">
+          <svg viewBox="0 0 90 60" xmlns="http://www.w3.org/2000/svg">
+            <rect x="2" y="2" width="86" height="56" rx="5" fill="#fff" stroke="#1e3c72" stroke-width="2"/>
+            <path d="M2 7a5 5 0 0 1 5-5h76a5 5 0 0 1 5 5v14H2z" fill="#1e3c72"/>
+            <circle cx="14" cy="11" r="5" fill="#f0b90b"/><circle cx="76" cy="11" r="5" fill="#f0b90b"/>
+            <rect x="32" y="8" width="26" height="3" rx="1.5" fill="#fff"/>
+            <rect x="64" y="26" width="18" height="24" rx="3" fill="#cfd8ea"/>
+            <rect x="12" y="27" width="42" height="4" rx="2" fill="#1e3c72"/>
+            <rect x="12" y="35" width="42" height="3" rx="1.5" fill="#9aa8c7"/>
+            <rect x="12" y="41" width="42" height="3" rx="1.5" fill="#9aa8c7"/>
+            <rect x="12" y="47" width="42" height="3" rx="1.5" fill="#9aa8c7"/>
+          </svg>
+          <span>أفقي</span>
+        </label>
+      </div>
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:10px;">
+        <button class="btn green" onclick="confirmPrintCard()">🖨️ طباعة</button>
+        <button class="btn red" onclick="closePrintDialog()">إلغاء</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ الخطة ============ -->
+<div class="modal-overlay" id="tacticModal">
+  <div class="modal" style="max-width:520px;">
+    <div class="modal-header">
+      <h3>⚽ تشكيل الخطة</h3>
+      <button class="close-btn" onclick="closeTacticModal()">✖</button>
+    </div>
+    <div class="modal-body">
+      <div class="tc-controls">
+        <div class="field"><label>العدد (مع الحارس)</label>
+          <input type="number" id="tcCount" min="5" max="11" value="11" onchange="onTcCountChange()"></div>
+        <div class="field"><label>عدد الاحتياط</label>
+          <input type="number" id="tcSubs" min="0" max="9" value="5" onchange="onTcSubsChange()"></div>
+      </div>
+      <div class="tc-formation-row">
+        <label for="tcFormation">الخطة</label>
+        <input type="text" id="tcFormation" list="tcFormationList" dir="ltr" placeholder="مثال: 4-4-2"
+               autocomplete="off" onchange="onTcFormationChange()" onfocus="this.select()">
+        <datalist id="tcFormationList"></datalist>
+      </div>
+      <div id="tcFormationErr" class="tc-formation-err"></div>
+      <div class="tc-pitch" id="tcPitch"></div>
+      <div id="tcBenchWrap" style="display:none;">
+        <div class="tc-bench-title">🪑 الاحتياط</div>
+        <div class="tc-bench" id="tcBench"></div>
+      </div>
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:10px;margin-top:16px;">
+        <button class="btn green" onclick="saveTacticImage(this)">🖼️ حفظ الملعب كصورة</button>
+        <button class="btn" onclick="reloadTacticPlayers()">🔄 الأعضاء</button>
+      </div>
+      <div id="tcMsg" class="team-form-msg"></div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="tcPickModal">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-header">
+      <h3 id="tcPickTitle">اختر لاعباً</h3>
+      <button class="close-btn" onclick="closeTacticPick()">✖</button>
+    </div>
+    <div class="modal-body">
+      <div class="field"><label>المركز</label>
+        <select id="tcPickFilter" onchange="renderTacticPick()"></select></div>
+      <div class="tc-pick-list" id="tcPickList"></div>
+      <button class="btn red" onclick="tcClearSlot()">🗑 إزالة اللاعب من المركز</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ المباريات ============ -->
+<div class="modal-overlay" id="matchListModal" style="padding:0;">
+  <div class="modal" style="max-width:100%;width:100%;height:100vh;max-height:100vh;border-radius:0;display:flex;flex-direction:column;">
+    <div class="modal-header" style="border-radius:0;flex-shrink:0;">
+      <h3>🏟️ جدول المباريات</h3>
+      <button class="close-btn" onclick="closeMatchList()">✖</button>
+    </div>
+    <div class="modal-body" style="flex:1;overflow-y:auto;padding:18px;">
+      <div class="admin-toolbar" style="margin-bottom:12px;">
+        <button class="btn small green" id="mtAddBtn" onclick="mtStartAdd()">➕ إضافة مباراة</button>
+        <button class="btn small" onclick="loadMatchList()">🔄 تحديث</button>
+        <span class="subs-count" style="margin-inline-start:auto;" id="mtCount"></span>
+      </div>
+      <div class="subs-searchbar">
+        <input type="text" id="mtSearchInput" placeholder="الفريق أو النوع أو الرقم"
+               oninput="mtSearch=this.value;renderMatchList();">
+        <button class="btn small red" onclick="mtSearch='';document.getElementById('mtSearchInput').value='';renderMatchList();">✖</button>
+      </div>
+      <input type="file" id="mtPhotoInput" accept="image/*" style="display:none" onchange="mtOnPhoto(event)">
+      <datalist id="mtPlayersDl"></datalist>
+      <div id="mtListBox">جارٍ التحميل...</div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="matchAdModal">
+  <div class="modal" style="max-width:560px;">
+    <div class="modal-header">
+      <h3>📢 إعلان المباراة</h3>
+      <button class="close-btn" onclick="closeMatchAd()">✖</button>
+    </div>
+    <div class="modal-body">
+      <div id="matchAdBox"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;">
+        <button class="btn green" onclick="mtAdDownload()">🖼️ تنزيل كصورة</button>
+        <button class="btn gold" onclick="mtAdUpload(this)">💾 حفظ الإعلان</button>
+      </div>
+      <div id="mtAdMsg" class="team-form-msg"></div>
+    </div>
+  </div>
+</div>
 
 <!-- ============ نافذة الاشتراكات ============ -->
 <div class="modal-overlay" id="subsModal" style="padding:0;">
@@ -1130,6 +1448,9 @@ body.has-install-bar { padding-bottom: 80px; }
     <div class="admin-toolbar" style="margin-bottom:12px;">
   <button class="btn small" onclick="loadBookings()">🔄 تحديث</button>
   <button class="btn small gold" onclick="openBookingsReportModal()">📊 التقارير</button>
+  <select id="bookingsYearFilter" onchange="bookingsSearchYear=this.value;renderBookingsTable(bookingsRowsCache);">
+  <option value="">كل السنوات</option>
+</select>
  <span class="subs-count" style="margin-inline-start:auto;" id="bookingsCount"></span>
 </div>
 
@@ -1142,6 +1463,7 @@ body.has-install-bar { padding-bottom: 80px; }
         <select id="bookingsSearchState" onchange="bookingsSearchState=this.value;renderBookingsTable(bookingsRowsCache);">
           <option value="">الكل</option>
           <option value="في الإجراء">في الإجراء</option>
+          <option value="انتظار الدفع">انتظار الدفع</option>
           <option value="تم الحجز">تم الحجز</option>
           <option value="ملغي">ملغي</option>
         </select>
@@ -1174,6 +1496,7 @@ body.has-install-bar { padding-bottom: 80px; }
           onchange="myBkState=this.value;renderMyBookings();">
     <option value="">الكل</option>
     <option value="في الإجراء">في الإجراء</option>
+    <option value="انتظار الدفع">انتظار الدفع</option>
     <option value="تم الحجز">تم الحجز</option>
     <option value="ملغي">ملغي</option>
   </select>
@@ -1297,7 +1620,29 @@ body.has-install-bar { padding-bottom: 80px; }
 </div>
 
 
+<div id="noteSuggest" class="note-suggest"></div>
 
+<!-- نافذة الواتس اب -->
+<div class="modal-overlay" id="waModal">
+  <div class="modal" style="max-width:440px;">
+    <div class="modal-header">
+      <h3>💬 إرسال عبر الواتس اب</h3>
+      <button class="close-btn" onclick="closeWaModal()">✖</button>
+    </div>
+    <div class="modal-body">
+      <div class="reg-note" style="margin-bottom:10px;">هل تريد إرسال الطلب إلى المستخدم بالواتس اب؟</div>
+      <div class="info-line"><span>إلى:</span><span id="waTo" style="direction:ltr">-</span></div>
+      <div class="field">
+        <label>نص الرسالة (يمكنك تعديله)</label>
+        <textarea id="waText" rows="9"></textarea>
+      </div>
+      <div style="display:grid;grid-template-columns:2fr 1fr;gap:10px;margin-top:14px;">
+        <button class="btn green" onclick="sendWhatsApp()">✅ نعم، إرسال</button>
+        <button class="btn red" onclick="closeWaModal()">لا</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
 /* ============================================================
@@ -1312,47 +1657,72 @@ const TEAM_API     = "local://team";
 const USER_API     = "local://user";
 const SUBS_API     = "local://subs";
 const EXP_API      = "local://exp";
+const PLAYERS_API = "local://players";
+const MATCH_API   = "local://match";
 
-const DB_NAME    = 'StadiumBookingDB';
-const DB_VERSION = 1;
+const DB_NAME = 'StadiumBookingDB';
 const STORES = {
-  users:    'users',      // keyPath: UserID
-  reserves: 'reserves',   // keyPath: ResID
-  bookings: 'bookings',   // keyPath: RegID
-  team:     'team',       // keyPath: TeamID
-  subs:     'subs',       // keyPath: SubID
-  exp:      'exp',        // keyPath: ExpID
-  meta:     'meta'        // keyPath: key (للعدادات)
+  users: 'users', reserves: 'reserves', bookings: 'bookings',
+  team: 'team', subs: 'subs', exp: 'exp', meta: 'meta',
+  players: 'players',     // ← جديد
+  matches: 'matches'      // ← جديد
+};
+const STORE_KEYS = {
+  users: 'UserID', reserves: 'ResID', bookings: 'RegID',
+  team: 'TeamID', subs: 'SubID', exp: 'ExpID', meta: 'key',
+  players: 'PLYID',       // ← جديد
+  matches: 'MatchID'      // ← جديد
 };
 
 let _db = null;
+let _dbPromise = null;
+
+function _open(version) {
+  return new Promise((resolve, reject) => {
+    // بدون version = افتح بالإصدار الموجود أياً كان
+    const req = version ? indexedDB.open(DB_NAME, version) : indexedDB.open(DB_NAME);
+
+    req.onupgradeneeded = (e) => {
+      const db = e.target.result;
+      for (const name of Object.keys(STORE_KEYS)) {
+        if (!db.objectStoreNames.contains(name)) {
+          db.createObjectStore(name, { keyPath: STORE_KEYS[name] });
+        }
+      }
+    };
+    req.onsuccess = () => resolve(req.result);
+    req.onerror   = () => reject(req.error);
+    req.onblocked = () => console.warn('IndexedDB blocked');
+  });
+}
 
 function openDB() {
   if (_db) return Promise.resolve(_db);
-  return new Promise((resolve, reject) => {
-    const req = indexedDB.open(DB_NAME, DB_VERSION);
-    req.onupgradeneeded = (e) => {
-      const db = e.target.result;
-      if (!db.objectStoreNames.contains(STORES.users))
-        db.createObjectStore(STORES.users, { keyPath: 'UserID' });
-      if (!db.objectStoreNames.contains(STORES.reserves))
-        db.createObjectStore(STORES.reserves, { keyPath: 'ResID' });
-      if (!db.objectStoreNames.contains(STORES.bookings))
-        db.createObjectStore(STORES.bookings, { keyPath: 'RegID' });
-      if (!db.objectStoreNames.contains(STORES.team))
-        db.createObjectStore(STORES.team, { keyPath: 'TeamID' });
-      if (!db.objectStoreNames.contains(STORES.subs))
-        db.createObjectStore(STORES.subs, { keyPath: 'SubID' });
-      if (!db.objectStoreNames.contains(STORES.exp))
-        db.createObjectStore(STORES.exp, { keyPath: 'ExpID' });
-      if (!db.objectStoreNames.contains(STORES.meta))
-        db.createObjectStore(STORES.meta, { keyPath: 'key' });
-    };
-    req.onsuccess = () => { _db = req.result; resolve(_db); };
-    req.onerror   = () => reject(req.error);
-    req.onerror = () => { console.error(req.error); reject(req.error); };
-    req.onblocked = () => console.warn('IndexedDB blocked')
+  if (_dbPromise) return _dbPromise;
+
+  _dbPromise = (async () => {
+    let db = await _open();                       // 1) افتح بأي إصدار موجود
+
+    // 2) تأكد أن كل المخازن موجودة، وإلا ارفع الإصدار تلقائياً
+    const missing = Object.keys(STORE_KEYS)
+      .filter(n => !db.objectStoreNames.contains(n));
+    if (missing.length) {
+      const next = db.version + 1;
+      db.close();
+      db = await _open(next);
+    }
+
+    // 3) إن قام تبويب آخر بترقية القاعدة، أغلق الاتصال ليُعاد فتحه لاحقاً
+    db.onversionchange = () => { db.close(); _db = null; _dbPromise = null; };
+
+    _db = db;
+    return db;
+  })().catch(err => {
+    _dbPromise = null;
+    throw err;
   });
+
+  return _dbPromise;
 }
 
 
@@ -1498,7 +1868,7 @@ async function getTrialInfo() {
 
 /* مسح كل البيانات ما عدا المستخدمين */
 async function wipeAllExceptUsers() {
-  for (const s of [STORES.reserves, STORES.bookings, STORES.team, STORES.subs, STORES.exp]) {
+  for (const s of [STORES.reserves, STORES.bookings, STORES.team, STORES.subs, STORES.exp, STORES.players, STORES.matches]) {
     await dbClear(s);
   }
   try { localStorage.removeItem('teamInfo'); } catch (e) {}
@@ -1676,6 +2046,7 @@ async function localFetch(url, options = {}) {
       }
       return makeResponse({ success: found > 0, message: found ? '' : 'لم يتم العثور' });
     }
+    
     return makeResponse({ success: false, message: 'إجراء غير معروف' });
   }
 
@@ -1923,7 +2294,7 @@ async function checkAdmin(phone, password) {
         RegDate: body.date, Regday: body.day,
         RegTimeFrom: body.from, RegTimeTo: body.to,
         RegCost: body.cost,
-        RegNote: body.note || 'الطلب في الاجراء سيتم تحديث الحالة بعد الدفع وارسال الايصال',
+        RegNote: body.note || 'طلبك في المتابعة سيتم اشعارك بالتحديث الجديد',
         RegState: 'في الإجراء'
       };
       await dbPut(STORES.bookings, row);
@@ -1951,7 +2322,75 @@ async function checkAdmin(phone, password) {
 
     return makeResponse({ success: false, message: 'إجراء غير معروف' });
   }
+  /* ============ PLAYERS ============ */
+  if (url.startsWith(PLAYERS_API)) {
+    const action = method === 'GET' ? q.action : body.action;
+    const fmtPly = n => 'PLY-' + String(n).padStart(7, '0');
 
+    if (action === 'list') {
+      const rows = await dbGetAll(STORES.players);
+      rows.sort((a, b) => String(a.PLYID).localeCompare(String(b.PLYID)));
+      return makeResponse({ success: true, rows });
+    }
+    if (action === 'get') {
+      const all = await dbGetAll(STORES.players);
+      const p = all.find(x => onlyDigits(x.PLYTel) === onlyDigits(q.tel));
+      if (p) return makeResponse({ success: true, found: true, player: p });
+      const m = await dbGet(STORES.meta, 'PLYID');
+      return makeResponse({ success: true, found: false,
+        newId: fmtPly(((m && m.value) || 0) + 1) });
+    }
+    if (action === 'save') {
+      const row = { ...body }; delete row.action;
+      if (!row.PLYID) return makeResponse({ success: false, message: 'رقم العضوية مفقود' });
+      const n = parseInt(String(row.PLYID).replace(/\D/g, ''), 10) || 0;
+      const m = await dbGet(STORES.meta, 'PLYID');
+      if (n > ((m && m.value) || 0)) await dbPut(STORES.meta, { key: 'PLYID', value: n });
+      const old = await dbGet(STORES.players, String(row.PLYID));
+      await dbPut(STORES.players, { ...(old || {}), ...row });
+      return makeResponse({ success: true });
+    }
+    return makeResponse({ success: false, message: 'إجراء غير معروف' });
+  }
+
+  /* ============ MATCHES ============ */
+  if (url.startsWith(MATCH_API)) {
+    const action = method === 'GET' ? q.action : body.action;
+
+    if (action === 'list') {
+      const rows = (await dbGetAll(STORES.matches))
+        .map(r => ({ MatchTeamGoals: '', MatchTeamVGoals: '', ...r }));
+      return makeResponse({ success: true, rows });
+    }
+    if (action === 'save') {
+      let id = body.MatchID;
+      if (!id) id = String(await nextId('MatchID', 1));
+      const old = await dbGet(STORES.matches, String(id));
+      const row = { ...(old || {}), ...body, MatchID: String(id) };
+      delete row.action;
+      await dbPut(STORES.matches, row);
+      return makeResponse({ success: true, MatchID: String(id) });
+    }
+    if (action === 'delete') {
+      await dbDelete(STORES.matches, String(body.MatchID));
+      return makeResponse({ success: true });
+    }
+    if (action === 'fetchImage') {   // لتحويل الروابط الخارجية القديمة إلى Base64
+      try {
+        const r = await _originalFetch(body.url);
+        const blob = await r.blob();
+        const data = await new Promise((res, rej) => {
+          const fr = new FileReader();
+          fr.onload = () => res(fr.result); fr.onerror = rej;
+          fr.readAsDataURL(blob);
+        });
+        return makeResponse({ success: true, data });
+      } catch (e) {
+        return makeResponse({ success: false, message: 'تعذّر جلب الصورة' });
+      }
+    }
+    return makeResponse({ success: false, message: 'إجراء غير معروف' });
+  }
   return makeResponse({ success: false, message: 'API غير معروف: ' + url });
 }
 
@@ -2290,6 +2729,8 @@ function logout() {
   bookingsLoaded = false; bookingsRowsCache = [];
   usersLoaded = false;    usersRowsCache = [];
   adminRowsCache = [];
+  plyListLoaded = false; plyListCache = [];
+  mtLoaded = false; mtCache = [];
 
   // 4) أخفِ الأزرار الخاصة بالمستخدم
   document.getElementById('adminBtn').style.display = 'none';
@@ -2705,7 +3146,7 @@ async function submitBooking() {
   const from = document.getElementById('timeFrom').value;
   const to   = document.getElementById('timeTo').value;
   const cost = document.getElementById('cost').value;
-  const note = document.getElementById('note').value;
+ const note = DEFAULT_NOTE;
 
   if (!user) {
     document.getElementById('bookMsg').innerHTML = 
@@ -4059,6 +4500,7 @@ let bookingsLoaded = false;
 let bookingsSearchName = '';
 let bookingsSearchDate = '';
 let bookingsSearchState = '';
+let bookingsSearchYear = '';
 
 
 function openBookingsModal() {
@@ -4081,274 +4523,222 @@ function loadBookings() {
   const box = document.getElementById('bookingsList');
   box.innerHTML = '<div class="spinner" style="margin:20px auto"></div>';
 
-  fetch(REGISTER_API + '?action=listBookings')
+  fetch(REGISTER_API + '?action=listBookings&t=' + Date.now())
     .then(r => r.json())
     .then(data => {
       if (!data.success) {
-        box.innerHTML = `<div class="error-msg">${data.message}</div>`;
+        box.innerHTML = `<div class="error-msg">${escAttr(data.message)}</div>`;
       } else {
         bookingsRowsCache = data.rows || [];
         bookingsLoaded = true;
+        fillBookingsYears(bookingsRowsCache);
         renderBookingsTable(bookingsRowsCache);
       }
     })
-    .catch(e => {
-      box.innerHTML = `<div class="error-msg">خطأ: ${e.message}</div>`;
-    });
+    .catch(e => { box.innerHTML = `<div class="error-msg">خطأ: ${escAttr(e.message)}</div>`; });
+}
+
+function fillBookingsYears(rows) {
+  const sel = document.getElementById('bookingsYearFilter');
+  if (!sel) return;
+  const years = [...new Set(rows.map(r => (normalizeDate(r.RegDate) || '').slice(0, 4)).filter(Boolean))]
+    .sort((a, b) => b - a);
+  if (bookingsSearchYear && !years.includes(bookingsSearchYear)) bookingsSearchYear = '';
+  sel.innerHTML = '<option value="">كل السنوات</option>' +
+    years.map(y => `<option value="${y}" ${y === bookingsSearchYear ? 'selected' : ''}>${y}</option>`).join('');
 }
 
 function clearBookingsFilters() {
-  bookingsSearchName = '';
-  bookingsSearchDate = '';
-  bookingsSearchState = '';
+  bookingsSearchName = ''; bookingsSearchDate = ''; bookingsSearchState = ''; bookingsSearchYear = '';
   document.getElementById('bookingsSearchName').value = '';
   document.getElementById('bookingsSearchDate').value = '';
   document.getElementById('bookingsSearchState').value = '';
+  document.getElementById('bookingsYearFilter').value = '';
   renderBookingsTable(bookingsRowsCache);
 }
 
+/* ============ اقتراحات الملاحظة حسب الحالة ============ */
+const DEFAULT_NOTE = 'طلبك في المتابعة سيتم اشعارك بالتحديث الجديد';
+
+const NOTE_OPTIONS = [
+  DEFAULT_NOTE,
+  'لتأكيد الحجز الرجاء ارسال ايصال الدفع الى الرقم : ',
+  'تم تأكيد الحجز الرجاء الالتزام بموعد الحجز ، شكرا لكم',
+  'نعتذر عن الغاء الحجز بسبب : '
+];
+
+function noteColorClass(text) {
+  const s = String(text || '').trim().replace(/[أإآ]/g, 'ا');
+  if (s.startsWith('طلبك في المتابعة')) return 'note-yellow';
+  if (s.startsWith('الطلب في الاجراء')) return 'note-yellow';   // ملاحظات قديمة
+  if (s.startsWith('لتاكيد الحجز'))     return 'note-navy';
+  if (s.startsWith('تم تاكيد الحجز'))   return 'note-green';
+  if (s.startsWith('نعتذر عن الغاء'))   return 'note-red';
+  return '';
+}
+
+function noteToState(text) {
+  switch (noteColorClass(text)) {
+    case 'note-yellow': return 'في الإجراء';
+    case 'note-navy':   return 'انتظار الدفع';
+    case 'note-green':  return 'تم الحجز';
+    case 'note-red':    return 'ملغي';
+    default:            return '';
+  }
+}
+
+function applyNoteColor(input) {
+  input.classList.remove('note-yellow', 'note-navy', 'note-green', 'note-red');
+  const c = noteColorClass(input.value);
+  if (c) input.classList.add(c);
+}
+
+function stateClass(state) {
+  if (state === 'تم الحجز') return 'confirmed';
+  if (state === 'ملغي') return 'cancelled';
+  if (state === 'انتظار الدفع') return 'waiting';
+  return 'pending';
+}
+
+/* ============ جدول طلبات الحجوزات ============ */
 function renderBookingsTable(rows) {
   const box = document.getElementById('bookingsList');
 
-  // فلترة
   let filtered = rows;
   if (bookingsSearchName.trim()) {
     const q = bookingsSearchName.trim().toLowerCase();
     filtered = filtered.filter(r =>
       String(r.RegUserName || '').toLowerCase().includes(q) ||
       String(r.RegUserTel  || '').toLowerCase().includes(q) ||
-      String(r.RegNo       || '').toLowerCase().includes(q)
-    );
+      String(r.RegNo       || '').toLowerCase().includes(q));
   }
-  if (bookingsSearchDate) {
-    filtered = filtered.filter(r => normalizeDate(r.RegDate) === bookingsSearchDate);
-  }
-  if (bookingsSearchState) {
-    filtered = filtered.filter(r => String(r.RegState || '').trim() === bookingsSearchState);
-  }
+  if (bookingsSearchDate)  filtered = filtered.filter(r => normalizeDate(r.RegDate) === bookingsSearchDate);
+  if (bookingsSearchState) filtered = filtered.filter(r => String(r.RegState || '').trim() === bookingsSearchState);
+  if (bookingsSearchYear)  filtered = filtered.filter(r => (normalizeDate(r.RegDate) || '').slice(0, 4) === bookingsSearchYear);
 
-  document.getElementById('bookingsCount').textContent =
-    `النتائج: ${filtered.length} من ${rows.length}`;
+  document.getElementById('bookingsCount').textContent = `النتائج: ${filtered.length} من ${rows.length}`;
 
   if (!filtered.length) {
     box.innerHTML = '<div class="bookings-empty">لا توجد طلبات مطابقة</div>';
     return;
   }
 
-  // ترتيب حسب التاريخ (الأحدث أولاً)
- filtered = [...filtered].sort((a, b) => {
-    const da = normalizeDate(a.RegDate) || '';
-    const db = normalizeDate(b.RegDate) || '';
-    if (da !== db) return db.localeCompare(da);
-
-    const na = parseInt(String(a.RegNo || '').replace(/\D/g, '')) || 0;
-    const nb = parseInt(String(b.RegNo || '').replace(/\D/g, '')) || 0;
+  filtered = [...filtered].sort((a, b) => {
+    const na = parseInt(String(a.RegNo || '').replace(/\D/g, ''), 10) || 0;
+    const nb = parseInt(String(b.RegNo || '').replace(/\D/g, ''), 10) || 0;
     if (na !== nb) return nb - na;
-
+    const da = normalizeDate(a.RegDate) || '', db = normalizeDate(b.RegDate) || '';
+    if (da !== db) return db.localeCompare(da);
     return (to24(b.RegTimeFrom) || '').localeCompare(to24(a.RegTimeFrom) || '');
   });
 
   let html = `<div style="overflow-x:auto;"><table class="bookings-table">
     <thead><tr>
-      <th>رقم الطلب</th>
-      <th>الاسم</th>
-      <th>رقم الهاتف</th>
-      <th>تاريخ الحجز</th>
-      <th>اليوم</th>
-      <th>من</th>
-      <th>إلى</th>
-      <th>المبلغ</th>
-      <th>الحالة</th>
-      <th>إجراءات</th>
+      <th>رقم الطلب</th><th>الاسم</th><th>رقم الهاتف</th><th>تاريخ الحجز</th><th>اليوم</th>
+      <th>من</th><th>إلى</th><th>المبلغ</th><th>الحالة</th><th>إجراءات</th>
     </tr></thead><tbody>`;
 
   filtered.forEach(r => {
-    const regId  = r.RegID || '';
-    const regNo  = r.RegNo || '-';
-     const name   = escAttr(r.RegUserName || '-');
-    const tel    = escAttr(r.RegUserTel || '-');
-    const date   = normalizeDate(r.RegDate) || '-';
-    const day    = r.Regday || '-';
-    const from   = r.RegTimeFrom || '-';
-    const to     = r.RegTimeTo || '-';
-    const cost   = r.RegCost || '-';
-    const state  = String(r.RegState || 'في الإجراء').trim();
-    const note   = r.RegNote || '';
+    const regId = r.RegID || '';
+    const state = String(r.RegState || 'في الإجراء').trim();
+    const note  = r.RegNote || (state === 'في الإجراء' ? DEFAULT_NOTE : '');
 
-    let stateCls = 'pending';
-    if (state === 'تم الحجز') stateCls = 'confirmed';
-    else if (state === 'ملغي') stateCls = 'cancelled';
-
-    html += `<tr data-regid="${regId}">
-      <td><strong>${regNo}</strong></td>
-      <td>${name}</td>
-      <td>${tel}</td>
-      <td>${date}</td>
-      <td>${day}</td>
-      <td>${from}</td>
-      <td>${to}</td>
-      <td>${cost}</td>
-           <td class="state-cell">
-        <select class="state-select ${stateCls}"
-          data-original="${state}"
-          onfocus="openNoteField('${regId}')"
-          onclick="openNoteField('${regId}')"
+    html += `<tr class="bk-main" data-regid="${regId}">
+      <td><strong>${escAttr(r.RegNo || '-')}</strong></td>
+      <td>${escAttr(r.RegUserName || '-')}</td>
+      <td>${escAttr(r.RegUserTel || '-')}</td>
+      <td>${normalizeDate(r.RegDate) || '-'}</td>
+      <td>${escAttr(r.Regday || '-')}</td>
+      <td>${escAttr(r.RegTimeFrom || '-')}</td>
+      <td>${escAttr(r.RegTimeTo || '-')}</td>
+      <td>${escAttr(r.RegCost || '-')}</td>
+      <td>
+        <select class="state-select ${stateClass(state)}" data-original="${escAttr(state)}"
           onchange="onBookingStateChange('${regId}', this)">
-          <option value="في الإجراء" ${state === 'في الإجراء' ? 'selected' : ''}>في الإجراء</option>
-          <option value="تم الحجز"  ${state === 'تم الحجز'  ? 'selected' : ''}>تم الحجز</option>
-          <option value="ملغي"      ${state === 'ملغي'      ? 'selected' : ''}>ملغي</option>
+          <option value="في الإجراء"   ${state === 'في الإجراء'   ? 'selected' : ''}>في الإجراء</option>
+          <option value="انتظار الدفع" ${state === 'انتظار الدفع' ? 'selected' : ''}>انتظار الدفع</option>
+          <option value="تم الحجز"     ${state === 'تم الحجز'     ? 'selected' : ''}>تم الحجز</option>
+          <option value="ملغي"         ${state === 'ملغي'         ? 'selected' : ''}>ملغي</option>
         </select>
-     <input type="text" class="note-input" id="bkNote_${regId}"
-          data-original="${escAttr(note)}" value="${escAttr(note)}"
-          placeholder="أضف ملاحظة..."
-          onfocus="showNoteSuggest('${regId}')"
-          onclick="showNoteSuggest('${regId}')">
-        <div class="note-suggest" id="bkSug_${regId}"></div>
       </td>
       <td style="white-space:nowrap">
         <button class="btn small green" id="saveBk_${regId}" disabled
           onclick="saveBookingState('${regId}', this)">💾</button>
         <button class="btn small red" onclick="deleteBooking('${regId}')">🗑</button>
       </td>
+    </tr>
+    <tr class="bk-note-row">
+      <td colspan="10">
+        <input type="text" class="note-input ${noteColorClass(note)}" id="bkNote_${regId}"
+          data-original="${escAttr(note)}" value="${escAttr(note)}"
+          placeholder="📝 اضغط لاختيار ملاحظة أو اكتبها..."
+          onfocus="showNoteSuggest(this, '${regId}')"
+          oninput="onBookingNoteInput('${regId}')"
+          onblur="setTimeout(hideNoteSuggest,150)">
+      </td>
     </tr>`;
   });
 
-  html += `</tbody></table></div>`;
-  box.innerHTML = html;
+  box.innerHTML = html + '</tbody></table></div>';
 }
 
-const NOTE_SUGGESTIONS = [
-  { state: 'في الإجراء', text: 'الطلب في الاجراء سيتم تحديث الحالة بعد الدفع وارسال الايصال' },
-  { state: 'تم الحجز',  text: 'تم تأكيد الحجز الرجاء ارسال ايصال الدفع الى الرقم : ' },
-  { state: 'ملغي',      text: 'نأسف لكم تم الغاء الحجز بسبب: ' }
-];
-
-/* أغلق كل الصفوف الأخرى وأعد حالتها وملاحظتها إلى الأصل */
-function closeOtherRows(currentRegId) {
-  hideAllNoteSuggest();
-  document.querySelectorAll('.state-cell').forEach(td => {
-    const sel  = td.querySelector('.state-select');
-    const note = td.querySelector('.note-input');
-    if (!sel || !note) return;
-    if (note.id === 'bkNote_' + currentRegId) return;   // الصف الحالي
-
-    // أعد الحالة إلى الأصل
-    sel.value = sel.dataset.original;
-    sel.classList.remove('pending', 'confirmed', 'cancelled');
-    if (sel.value === 'تم الحجز') sel.classList.add('confirmed');
-    else if (sel.value === 'ملغي') sel.classList.add('cancelled');
-    else sel.classList.add('pending');
-
-    // أعد الملاحظة وأغلق الحقل
-    note.value = note.dataset.original;
-    note.classList.remove('show');
-
-    // عطّل زر الحفظ لهذا الصف
-    const tr  = td.closest('tr');
-    const btn = tr ? tr.querySelector('button[id^="saveBk_"]') : null;
-    if (btn) btn.disabled = true;
+function showNoteSuggest(input, regId) {
+  const box = document.getElementById('noteSuggest');
+  box.innerHTML = NOTE_OPTIONS.map((t, i) => `<div class="ns-item" data-i="${i}">${escAttr(t)}</div>`).join('');
+  box.querySelectorAll('.ns-item').forEach(el => {
+    el.addEventListener('mousedown', ev => {
+      ev.preventDefault();
+      input.value = NOTE_OPTIONS[el.dataset.i];
+      hideNoteSuggest();
+      onBookingNoteInput(regId);
+      input.focus();
+      input.setSelectionRange(input.value.length, input.value.length);
+    });
   });
-}
-
-function openNoteField(regId) {
-  closeOtherRows(regId);
-  const noteEl = document.getElementById('bkNote_' + regId);
-  if (noteEl) noteEl.classList.add('show');
-}
-
-function hideAllNoteSuggest() {
-  document.querySelectorAll('.note-suggest.show')
-    .forEach(el => el.classList.remove('show'));
-}
-
-document.addEventListener('scroll', hideAllNoteSuggest, true);
-
-function showNoteSuggest(regId) {
-  const box    = document.getElementById('bkSug_' + regId);
-  const noteEl = document.getElementById('bkNote_' + regId);
-  if (!box || !noteEl) return;
-  hideAllNoteSuggest();
-  noteEl.classList.add('show');
-  box.innerHTML = `<div class="ns-title">💡 اقتراحات الملاحظة</div>` +
-    NOTE_SUGGESTIONS.map((s, i) =>
-      `<button type="button" class="ns-item"
-         onmousedown="event.preventDefault()"
-         onclick="applyNoteSuggest('${regId}', ${i})">
-         <b>${s.state}</b>${s.text}
-       </button>`).join('');
-
-  // أظهرها أولاً لقياس حجمها ثم ضعها أسفل الحقل
-  box.classList.add('show');
-
-  const r  = noteEl.getBoundingClientRect();
-  const w  = Math.min(Math.max(r.width, 280), window.innerWidth - 16);
-  let left = r.left + r.width / 2 - w / 2;
-  left = Math.max(8, Math.min(left, window.innerWidth - w - 8));
-
-  let top = r.bottom + 4;
-  // إن لم يتسع المكان أسفل الحقل، اعرضها فوقه
-  if (top + box.offsetHeight > window.innerHeight - 8) {
-    top = Math.max(8, r.top - box.offsetHeight - 4);
-  }
-
+  const r = input.getBoundingClientRect();
+  const w = Math.min(Math.max(r.width, 280), document.documentElement.clientWidth - 16);
   box.style.width = w + 'px';
-  box.style.left  = left + 'px';
-  box.style.top   = top + 'px';
+  box.style.top = (r.bottom + 2) + 'px';
+  box.style.right = 'auto';
+  box.style.left = Math.max(8, r.left + (r.width - w) / 2) + 'px';
+  box.classList.add('show');
 }
 
+function hideNoteSuggest() {
+  document.getElementById('noteSuggest').classList.remove('show');
+}
+document.querySelector('#bookingsModal .modal-body').addEventListener('scroll', hideNoteSuggest);
 
+function updateBookingSaveBtn(regId) {
+  const tr   = document.querySelector(`tr[data-regid="${regId}"]`);
+  const sel  = tr ? tr.querySelector('select.state-select') : null;
+  const note = document.getElementById('bkNote_' + regId);
+  const btn  = document.getElementById('saveBk_' + regId);
+  if (!sel || !note || !btn) return;
+  btn.disabled = !(sel.value !== sel.dataset.original ||
+                   note.value.trim() !== (note.dataset.original || '').trim());
+}
 
-function applyNoteSuggest(regId, idx) {
-  const noteEl = document.getElementById('bkNote_' + regId);
-  if (!noteEl) return;
-  noteEl.classList.add('show');
-  noteEl.value = NOTE_SUGGESTIONS[idx].text;
-  hideAllNoteSuggest();
-  const len = noteEl.value.length;
-  noteEl.setSelectionRange(len, len);
+function onBookingNoteInput(regId) {
+  const note = document.getElementById('bkNote_' + regId);
+  if (note) {
+    applyNoteColor(note);
+    const st = noteToState(note.value);
+    if (st) {
+      const tr  = document.querySelector(`tr[data-regid="${regId}"]`);
+      const sel = tr ? tr.querySelector('select.state-select') : null;
+      if (sel && sel.value !== st) { sel.value = st; onBookingStateChange(regId, sel); }
+    }
+  }
+  updateBookingSaveBtn(regId);
 }
 
 function onBookingStateChange(regId, selEl) {
-  closeOtherRows(regId);          // ← أغلق باقي الصفوف
-
-  selEl.classList.remove('pending', 'confirmed', 'cancelled');
-  if (selEl.value === 'تم الحجز') selEl.classList.add('confirmed');
-  else if (selEl.value === 'ملغي') selEl.classList.add('cancelled');
-  else selEl.classList.add('pending');
-
-  const changed = selEl.value !== selEl.dataset.original;
-  const btn = document.getElementById('saveBk_' + regId);
-  if (btn) btn.disabled = !changed;
-
-  const noteEl = document.getElementById('bkNote_' + regId);
-  if (!noteEl) return;
-
-  if (changed) {
-    noteEl.classList.add('show');
-    noteEl.focus();
-  } else {
-    noteEl.classList.remove('show');
-    noteEl.value = noteEl.dataset.original;
-    hideAllNoteSuggest();
-  }
+  selEl.classList.remove('pending', 'confirmed', 'cancelled', 'waiting');
+  selEl.classList.add(stateClass(selEl.value));
+  updateBookingSaveBtn(regId);
 }
 
-/* إغلاق الاقتراحات عند النقر خارجها */
-document.addEventListener('click', (e) => {
-  const cell = e.target.closest('.state-cell');
-  if (!cell) hideAllNoteSuggest();
-
-  document.querySelectorAll('.state-cell').forEach(td => {
-    if (td === cell) return;
-    const sel  = td.querySelector('.state-select');
-    const note = td.querySelector('.note-input');
-    if (sel && note && sel.value === sel.dataset.original) {
-      note.classList.remove('show');
-    }
-  });
-});
-
-/* ============ حفظ الحالة عند الضغط على زر الحفظ ============ */
 async function saveBookingState(regId, btnEl) {
   const tr = document.querySelector(`tr[data-regid="${regId}"]`);
   const selEl = tr ? tr.querySelector('select.state-select') : null;
@@ -4365,39 +4755,24 @@ async function saveBookingState(regId, btnEl) {
   selEl.disabled = true;
   if (noteEl) noteEl.disabled = true;
 
-  let ok = false;
   try {
     const res = await fetch(REGISTER_API, {
       method: 'POST',
-      body: JSON.stringify({
-        action: 'updateBookingState',
-        RegID: regId,
-        RegState: newState,
-        RegNote: newNote
-      })
+      body: JSON.stringify({ action: 'updateBookingState', RegID: regId, RegState: newState, RegNote: newNote })
     });
     const data = await res.json();
 
     if (data.success) {
-      ok = true;
       const row = bookingsRowsCache.find(r => String(r.RegID) === String(regId));
       const prevState = selEl.dataset.original;
       if (row) { row.RegState = newState; row.RegNote = newNote; }
       selEl.dataset.original = newState;
-
-      if (noteEl) {
-        noteEl.dataset.original = newNote;
-        noteEl.value = newNote;
-        noteEl.classList.remove('show'); 
-         hideAllNoteSuggest();  // أغلق الحقل بعد الحفظ
-      }
+      if (noteEl) { noteEl.dataset.original = newNote; noteEl.value = newNote; }
 
       if (row) {
-        if (newState === 'ملغي') {
-          await releaseSlotForBooking(row, 'إلغاء الطلب');
-        } else if (prevState === 'ملغي') {
-          await bookSlotForBooking(row);
-        }
+        if (newState === 'ملغي') await releaseSlotForBooking(row, 'إلغاء الطلب');
+        else if (prevState === 'ملغي') await bookSlotForBooking(row);
+        offerWhatsApp(row, newState, newNote);
       }
     } else {
       alert('خطأ: ' + data.message);
@@ -4409,15 +4784,60 @@ async function saveBookingState(regId, btnEl) {
     btnEl.dataset.busy = '0';
     selEl.disabled = false;
     if (noteEl) noteEl.disabled = false;
-    btnEl.disabled = ok || (selEl.value === selEl.dataset.original);
+    updateBookingSaveBtn(regId);
   }
 }
 
-function escAttr(v) {
-  return String(v == null ? '' : v)
-    .replace(/&/g, '&amp;').replace(/"/g, '&quot;')
-    .replace(/</g, '&lt;').replace(/>/g, '&gt;');
+/* ============ الواتس اب ============ */
+const WA_COUNTRY_CODE = '968';
+let waPending = null;
+
+function waNormalizePhone(raw) {
+  let d = String(raw || '').replace(/\D/g, '');
+  if (d.startsWith('00')) d = d.slice(2);
+  if (d.length <= 8) d = WA_COUNTRY_CODE + d;
+  return d;
 }
+
+function buildWaMessage(row, state, note) {
+  const lines = [
+    `السلام عليكم ${row.RegUserName || ''}،`, '',
+    `📋 رقم الطلب: ${row.RegNo || '-'}`,
+    `📅 التاريخ: ${normalizeDate(row.RegDate) || '-'} (${row.Regday || '-'})`,
+    `⏰ من: ${row.RegTimeFrom || '-'}  إلى: ${row.RegTimeTo || '-'}`,
+    `💰 المبلغ: ${row.RegCost || '-'} ر.ع`,
+    `📌 الحالة: ${state}`
+  ];
+  if (note) lines.push('', note);
+  return lines.join('\n');
+}
+
+function offerWhatsApp(row, state, note) {
+  if (state === 'في الإجراء') return;
+  const phone = waNormalizePhone(row.RegUserTel);
+  if (phone.length < 8) return;
+  waPending = { phone };
+  document.getElementById('waTo').textContent = '+' + phone;
+  document.getElementById('waText').value = buildWaMessage(row, state, note);
+  document.getElementById('waModal').classList.add('active');
+}
+
+function sendWhatsApp() {
+  if (!waPending) return;
+  const text = document.getElementById('waText').value.trim();
+  window.open(`https://wa.me/${waPending.phone}?text=${encodeURIComponent(text)}`, '_blank');
+  closeWaModal();
+}
+
+function closeWaModal() {
+  document.getElementById('waModal').classList.remove('active');
+  waPending = null;
+}
+document.getElementById('waModal').addEventListener('click', function (e) {
+  if (e.target === this) closeWaModal();
+});
+
+
 
 /* ============ تحرير الوقت في جدول الأوقات عند إلغاء الطلب ============ */
 async function refreshSlotsViews() {
@@ -4534,19 +4954,19 @@ document.getElementById('bookingsReportModal').addEventListener('click', functio
 
 function renderBookingsReportModal() {
   const box = document.getElementById('bookingsReportContent');
-  const rows = bookingsRowsCache || [];
+  const rows = (bookingsRowsCache || []).filter(r =>
+    !bookingsSearchYear || (normalizeDate(r.RegDate) || '').slice(0, 4) === bookingsSearchYear);
 
   const st = {
-    'تم الحجز':   { n: 0, sum: 0, cls: 'paid' },
-    'ملغي':       { n: 0, sum: 0, cls: 'unpaid' },
-    'في الإجراء': { n: 0, sum: 0, cls: 'pending' }
+    'تم الحجز':     { n: 0, sum: 0, cls: 'paid' },
+    'ملغي':         { n: 0, sum: 0, cls: 'unpaid' },
+    'في الإجراء':   { n: 0, sum: 0, cls: 'pending' },
+    'انتظار الدفع': { n: 0, sum: 0, cls: 'waiting' }
   };
-
   rows.forEach(r => {
     let state = String(r.RegState || 'في الإجراء').trim();
     if (!st[state]) state = 'في الإجراء';
     st[state].n++;
-    // المبلغ يُحسب فقط للحجوزات المؤكدة
     if (state === 'تم الحجز') st[state].sum += parseFloat(r.RegCost) || 0;
   });
 
@@ -4556,55 +4976,25 @@ function renderBookingsReportModal() {
 
   let html = `
     <div class="report-cards">
-      <div class="report-card total">
-        <h4>عدد الحجوزات</h4>
-        <div class="val">${total}</div>
-      </div>
-      <div class="report-card amount">
-        <h4>إجمالي المبالغ (تم الحجز)</h4>
-        <div class="val">${totalSum.toFixed(3)} ر.ع</div>
-      </div>
-      <div class="report-card paid">
-        <h4>تم الحجز</h4>
-        <div class="val">${st['تم الحجز'].n}</div>
-      </div>
-      <div class="report-card unpaid">
-        <h4>ملغي</h4>
-        <div class="val">${st['ملغي'].n}</div>
-      </div>
-      <div class="report-card pending">
-        <h4>في الإجراء</h4>
-        <div class="val">${st['في الإجراء'].n}</div>
-      </div>
+      <div class="report-card total"><h4>عدد الحجوزات</h4><div class="val">${total}</div></div>
+      <div class="report-card amount"><h4>إجمالي المبالغ (تم الحجز)</h4><div class="val">${totalSum.toFixed(3)} ر.ع</div></div>
+      <div class="report-card paid"><h4>تم الحجز</h4><div class="val">${st['تم الحجز'].n}</div></div>
+      <div class="report-card unpaid"><h4>ملغي</h4><div class="val">${st['ملغي'].n}</div></div>
+      <div class="report-card pending"><h4>في الإجراء</h4><div class="val">${st['في الإجراء'].n}</div></div>
+      <div class="report-card waiting"><h4>انتظار الدفع</h4><div class="val">${st['انتظار الدفع'].n}</div></div>
     </div>
-
     <h3 style="color:#1e3c72;margin:20px 0 10px;">📌 التفصيل حسب الحالة</h3>
-    <div style="overflow-x:auto;">
-      <table class="report-table">
-        <thead><tr>
-          <th>الحالة</th>
-          <th>عدد الطلبات</th>
-          <th>إجمالي المبالغ</th>
-          <th>النسبة</th>
-        </tr></thead><tbody>`;
+    <div style="overflow-x:auto;"><table class="report-table">
+      <thead><tr><th>الحالة</th><th>عدد الطلبات</th><th>إجمالي المبالغ</th><th>النسبة</th></tr></thead><tbody>`;
 
-  ['تم الحجز', 'في الإجراء', 'ملغي'].forEach(k => {
+  ['تم الحجز', 'انتظار الدفع', 'في الإجراء', 'ملغي'].forEach(k => {
     const amount = (k === 'تم الحجز') ? st[k].sum.toFixed(3) + ' ر.ع' : '—';
-    html += `<tr>
-      <td class="${st[k].cls}">${k}</td>
-      <td>${st[k].n}</td>
-      <td>${amount}</td>
-      <td>${pct(st[k].n)}%</td>
-    </tr>`;
+    html += `<tr><td class="${st[k].cls}">${k}</td><td>${st[k].n}</td><td>${amount}</td><td>${pct(st[k].n)}%</td></tr>`;
   });
 
   html += `<tr style="font-weight:700;background:#eef2f7;">
-      <td>الإجمالي</td>
-      <td>${total}</td>
-      <td>${totalSum.toFixed(3)} ر.ع</td>
-      <td>100%</td>
+      <td>الإجمالي</td><td>${total}</td><td>${totalSum.toFixed(3)} ر.ع</td><td>100%</td>
     </tr></tbody></table></div>`;
-
   box.innerHTML = html;
 }
 
@@ -4665,72 +5055,51 @@ function renderMyBookings() {
   const box = document.getElementById('myBookingsList');
   const countEl = document.getElementById('myBookingsCount');
 
-  // فلترة
   let list = myBookingsCache;
-  if (myBkDate) {
-    list = list.filter(r => normalizeDate(r.RegDate) === myBkDate);
-  }
-  if (myBkState) {
-    list = list.filter(r => String(r.RegState || 'في الإجراء').trim() === myBkState);
-  }
+  if (myBkDate)  list = list.filter(r => normalizeDate(r.RegDate) === myBkDate);
+  if (myBkState) list = list.filter(r => String(r.RegState || 'في الإجراء').trim() === myBkState);
 
   countEl.textContent = `النتائج: ${list.length} من ${myBookingsCache.length}`;
 
-  if (!myBookingsCache.length) {
-    box.innerHTML = '<div class="bookings-empty">لا توجد طلبات حجز لك حتى الآن</div>';
-    return;
-  }
-  if (!list.length) {
-    box.innerHTML = '<div class="bookings-empty">لا توجد طلبات مطابقة</div>';
-    return;
-  }
+  if (!myBookingsCache.length) { box.innerHTML = '<div class="bookings-empty">لا توجد طلبات حجز لك حتى الآن</div>'; return; }
+  if (!list.length)           { box.innerHTML = '<div class="bookings-empty">لا توجد طلبات مطابقة</div>'; return; }
 
-  // الأحدث أولاً (التاريخ ثم رقم الطلب)
   list = [...list].sort((a, b) => {
-    const da = normalizeDate(a.RegDate) || '';
-    const db = normalizeDate(b.RegDate) || '';
+    const na = parseInt(String(a.RegNo || '').replace(/\D/g, ''), 10) || 0;
+    const nb = parseInt(String(b.RegNo || '').replace(/\D/g, ''), 10) || 0;
+    if (na !== nb) return nb - na;
+    const da = normalizeDate(a.RegDate) || '', db = normalizeDate(b.RegDate) || '';
     if (da !== db) return db.localeCompare(da);
-    const na = parseInt(String(a.RegNo || '').replace(/\D/g, '')) || 0;
-    const nb = parseInt(String(b.RegNo || '').replace(/\D/g, '')) || 0;
-    return nb - na;
+    return (to24(b.RegTimeFrom) || '').localeCompare(to24(a.RegTimeFrom) || '');
   });
 
   let html = `<div style="overflow-x:auto;"><table class="bookings-table">
     <thead><tr>
-      <th>رقم الطلب</th>
-      <th>تاريخ الحجز</th>
-      <th>اليوم</th>
-      <th>من</th>
-      <th>إلى</th>
-      <th>المبلغ</th>
-      <th>الحالة</th>
+      <th>رقم الطلب</th><th>تاريخ الحجز</th><th>اليوم</th><th>من</th><th>إلى</th><th>المبلغ</th><th>الحالة</th>
     </tr></thead><tbody>`;
 
-   list.forEach(r => {
+  list.forEach(r => {
     const state = String(r.RegState || 'في الإجراء').trim();
-    let cls = 'pending';
-    if (state === 'تم الحجز') cls = 'confirmed';
-    else if (state === 'ملغي') cls = 'cancelled';
+    const note  = String(r.RegNote || '').trim() || (state === 'في الإجراء' ? DEFAULT_NOTE : '');
 
-    html += `<tr>
+    html += `<tr class="booking-row">
       <td><strong>${escAttr(r.RegNo || '-')}</strong></td>
       <td>${normalizeDate(r.RegDate) || '-'}</td>
       <td>${escAttr(r.Regday || '-')}</td>
       <td>${escAttr(r.RegTimeFrom || '-')}</td>
       <td>${escAttr(r.RegTimeTo || '-')}</td>
       <td>${r.RegCost ? escAttr(r.RegCost) + ' ر.ع' : '-'}</td>
-      <td><span class="badge ${cls}">${escAttr(state)}</span></td>
+      <td><span class="badge ${stateClass(state)}">${escAttr(state)}</span></td>
     </tr>
-    <tr class="note-row">
-      <td colspan="7">
-        <textarea class="my-note" rows="1" disabled
-          placeholder="لا توجد ملاحظات">${escAttr(r.RegNote || '')}</textarea>
-      </td>
-    </tr>`;
+    <tr class="my-note-row"><td colspan="7">
+      <div class="my-note-box ${noteColorClass(note)}">
+        <span class="my-note-label">📝 ملاحظة:</span>
+        <span>${escAttr(note || 'لا توجد ملاحظات')}</span>
+      </div>
+    </td></tr>`;
   });
 
-  html += '</tbody></table></div>';
-  box.innerHTML = html;
+  box.innerHTML = html + '</tbody></table></div>';
 }
 
 function clearMyBookingsFilters() {
@@ -5305,6 +5674,1731 @@ async function deleteExp(id, btnEl) {
   }
 }
 
+function escAttr(v) {
+  return String(v == null ? '' : v)
+    .replace(/&/g, '&amp;').replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+
+/* ============================================================
+   أساسيات الأعضاء والطباعة
+   ============================================================ */
+let plyAdding = false;
+let plyListCache = [];
+let plyListLoaded = false;
+let plyEditingId = null;
+let plySearch = '';
+let plyRowPhotoNew = '';
+let ply = { id: '', photo: '', photoData: '' };   // تحتاجه buildCardDoc
+
+const PLY_POSITIONS = ['الرئيس','المنسق','نائب الرئيس','أمين الصندوق','عضو','مدرب','نائب مدرب',
+  'مدرب حراس','حارس','مدافع','ظهير','وسط','جناح','هجوم','اخصائي علاج'];
+const PLY_SECTIONS = ['الفريق','اللجنة الرياضية','اللجنة الثقافية','اللجنة المالية','اللجنة الادارية',
+  'اللجنة الاجتماعية','اللجنة الانضباطية','أخرى'];
+
+const PHOTO_MAX_CHARS = 400000;   // IndexedDB تتسع لصور أكبر من خلية الشيت
+
+async function fetchJSON(url, options, retries = 2) {
+  for (let attempt = 0; attempt <= retries; attempt++) {
+    try {
+      const res = await fetch(url, options);
+      const text = await res.text();
+      try { return JSON.parse(text); }
+      catch (e) {
+        if (attempt === retries) throw new Error('السيرفر مشغول حالياً، حاول مرة أخرى بعد قليل');
+        await new Promise(r => setTimeout(r, 800 * (attempt + 1)));
+      }
+    } catch (e) {
+      if (attempt === retries) throw e;
+      await new Promise(r => setTimeout(r, 800 * (attempt + 1)));
+    }
+  }
+}
+
+function plyCalcAge(s) {
+  if (!s) return '';
+  const b = new Date(s + 'T00:00:00');
+  if (isNaN(b)) return '';
+  const n = new Date();
+  let a = n.getFullYear() - b.getFullYear();
+  const m = n.getMonth() - b.getMonth();
+  if (m < 0 || (m === 0 && n.getDate() < b.getDate())) a--;
+  return a >= 0 ? a : '';
+}
+
+async function ensurePlayersLoaded() {
+  if (plyListLoaded) return;
+  try {
+    const data = await fetchJSON(PLAYERS_API + '?action=list&t=' + Date.now());
+    if (data.success) { plyListCache = data.rows || []; plyListLoaded = true; }
+  } catch (e) { console.warn('تعذّر تحميل الأعضاء:', e); }
+}
+
+/* ===== الطباعة ===== */
+let printData = null;
+
+function openPrintDialog(data) {
+  printData = data || null;
+  document.getElementById('printModal').classList.add('active');
+}
+function closePrintDialog() { document.getElementById('printModal').classList.remove('active'); }
+document.getElementById('printModal').addEventListener('click', function (e) {
+  if (e.target === this) closePrintDialog();
+});
+
+function confirmPrintCard() {
+  const orient = document.querySelector('input[name="printOrient"]:checked').value;
+  closePrintDialog();
+  printIdCard(orient, printData);
+}
+
+function getTeamInfoForCard() {
+  if (currentTeam) return currentTeam;
+  try { return JSON.parse(localStorage.getItem('teamInfo')) || {}; } catch (e) { return {}; }
+}
+
+function buildCardDoc(orient, data) {
+  const t = getTeamInfoForCard();
+  const P = data;
+  const fd = s => s ? fmtDMY(s) : '-';
+  const e = escAttr;
+  const land = orient === 'landscape';
+
+  const logo = u => u ? `<img src="${e(u)}" alt="">` : '<span class="nologo"></span>';
+  const photo = P.photo ? `<img src="${e(P.photo)}" alt="">` : '<div class="nophoto">👤</div>';
+
+  const rows = `
+    <div class="r"><span>الرقم المدني</span><b>${e(P.idc) || '-'}</b></div>
+    <div class="r"><span>تاريخ الميلاد</span><b>${e(fd(P.birth))}</b></div>
+    <div class="r"><span>العمر</span><b>${e(P.age) || '-'}</b></div>
+    <div class="r"><span>المركز</span><b>${e(P.pos) || '-'}</b></div>`;
+
+  const W = land ? '85.6mm' : '54mm';
+  const H = land ? '54mm'   : '85.6mm';
+
+  return `<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  @page { size:${W} ${H}; margin:0; }
+  * { box-sizing:border-box; margin:0; padding:0; font-family:'Cairo',Tahoma,sans-serif;
+      -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  html,body { width:${W}; height:${H}; background:#fff; }
+  .card { width:${W}; height:${H}; overflow:hidden; display:flex; flex-direction:column;
+          border:0.3mm solid #1e3c72; border-radius:2.5mm; }
+  .hd { background:#438307; color:#fff; display:flex; align-items:center; justify-content:space-between;
+        gap:1.5mm; padding:1.5mm 2mm; height:${land ? '14mm' : '18mm'}; flex-shrink:0; }
+  .hd img, .hd .nologo { width:${land ? '10.5mm' : '11mm'}; height:${land ? '10.5mm' : '11mm'};
+        object-fit:contain; background:#fff; border-radius:50%; flex-shrink:0; }
+  .hd .nologo { display:inline-block; }
+  .hd .tt { flex:1; text-align:center; line-height:1.15; min-width:0; }
+  .hd .tt b { display:block; color:#f0b90b; font-size:${land ? '9pt' : '8pt'}; }
+  .hd .tt small { display:block; font-size:${land ? '6.5pt' : '6pt'}; opacity:.95; margin-top:1.5mm; }
+  .bd { flex:1; display:flex; ${land ? 'flex-direction:row; align-items:center; gap:3mm; padding:1.5mm 3mm;' :
+        'flex-direction:column; align-items:center; gap:1.2mm; padding:2mm 3mm;'} min-height:0; }
+  .ph { width:${land ? '23mm' : '25mm'}; height:${land ? '29mm' : '30mm'}; border:0.4mm solid #1e3c72;
+        border-radius:2mm; overflow:hidden; background:#f0f3f9; flex-shrink:0; }
+  .ph img { width:100%; height:100%; object-fit:cover; }
+  .nophoto { width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:22pt; color:#1e3c72; }
+  .info { flex:1; width:100%; min-width:0; }
+  .nm { font-size:${land ? '10pt' : '9.5pt'}; font-weight:700; color:#1e3c72; text-align:${land ? 'right' : 'center'};
+        line-height:1.2; margin-bottom:1mm; border-bottom:0.3mm solid #f0b90b; padding-bottom:0.6mm; }
+  .r { display:flex; justify-content:space-between; gap:2mm; font-size:${land ? '7pt' : '6.8pt'}; line-height:1.55; }
+  .r span { color:#555; }
+  .r b { color:#000; direction:ltr; }
+  .ft { background:#f0b90b; color:#000; font-size:6pt; font-weight:700; display:flex; justify-content:space-between;
+        padding:0.8mm 3mm; flex-shrink:0; }
+</style></head><body>
+<div class="card">
+  <div class="hd">
+    ${logo(t.TeamCloubLogo)}
+    <div class="tt"><b>${e(t.TeamName || '')}</b><small>${e(t.TeamCloub || '')}</small></div>
+    ${logo(t.TeamLogo)}
+  </div>
+  <div class="bd">
+    <div class="ph">${photo}</div>
+    <div class="info">
+      <div class="nm">${e(P.name) || '-'}</div>
+      ${rows}
+    </div>
+  </div>
+  <div class="ft"><span>رقم العضوية: ${e(P.plyId)}</span><span>ينتهي: ${e(fd(P.exp))}</span></div>
+</div></body></html>`;
+}
+
+function printIdCard(orient, data) {
+  const old = document.getElementById('printFrame');
+  if (old) old.remove();
+
+  const fr = document.createElement('iframe');
+  fr.id = 'printFrame';
+  fr.style.cssText = 'position:fixed;right:0;bottom:0;width:0;height:0;border:0;visibility:hidden;';
+  document.body.appendChild(fr);
+
+  const doc = fr.contentWindow.document;
+  doc.open(); doc.write(buildCardDoc(orient, data)); doc.close();
+
+  const waits = [...doc.images].map(im =>
+    im.complete ? Promise.resolve() : new Promise(r => { im.onload = im.onerror = r; }));
+  const ready = Promise.all(waits).then(() => doc.fonts ? doc.fonts.ready : null);
+
+  Promise.race([ready, new Promise(r => setTimeout(r, 4000))]).then(() => {
+    fr.contentWindow.focus();
+    fr.contentWindow.print();
+  });
+}
+
+
+/* ============================================================
+   جدول أعضاء الفريق
+   ============================================================ */
+function openPlayersList() {
+  document.getElementById('plyListModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  if (!plyListLoaded) loadPlayersList(); else renderPlayersList();
+}
+
+function closePlayersList() {
+  document.getElementById('plyListModal').classList.remove('active');
+  plyRowPhotoNew = '';
+  setPlyAddMode(false);
+}
+
+async function loadPlayersList() {
+  const box = document.getElementById('plyListBox');
+  plyEditingId = null;
+  box.innerHTML = '<div class="spinner" style="margin:20px auto"></div>';
+  try {
+    const data = await fetchJSON(PLAYERS_API + '?action=list&t=' + Date.now());
+    if (!data.success) { box.innerHTML = `<div class="error-msg">${escAttr(data.message)}</div>`; return; }
+    plyListCache = data.rows || [];
+    plyListLoaded = true;
+    renderPlayersList();
+  } catch (e) {
+    box.innerHTML = `<div class="error-msg">خطأ: ${escAttr(e.message)}</div>`;
+  }
+}
+
+function plyRowToCard(r) {
+  return {
+    name: r.PLYName || '', idc: r.PLYIDCARD || '',
+    exp: normalizeDate(r.PLYIDCARDExpired) || '',
+    birth: normalizeDate(r.PLYBirthDay) || '',
+    age: r.PLYBirthDay ? plyCalcAge(normalizeDate(r.PLYBirthDay)) : (r.PLYAge || ''),
+    pos: r.PLYPosition || '', plyId: r.PLYID || '', photo: r.PLYPhoto || ''
+  };
+}
+
+function renderPlayersList() {
+  const box = document.getElementById('plyListBox');
+  let rows = plyListCache;
+
+  const q = plySearch.trim().toLowerCase();
+  if (q) {
+    rows = rows.filter(r =>
+      String(r.PLYName   || '').toLowerCase().includes(q) ||
+      String(r.PLYTel    || '').toLowerCase().includes(q) ||
+      String(r.PLYIDCARD || '').toLowerCase().includes(q) ||
+      String(r.PLYID     || '').toLowerCase().includes(q));
+  }
+  document.getElementById('plyListCount').textContent = `النتائج: ${rows.length} من ${plyListCache.length}`;
+
+  if (!rows.length && !plyAdding) { box.innerHTML = '<div class="bookings-empty">لا يوجد أعضاء</div>'; return; }
+
+  const opts = (arr, cur) => '<option value="">—</option>' +
+    arr.map(v => `<option value="${escAttr(v)}" ${v === cur ? 'selected' : ''}>${escAttr(v)}</option>`).join('');
+
+  let html = `<div style="overflow-x:auto;"><table class="bookings-table users-table ply-table">
+    <thead><tr>
+      <th>الصورة</th><th>رقم العضوية</th><th>الاسم</th><th>الهاتف</th>
+      <th>رقم البطاقة</th><th>تاريخ الانتهاء</th><th>تاريخ الميلاد</th><th>العمر</th>
+      <th>المركز</th><th>اللجنة</th><th>إجراءات</th>
+    </tr></thead><tbody>`;
+
+  if (plyAdding) {
+    html += `<tr class="input-row">
+      <td>
+        ${plyRowPhotoNew
+          ? `<img id="plyRowThumb" class="ply-thumb editable" src="${plyRowPhotoNew}" onclick="plyRowPhotoClick()" alt="">`
+          : `<span id="plyRowThumb" class="ply-thumb none editable" onclick="plyRowPhotoClick()" title="اضغط لإضافة صورة">📷</span>`}
+        <small class="ply-photo-hint">اضغط للإضافة</small>
+      </td>
+      <td><strong>جديد</strong></td>
+      <td><input type="text" id="pl_new_name" placeholder="الاسم"></td>
+      <td><input type="tel" id="pl_new_tel" placeholder="رقم الهاتف" maxlength="15"></td>
+      <td><input type="text" id="pl_new_idc" inputmode="numeric" maxlength="15"></td>
+      <td><input type="date" id="pl_new_exp"></td>
+      <td><input type="date" id="pl_new_birth" oninput="document.getElementById('pl_new_age').value=plyCalcAge(this.value)"></td>
+      <td><input type="number" id="pl_new_age" min="0" max="120"></td>
+      <td><select id="pl_new_pos">${opts(PLY_POSITIONS, '')}</select></td>
+      <td><select id="pl_new_sec">${opts(PLY_SECTIONS, '')}</select></td>
+      <td style="white-space:nowrap">
+        <button class="btn small green" onclick="saveNewPlayer(this)">💾</button>
+        <button class="btn small red" onclick="cancelAddPlayer()">✖</button>
+      </td></tr>`;
+  }
+
+  rows.forEach(r => {
+    const id = r.PLYID, sid = escAttr(id);
+    const photo = r.PLYPhoto
+      ? `<img class="ply-thumb" src="${escAttr(r.PLYPhoto)}" alt="">`
+      : '<span class="ply-thumb none">👤</span>';
+    const birth = normalizeDate(r.PLYBirthDay) || '';
+    const age = birth ? plyCalcAge(birth) : (r.PLYAge || '');
+    const exp = normalizeDate(r.PLYIDCARDExpired) || '';
+
+    if (plyEditingId === id) {
+      html += `<tr class="input-row" data-plyid="${sid}">
+        <td>
+          ${r.PLYPhoto
+            ? `<img id="plyRowThumb" class="ply-thumb editable" src="${escAttr(r.PLYPhoto)}" onclick="plyRowPhotoClick()" title="اضغط لتغيير الصورة" alt="">`
+            : `<span id="plyRowThumb" class="ply-thumb none editable" onclick="plyRowPhotoClick()" title="اضغط لإضافة صورة">📷</span>`}
+          <small class="ply-photo-hint">اضغط للتغيير</small>
+        </td>
+        <td><strong>${sid}</strong></td>
+        <td><input type="text" id="pl_name_${sid}" value="${escAttr(r.PLYName)}"></td>
+        <td><input type="tel" id="pl_tel_${sid}" value="${escAttr(r.PLYTel)}" maxlength="15"></td>
+        <td><input type="text" id="pl_idc_${sid}" value="${escAttr(r.PLYIDCARD)}" inputmode="numeric" maxlength="15"></td>
+        <td><input type="date" id="pl_exp_${sid}" value="${exp}"></td>
+        <td><input type="date" id="pl_birth_${sid}" value="${birth}"
+             oninput="document.getElementById('pl_age_${sid}').value=plyCalcAge(this.value)"></td>
+        <td><input type="number" id="pl_age_${sid}" value="${escAttr(age)}" min="0" max="120"></td>
+        <td><select id="pl_pos_${sid}">${opts(PLY_POSITIONS, r.PLYPosition)}</select></td>
+        <td><select id="pl_sec_${sid}">${opts(PLY_SECTIONS, r.PLYSection)}</select></td>
+        <td style="white-space:nowrap">
+          <button class="btn small green" onclick="savePlayerRow('${sid}', this)">💾</button>
+          <button class="btn small red" onclick="plyEditingId=null;plyRowPhotoNew='';renderPlayersList();">✖</button>
+        </td></tr>`;
+    } else {
+      html += `<tr data-plyid="${sid}">
+        <td>${photo}</td>
+        <td><strong>${sid}</strong></td>
+        <td>${escAttr(r.PLYName) || '-'}</td>
+        <td>${escAttr(r.PLYTel) || '-'}</td>
+        <td>${escAttr(r.PLYIDCARD) || '-'}</td>
+        <td>${exp ? fmtDMY(exp) : '-'}</td>
+        <td>${birth ? fmtDMY(birth) : '-'}</td>
+        <td>${escAttr(age) || '-'}</td>
+        <td>${escAttr(r.PLYPosition) || '-'}</td>
+        <td>${escAttr(r.PLYSection) || '-'}</td>
+        <td style="white-space:nowrap">
+          <button class="btn small goldEdit" onclick="startEditPlayer('${sid}')">✏️</button>
+          <button class="btn small" onclick="printPlayerRow('${sid}')" title="طباعة البطاقة">🖨️</button>
+        </td></tr>`;
+    }
+  });
+
+  box.innerHTML = html + '</tbody></table></div>';
+}
+
+function startEditPlayer(id) {
+  setPlyAddMode(false);
+  plyRowPhotoNew = '';
+  plyEditingId = id;
+  renderPlayersList();
+}
+
+function setPlyAddMode(on) {
+  plyAdding = on;
+  const btn = document.getElementById('plyAddBtn');
+  if (!btn) return;
+  btn.textContent = on ? '✖ إغلاق' : '➕ إضافة عضو';
+  btn.classList.toggle('red', on);
+  btn.classList.toggle('green', !on);
+}
+
+function startAddPlayer() {
+  if (plyAdding) { cancelAddPlayer(); return; }
+  plyEditingId = null; plyRowPhotoNew = '';
+  setPlyAddMode(true);
+  renderPlayersList();
+  const n = document.getElementById('pl_new_name');
+  if (n) n.focus();
+}
+
+function cancelAddPlayer() {
+  plyRowPhotoNew = '';
+  setPlyAddMode(false);
+  renderPlayersList();
+}
+
+async function saveNewPlayer(btnEl) {
+  const g = k => document.getElementById('pl_new_' + k).value.trim();
+  const name = g('name'), tel = g('tel');
+
+  if (!name || !tel) { alert('الاسم والهاتف مطلوبان'); return; }
+  if (!/^[0-9]{8,15}$/.test(tel)) { alert('رقم الهاتف يجب أن يتكون من أرقام فقط (8 إلى 15 رقماً)'); return; }
+  if (plyListCache.some(p => onlyDigits(p.PLYTel) === onlyDigits(tel))) { alert('رقم الهاتف مسجل مسبقاً لعضو آخر'); return; }
+
+  if (btnEl.dataset.busy === '1') return;
+  btnEl.dataset.busy = '1'; btnEl.classList.add('loading'); btnEl.disabled = true;
+
+  try {
+    const info = await fetchJSON(PLAYERS_API + '?action=get&tel=' + encodeURIComponent(tel) + '&t=' + Date.now());
+    if (!info.success) throw new Error(info.message);
+    if (info.found) throw new Error('رقم الهاتف مسجل مسبقاً');
+    const newId = info.newId;
+    if (!newId) throw new Error('تعذّر توليد رقم العضوية');
+
+    const upd = {
+      PLYID: newId, PLYName: name, PLYTel: tel,
+      PLYBirthDay: g('birth'), PLYAge: g('age'),
+      PLYPosition: g('pos'), PLYSection: g('sec'),
+      PLYPhoto: plyRowPhotoNew || '',
+      PLYIDCARD: g('idc'), PLYIDCARDExpired: g('exp')
+    };
+    const res = await fetch(PLAYERS_API, { method: 'POST', body: JSON.stringify({ action: 'save', ...upd }) });
+    const data = await res.json();
+    if (!data.success) throw new Error(data.message);
+
+    plyListCache.push(upd);
+    plyRowPhotoNew = '';
+    setPlyAddMode(false);
+    renderPlayersList();
+  } catch (e) {
+    alert('خطأ: ' + e.message);
+    btnEl.classList.remove('loading'); btnEl.disabled = false; btnEl.dataset.busy = '0';
+  }
+}
+
+function printPlayerRow(id) {
+  const r = plyListCache.find(x => String(x.PLYID) === String(id));
+  if (r) openPrintDialog(plyRowToCard(r));
+}
+
+async function savePlayerRow(id, btnEl) {
+  const r = plyListCache.find(x => String(x.PLYID) === String(id));
+  if (!r) return;
+  const g = k => document.getElementById(`pl_${k}_${id}`).value.trim();
+  const name = g('name'), tel = g('tel');
+  if (!name || !tel) { alert('الاسم والهاتف مطلوبان'); return; }
+
+  if (btnEl.dataset.busy === '1') return;
+  btnEl.dataset.busy = '1'; btnEl.classList.add('loading'); btnEl.disabled = true;
+
+  const upd = {
+    PLYID: id, PLYName: name, PLYTel: tel,
+    PLYBirthDay: g('birth'), PLYAge: g('age'),
+    PLYPosition: g('pos'), PLYSection: g('sec'),
+    PLYPhoto: plyRowPhotoNew || r.PLYPhoto || '',
+    PLYIDCARD: g('idc'), PLYIDCARDExpired: g('exp')
+  };
+
+  try {
+    const res = await fetch(PLAYERS_API, { method: 'POST', body: JSON.stringify({ action: 'save', ...upd }) });
+    const data = await res.json();
+    if (!data.success) throw new Error(data.message);
+    Object.assign(r, upd);
+    plyEditingId = null; plyRowPhotoNew = '';
+    renderPlayersList();
+  } catch (e) {
+    alert('خطأ: ' + e.message);
+    btnEl.classList.remove('loading'); btnEl.disabled = false; btnEl.dataset.busy = '0';
+  }
+}
+
+function resizePhotoFile(file, cb) {
+  const rd = new FileReader();
+  rd.onload = ev => {
+    const img = new Image();
+    img.onload = () => {
+      let size = 300, q = 0.8, out = '';
+      for (let i = 0; i < 15; i++) {
+        const k = Math.min(1, size / Math.max(img.width, img.height));
+        const c = document.createElement('canvas');
+        c.width  = Math.max(1, Math.round(img.width  * k));
+        c.height = Math.max(1, Math.round(img.height * k));
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+        ctx.drawImage(img, 0, 0, c.width, c.height);
+        out = c.toDataURL('image/jpeg', q);
+        if (out.length <= PHOTO_MAX_CHARS) break;
+        if (q > 0.5) q -= 0.1; else size = Math.round(size * 0.85);
+      }
+      if (out.length > PHOTO_MAX_CHARS) { alert('تعذّر تصغير الصورة بما يكفي، اختر صورة أخرى'); return; }
+      cb(out);
+    };
+    img.onerror = () => alert('ملف الصورة غير صالح');
+    img.src = ev.target.result;
+  };
+  rd.readAsDataURL(file);
+}
+
+function plyRowPhotoClick() { document.getElementById('plyRowPhotoInput').click(); }
+
+function plyRowPickPhoto(e) {
+  const f = e.target.files[0];
+  e.target.value = '';
+  if (!f) return;
+  resizePhotoFile(f, out => {
+    plyRowPhotoNew = out;
+    const img = document.getElementById('plyRowThumb');
+    if (img) img.outerHTML = `<img id="plyRowThumb" class="ply-thumb editable" src="${out}" onclick="plyRowPhotoClick()" alt="">`;
+  });
+}
+
+/* ============================================================
+   الخطة (تشكيل الملعب)
+   ============================================================ */
+const TC_ALLOWED  = ['حارس','مدافع','ظهير','وسط','جناح','هجوم'];
+const TC_ROLE_POS = { gk:['حارس'], def:['مدافع','ظهير'], mid:['وسط','جناح'], att:['هجوم','جناح'], sub:TC_ALLOWED };
+const TC_ROLE_NAME = { gk:'الحارس', def:'الدفاع', mid:'الوسط', att:'الهجوم', sub:'الاحتياط' };
+
+const TC_POPULAR = {
+  10: ['4-4-2','4-3-3','3-5-2','4-2-3-1','3-4-3','5-3-2','4-5-1','5-4-1','4-2-4','4-1-4-1','3-4-2-1','3-4-1-2','4-3-2-1'],
+  9:  ['4-3-2','3-4-2','3-3-3','4-4-1','3-5-1','4-2-3'],
+  8:  ['4-2-2','2-4-2','3-2-3','3-3-2','3-4-1','4-3-1'],
+  7:  ['3-2-2','2-3-2','3-3-1','2-2-3'],
+  6:  ['2-3-1','3-2-1','2-2-2','3-1-2'],
+  5:  ['2-2-1','2-1-2','1-2-2'],
+  4:  ['2-1-1','1-2-1','1-1-2']
+};
+
+let tc = { n: 11, subs: 5, formation: '', assign: {} };
+let tcPickKey = null, tcPickRole = null;
+
+const TC_PITCH_SVG = (() => {
+  let s = '<svg xmlns="http://www.w3.org/2000/svg" width="600" height="900" viewBox="0 0 600 900" preserveAspectRatio="none">';
+  for (let i = 0; i < 10; i++)
+    s += `<rect x="0" y="${i * 90}" width="600" height="90" fill="${i % 2 ? '#35a043' : '#2e8b3d'}"/>`;
+  s += '<g fill="none" stroke="#fff" stroke-opacity=".85" stroke-width="3">' +
+       '<rect x="10" y="10" width="580" height="880"/>' +
+       '<line x1="10" y1="450" x2="590" y2="450"/>' +
+       '<circle cx="300" cy="450" r="70"/>' +
+       '<rect x="150" y="10" width="300" height="140"/><rect x="230" y="10" width="140" height="50"/>' +
+       '<rect x="150" y="750" width="300" height="140"/><rect x="230" y="840" width="140" height="50"/>' +
+       '</g><circle cx="300" cy="450" r="5" fill="#fff" fill-opacity=".85"/></svg>';
+  return s;
+})();
+
+function tcFormations(n) {
+  const set = new Set();
+  const small = n < 6;
+  for (let d = 1; d <= n; d++) {
+    for (let m = 1; m <= n; m++) {
+      const a = n - d - m;
+      if (a < 1) continue;
+      if (!small && (d < 2 || d > 5 || m < 2 || m > 6 || a > 4)) continue;
+      set.add(`${d}-${m}-${a}`);
+    }
+  }
+  if (n >= 8) {
+    for (let d = 3; d <= 5; d++)
+      for (let m1 = 1; m1 <= 4; m1++)
+        for (let m2 = 1; m2 <= 4; m2++) {
+          const a = n - d - m1 - m2;
+          if (a >= 1 && a <= 3) set.add(`${d}-${m1}-${m2}-${a}`);
+        }
+  }
+  const all = [...set];
+  const pop = (TC_POPULAR[n] || []).filter(f => set.has(f));
+  const spread = f => { const p = f.split('-').map(Number); return Math.max(...p) - Math.min(...p); };
+  const rest = all.filter(f => !pop.includes(f)).sort((x, y) => spread(x) - spread(y) || x.localeCompare(y));
+  return [...pop, ...rest];
+}
+
+function tcLines(f)  { return String(f).split('-').map(Number).filter(Boolean); }
+function tcRoles(len) {
+  if (len === 1) return ['att'];
+  if (len === 2) return ['def', 'att'];
+  if (len === 3) return ['def', 'mid', 'att'];
+  return ['def', ...Array(len - 2).fill('mid'), 'att'];
+}
+function tcPlayer(id) { return id ? plyListCache.find(p => String(p.PLYID) === String(id)) || null : null; }
+
+function tcShortName(full) {
+  const p = String(full || '').trim().split(/\s+/).filter(Boolean);
+  if (!p.length) return '';
+  return p.length === 1 ? p[0] : p[0] + ' ' + p[p.length - 1];
+}
+
+function tcClearOutfield() {
+  Object.keys(tc.assign).forEach(k => { if (k[0] === 'L') delete tc.assign[k]; });
+}
+
+async function openTacticModal() {
+  document.getElementById('tcMsg').innerHTML = '';
+  document.getElementById('tcCount').value = tc.n;
+  document.getElementById('tcSubs').value  = tc.subs;
+  tcFillFormationSelect();
+  renderTactic();
+  document.getElementById('tacticModal').classList.add('active');
+  if (!plyListLoaded) { await ensurePlayersLoaded(); renderTactic(); }
+}
+
+function closeTacticModal() { document.getElementById('tacticModal').classList.remove('active'); }
+document.getElementById('tacticModal').addEventListener('click', function (e) {
+  if (e.target === this) closeTacticModal();
+});
+
+async function reloadTacticPlayers() {
+  plyListLoaded = false;
+  await ensurePlayersLoaded();
+  renderTactic();
+}
+
+function tcFillFormationSelect() {
+  const list = tcFormations(tc.n - 1);
+  document.getElementById('tcFormationList').innerHTML = list.map(f => `<option value="${f}">`).join('');
+  const input = document.getElementById('tcFormation');
+  if (!tcValidFormation(tc.formation)) tc.formation = list[0] || '';
+  input.value = tc.formation;
+  document.getElementById('tcFormationErr').textContent = '';
+}
+
+function tcValidFormation(f) {
+  if (!/^\d{1,2}(-\d{1,2}){1,4}$/.test(String(f || '').trim())) return false;
+  const parts = f.split('-').map(Number);
+  if (parts.some(p => p < 1)) return false;
+  return parts.reduce((a, b) => a + b, 0) === tc.n - 1;
+}
+
+function onTcFormationChange() {
+  const input = document.getElementById('tcFormation');
+  const err   = document.getElementById('tcFormationErr');
+  const v = input.value.trim().replace(/[\s_.\/،,]+/g, '-');
+  input.value = v;
+  if (!tcValidFormation(v)) {
+    err.textContent = `الخطة غير صالحة: يجب أن يكون مجموع الأرقام ${tc.n - 1} (بدون الحارس)، مثال: ${tcFormations(tc.n - 1)[0] || ''}`;
+    return;
+  }
+  err.textContent = '';
+  tc.formation = v;
+  tcClearOutfield();
+  renderTactic();
+}
+
+function onTcSubsChange() {
+  let s = parseInt(document.getElementById('tcSubs').value, 10);
+  s = Math.min(9, Math.max(0, isNaN(s) ? 0 : s));
+  document.getElementById('tcSubs').value = s;
+  tc.subs = s;
+  Object.keys(tc.assign).forEach(k => { if (k[0] === 'S' && parseInt(k.slice(1), 10) >= s) delete tc.assign[k]; });
+  renderTactic();
+}
+
+function onTcCountChange() {
+  let n = parseInt(document.getElementById('tcCount').value, 10);
+  n = Math.min(11, Math.max(5, isNaN(n) ? 11 : n));
+  document.getElementById('tcCount').value = n;
+  tc.n = n;
+  tc.formation = '';
+  tcClearOutfield();
+  tcFillFormationSelect();
+  renderTactic();
+}
+
+function tcSlotHtml(key, role, style) {
+  const p = tcPlayer(tc.assign[key]);
+  const inner = p ? (p.PLYPhoto ? `<img src="${escAttr(p.PLYPhoto)}" alt="">` : '👤') : '+';
+  return `<div class="tc-slot" ${style ? `style="${style}"` : ''} onclick="openTacticPick('${key}','${role}')">
+      <div class="tc-circle ${p ? '' : 'empty'}">${inner}</div>
+      ${p ? `<div class="tc-name">${escAttr(tcShortName(p.PLYName))}</div>` : ''}
+    </div>`;
+}
+
+function tcPositions() {
+  const lines = tcLines(tc.formation);
+  const roles = tcRoles(lines.length);
+  const L = lines.length;
+  const out = [{ key: 'gk', role: 'gk', x: 50, y: 88 }];
+  lines.forEach((cnt, i) => {
+    const y = L === 1 ? 50 : 72 - i * (58 / (L - 1));
+    for (let j = 0; j < cnt; j++) out.push({ key: `L${i}_${j}`, role: roles[i], x: ((j + 1) / (cnt + 1)) * 100, y });
+  });
+  return out;
+}
+
+function renderTactic() {
+  const pitch = document.getElementById('tcPitch');
+  let html = TC_PITCH_SVG;
+  tcPositions().forEach(s => { html += tcSlotHtml(s.key, s.role, `left:${s.x}%;top:${s.y}%`); });
+  pitch.innerHTML = html;
+
+  const wrap = document.getElementById('tcBenchWrap');
+  if (tc.subs > 0) {
+    let b = '';
+    for (let i = 0; i < tc.subs; i++) b += tcSlotHtml('S' + i, 'sub', '');
+    document.getElementById('tcBench').innerHTML = b;
+    wrap.style.display = '';
+  } else wrap.style.display = 'none';
+}
+
+function openTacticPick(key, role) {
+  tcPickKey = key; tcPickRole = role;
+  document.getElementById('tcPickTitle').textContent = 'اختر ' + TC_ROLE_NAME[role];
+  const sel = document.getElementById('tcPickFilter');
+  sel.innerHTML =
+    `<option value="auto">حسب الخط (${TC_ROLE_POS[role].join(' / ')})</option>` +
+    `<option value="all">كل المراكز</option>` +
+    TC_ALLOWED.map(p => `<option value="${p}">${p}</option>`).join('');
+  sel.value = 'auto';
+  renderTacticPick();
+  document.getElementById('tcPickModal').classList.add('active');
+}
+
+function closeTacticPick() { document.getElementById('tcPickModal').classList.remove('active'); }
+document.getElementById('tcPickModal').addEventListener('click', function (e) {
+  if (e.target === this) closeTacticPick();
+});
+
+function renderTacticPick() {
+  const box = document.getElementById('tcPickList');
+  const f = document.getElementById('tcPickFilter').value;
+  const positions = f === 'auto' ? TC_ROLE_POS[tcPickRole] : f === 'all' ? TC_ALLOWED : [f];
+  const used = new Set(Object.entries(tc.assign).filter(([k]) => k !== tcPickKey).map(([, v]) => String(v)));
+
+  const list = plyListCache
+    .filter(p => positions.includes(String(p.PLYPosition || '').trim()) && !used.has(String(p.PLYID)))
+    .sort((a, b) => String(a.PLYName || '').localeCompare(String(b.PLYName || ''), 'ar'));
+
+  if (!list.length) { box.innerHTML = '<div class="tc-pick-empty">لا يوجد أعضاء بهذا المركز</div>'; return; }
+
+  box.innerHTML = list.map(p => `
+    <div class="tc-pick-item" onclick="tcAssign('${escAttr(p.PLYID)}')">
+      ${p.PLYPhoto ? `<img class="ply-thumb" src="${escAttr(p.PLYPhoto)}" alt="">` : '<span class="ply-thumb none">👤</span>'}
+      <span class="nm">${escAttr(p.PLYName || '-')}</span>
+      <span class="ps">${escAttr(p.PLYPosition || '')}</span>
+    </div>`).join('');
+}
+
+function tcAssign(id) { tc.assign[tcPickKey] = id; closeTacticPick(); renderTactic(); }
+function tcClearSlot() { delete tc.assign[tcPickKey]; closeTacticPick(); renderTactic(); }
+
+/* ===== حفظ الملعب كصورة ===== */
+function tcLoadImg(src, cors) {
+  return new Promise(res => {
+    if (!src) return res(null);
+    const im = new Image();
+    if (cors && !/^data:/.test(src)) im.crossOrigin = 'anonymous';
+    im.onload  = () => res(im);
+    im.onerror = () => res(null);
+    im.src = src;
+  });
+}
+
+function tcRoundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x + r, y);
+  ctx.arcTo(x + w, y, x + w, y + h, r);
+  ctx.arcTo(x + w, y + h, x, y + h, r);
+  ctx.arcTo(x, y + h, x, y, r);
+  ctx.arcTo(x, y, x + w, y, r);
+  ctx.closePath();
+}
+
+async function saveTacticImage(btn) {
+  const msg = document.getElementById('tcMsg');
+  msg.innerHTML = '';
+  btn.disabled = true;
+  const oldTxt = btn.textContent;
+  btn.textContent = '⏳ جارٍ التجهيز...';
+
+  try {
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;
+
+    const W = 900, headerH = 110, pitchH = 1350;
+    const perRow = 6, rowH = 190;
+    const rows = Math.ceil(tc.subs / perRow);
+    const benchH = tc.subs ? 80 + rows * rowH : 0;
+    const H = headerH + pitchH + benchH;
+
+    const cv = document.createElement('canvas');
+    cv.width = W; cv.height = H;
+    const ctx = cv.getContext('2d');
+    ctx.direction = 'rtl'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+
+    ctx.fillStyle = '#0f2027'; ctx.fillRect(0, 0, W, H);
+    const g = ctx.createLinearGradient(0, 0, W, 0);
+    g.addColorStop(0, '#1e3c72'); g.addColorStop(1, '#2a5298');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, headerH);
+
+    const team = getTeamInfoForCard() || {};
+    ctx.fillStyle = '#f0b90b';
+    ctx.font = '700 42px Cairo, Tahoma, sans-serif';
+    ctx.fillText(team.TeamName || 'تشكيلة الفريق', W / 2, 40);
+    ctx.fillStyle = '#fff';
+    ctx.font = '700 34px Cairo, Tahoma, sans-serif';
+    ctx.direction = 'ltr';
+    ctx.fillText(tc.formation, W / 2, 84);
+    ctx.direction = 'rtl';
+
+    const pitchImg = await tcLoadImg('data:image/svg+xml;charset=utf-8,' + encodeURIComponent(TC_PITCH_SVG), false);
+    if (pitchImg) ctx.drawImage(pitchImg, 0, headerH, W, pitchH);
+    else { ctx.fillStyle = '#2e8b3d'; ctx.fillRect(0, headerH, W, pitchH); }
+
+    const imgs = {};
+    await Promise.all(Object.values(tc.assign).map(async id => {
+      const p = tcPlayer(id);
+      if (p && p.PLYPhoto && !(id in imgs)) imgs[id] = await tcLoadImg(p.PLYPhoto, true);
+    }));
+
+    const drawLabel = (text, cx, y, maxW) => {
+      let size = 26;
+      ctx.font = `700 ${size}px Cairo, Tahoma, sans-serif`;
+      while (size > 14 && ctx.measureText(text).width > maxW - 24) {
+        size -= 2; ctx.font = `700 ${size}px Cairo, Tahoma, sans-serif`;
+      }
+      const w = Math.min(maxW, ctx.measureText(text).width + 24);
+      ctx.fillStyle = 'rgba(15,32,39,.88)';
+      tcRoundRect(ctx, cx - w / 2, y, w, 36, 18); ctx.fill();
+      ctx.fillStyle = '#fff'; ctx.fillText(text, cx, y + 19);
+    };
+
+    const drawSlot = (key, cx, cy, r, maxW) => {
+      const id = tc.assign[key];
+      const p = tcPlayer(id);
+      ctx.save();
+      ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.closePath();
+      if (p) {
+        ctx.clip();
+        const im = imgs[id];
+        if (im) {
+          const sc = Math.max(2 * r / im.width, 2 * r / im.height);
+          const dw = im.width * sc, dh = im.height * sc;
+          ctx.drawImage(im, cx - dw / 2, cy - dh / 2, dw, dh);
+        } else {
+          ctx.fillStyle = '#e8eefb'; ctx.fillRect(cx - r, cy - r, 2 * r, 2 * r);
+          ctx.fillStyle = '#1e3c72'; ctx.font = `${r}px sans-serif`; ctx.fillText('👤', cx, cy);
+        }
+        ctx.restore();
+        ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.lineWidth = 5; ctx.strokeStyle = '#fff'; ctx.stroke();
+        drawLabel(tcShortName(p.PLYName), cx, cy + r + 8, maxW);
+      } else {
+        ctx.fillStyle = 'rgba(255,255,255,.2)'; ctx.fill();
+        ctx.restore();
+        ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2);
+        ctx.setLineDash([10, 8]); ctx.lineWidth = 4; ctx.strokeStyle = '#fff'; ctx.stroke();
+        ctx.setLineDash([]);
+        ctx.fillStyle = '#fff'; ctx.font = `700 ${r}px Cairo, sans-serif`;
+        ctx.fillText('+', cx, cy + 2);
+      }
+    };
+
+    const lines = tcLines(tc.formation);
+    tcPositions().forEach(s => {
+      const cnt = s.key === 'gk' ? 1 : lines[parseInt(s.key.slice(1), 10)];
+      const maxW = s.key === 'gk' ? 260 : (W / (cnt + 1)) * 1.05;
+      drawSlot(s.key, (s.x / 100) * W, headerH + (s.y / 100) * pitchH, W * 0.06, maxW);
+    });
+
+    if (tc.subs) {
+      const top = headerH + pitchH;
+      ctx.fillStyle = '#16323d'; ctx.fillRect(0, top, W, benchH);
+      ctx.fillStyle = '#f0b90b'; ctx.font = '700 36px Cairo, Tahoma, sans-serif';
+      ctx.fillText('الاحتياط', W / 2, top + 42);
+      for (let i = 0; i < tc.subs; i++) {
+        const row = Math.floor(i / perRow);
+        const inRow = Math.min(perRow, tc.subs - row * perRow);
+        const col = i - row * perRow;
+        drawSlot('S' + i, ((col + 1) / (inRow + 1)) * W, top + 80 + row * rowH + 52, 46, (W / (inRow + 1)) * 1.05);
+      }
+    }
+
+    cv.toBlob(blob => {
+      if (!blob) { msg.innerHTML = '<div class="error-msg">تعذّر إنشاء الصورة</div>'; return; }
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'خطة-' + tc.formation + '.png';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 2000);
+      msg.innerHTML = '<div class="success-msg">✅ تم حفظ الصورة</div>';
+    }, 'image/png');
+  } catch (e) {
+    msg.innerHTML = `<div class="error-msg">تعذّر حفظ الصورة: ${escAttr(e.message)}</div>`;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = oldTxt;
+  }
+}
+
+/* ============================================================
+   المباريات
+   ============================================================ */
+const MT_KINDS = ['ودية','دوري','كأس','خيرية','دورة ودية','دوري الهواة'];
+const MT_IMG_FIELDS = ['MatchTeamPhoto','MatchTeamVPhoto','MatchTeamVeiw','MatchTeamVVeiw','MatchPlan'];
+const MT_MAX_CHARS = 400000;
+
+let mtCache = [], mtLoaded = false, mtAdding = false, mtEditingId = null, mtSearch = '';
+let mtOpen = new Set(), mtDraft = null, mtPhotos = {}, mtPhotoTarget = '';
+let mtAdCanvas = null, mtAdMatch = null;
+
+const mtParse = s => { try { const a = JSON.parse(s); return Array.isArray(a) ? a : []; } catch (e) { return []; } };
+const mtSum = arr => arr.reduce((a, e) => a + (parseInt(e.n, 10) || 0), 0);
+const mtTime = t => /^\d{1,2}:\d{2}$/.test(String(t || '').trim()) ? to12(String(t).trim()) : (t || '-');
+
+function mtFillPlayersDl() {
+  document.getElementById('mtPlayersDl').innerHTML =
+    plyListCache.map(p => `<option value="${escAttr(p.PLYName)}">`).join('');
+}
+
+function openMatchList() {
+  document.getElementById('matchListModal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+  ensurePlayersLoaded().then(mtFillPlayersDl);
+  if (!mtLoaded) loadMatchList(); else renderMatchList();
+}
+function closeMatchList() {
+  document.getElementById('matchListModal').classList.remove('active');
+  mtCancel();
+}
+document.getElementById('matchListModal').addEventListener('click', function (e) {
+  if (e.target === this) closeMatchList();
+});
+
+async function loadMatchList() {
+  const box = document.getElementById('mtListBox');
+  mtEditingId = null;
+  box.innerHTML = '<div class="spinner" style="margin:20px auto"></div>';
+  try {
+    const data = await fetchJSON(MATCH_API + '?action=list&t=' + Date.now());
+    if (!data.success) { box.innerHTML = `<div class="error-msg">${escAttr(data.message)}</div>`; return; }
+    mtCache = data.rows || [];
+    mtLoaded = true;
+    renderMatchList();
+  } catch (e) {
+    box.innerHTML = `<div class="error-msg">خطأ: ${escAttr(e.message)}</div>`;
+  }
+}
+
+function mtDraftFrom(r) {
+  r = r || {};
+  const t = getTeamInfoForCard();
+  return {
+    team: r.MatchTeam || t.TeamName || '', teamV: r.MatchTeamV || '',
+    gl: mtParse(r.MatchTeamGoalers),  vgl: mtParse(r.MatchTeamVGoalers),
+    cd: mtParse(r.MatchTeamCards),    vcd: mtParse(r.MatchTeamVCards),
+    g: r.MatchTeamGoals ?? '', vg: r.MatchTeamVGoals ?? ''
+  };
+}
+
+function mtImgVal(r, f) {
+  return mtPhotos[f] || (r && r[f]) ||
+    (f === 'MatchTeamPhoto' ? (getTeamInfoForCard().TeamLogo || '') : '');
+}
+
+function mtThumb(field, url, editable) {
+  const id = 'mtth_' + field;
+  if (editable) {
+    return url
+      ? `<img id="${id}" class="mt-logo editable" src="${escAttr(url)}" onclick="mtPickPhoto('${field}')" title="اضغط للتغيير" alt="">`
+      : `<span id="${id}" class="mt-logo none editable" onclick="mtPickPhoto('${field}')" title="اضغط لإضافة صورة">📷</span>`;
+  }
+  return url
+    ? `<img class="mt-logo" src="${escAttr(url)}" onclick="window.open(this.src,'_blank')" alt="">`
+    : '<span class="mt-logo none">—</span>';
+}
+
+function mtPickPhoto(f) { mtPhotoTarget = f; document.getElementById('mtPhotoInput').click(); }
+
+function mtResize(file, startSize, png, cb) {
+  const rd = new FileReader();
+  rd.onload = ev => {
+    const im = new Image();
+    im.onload = () => {
+      let size = startSize, q = 0.8, out = '';
+      for (let i = 0; i < 30; i++) {
+        const k = Math.min(1, size / Math.max(im.width, im.height));
+        const c = document.createElement('canvas');
+        c.width  = Math.max(1, Math.round(im.width * k));
+        c.height = Math.max(1, Math.round(im.height * k));
+        const x = c.getContext('2d');
+        if (!png) { x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); }
+        x.drawImage(im, 0, 0, c.width, c.height);
+        out = png ? c.toDataURL('image/png') : c.toDataURL('image/jpeg', q);
+        if (out.length <= MT_MAX_CHARS) break;
+        if (!png && q > 0.45) q -= 0.1; else size = Math.round(size * 0.85);
+      }
+      if (out.length > MT_MAX_CHARS) { alert('تعذّر تصغير الصورة بما يكفي، اختر صورة أخرى'); return; }
+      cb(out);
+    };
+    im.onerror = () => alert('ملف الصورة غير صالح');
+    im.src = ev.target.result;
+  };
+  rd.readAsDataURL(file);
+}
+
+const MT_NOBG_FIELDS = ['MatchTeamPhoto','MatchTeamVPhoto','MatchTeamVeiw','MatchTeamVVeiw'];
+
+function mtLoadFileImg(file) {
+  return new Promise((resolve, reject) => {
+    const rd = new FileReader();
+    rd.onload = ev => {
+      const im = new Image();
+      im.onload  = () => resolve(im);
+      im.onerror = () => reject(new Error('ملف الصورة غير صالح'));
+      im.src = ev.target.result;
+    };
+    rd.onerror = () => reject(new Error('تعذّر قراءة الملف'));
+    rd.readAsDataURL(file);
+  });
+}
+
+/* canvas بدون خلفية وبدون حدود */
+function mtCutBackground(img, work) {
+  const k = Math.min(1, work / Math.max(img.width, img.height));
+  let w = Math.max(1, Math.round(img.width * k));
+  let h = Math.max(1, Math.round(img.height * k));
+
+  let cv = document.createElement('canvas');
+  cv.width = w; cv.height = h;
+  let ctx = cv.getContext('2d', { willReadFrequently: true });
+  ctx.drawImage(img, 0, 0, w, h);
+
+  let d = ctx.getImageData(0, 0, w, h).data;
+  const lineUniform = (pts) => {
+    let sr = 0, sg = 0, sb = 0, n = 0;
+    for (const i of pts) { if (d[i + 3] < 10) continue; sr += d[i]; sg += d[i+1]; sb += d[i+2]; n++; }
+    if (!n) return true;
+    const mr = sr / n, mg = sg / n, mb = sb / n;
+    for (const i of pts) {
+      if (d[i + 3] < 10) continue;
+      if (Math.abs(d[i]-mr) > 28 || Math.abs(d[i+1]-mg) > 28 || Math.abs(d[i+2]-mb) > 28) return false;
+    }
+    return true;
+  };
+  const rowPts = (y, x0, x1) => { const a = []; for (let x = x0; x < x1; x++) a.push((y * w + x) * 4); return a; };
+  const colPts = (x, y0, y1) => { const a = []; for (let y = y0; y < y1; y++) a.push((y * w + x) * 4); return a; };
+
+  const maxT = Math.max(2, Math.round(Math.min(w, h) * 0.06));
+  let L = 0, T = 0, R = w, B = h;
+  for (let i = 0; i < maxT && T < B - 4 && lineUniform(rowPts(T, L, R)); i++) T++;
+  for (let i = 0; i < maxT && B > T + 4 && lineUniform(rowPts(B - 1, L, R)); i++) B--;
+  for (let i = 0; i < maxT && L < R - 4 && lineUniform(colPts(L, T, B)); i++) L++;
+  for (let i = 0; i < maxT && R > L + 4 && lineUniform(colPts(R - 1, T, B)); i++) R--;
+  const m = Math.max(1, Math.round(Math.min(R - L, B - T) * 0.008));
+  L += m; T += m; R -= m; B -= m;
+  if (R - L < 8 || B - T < 8) { L = 0; T = 0; R = w; B = h; }
+
+  const c2 = document.createElement('canvas');
+  c2.width = R - L; c2.height = B - T;
+  c2.getContext('2d').drawImage(cv, L, T, R - L, B - T, 0, 0, R - L, B - T);
+  const trimmed = c2;
+  w = c2.width; h = c2.height;
+  ctx = c2.getContext('2d', { willReadFrequently: true });
+
+  const id = ctx.getImageData(0, 0, w, h);
+  const p = id.data;
+  const buckets = new Map();
+  const edgeIdx = [];
+  for (let x = 0; x < w; x++) { edgeIdx.push(x, (h - 1) * w + x); }
+  for (let y = 0; y < h; y++) { edgeIdx.push(y * w, y * w + w - 1); }
+
+  edgeIdx.forEach(px => {
+    const i = px * 4;
+    if (p[i + 3] < 10) return;
+    const key = ((p[i] >> 4) << 8) | ((p[i+1] >> 4) << 4) | (p[i+2] >> 4);
+    const b = buckets.get(key) || { n: 0, r: 0, g: 0, b: 0 };
+    b.n++; b.r += p[i]; b.g += p[i+1]; b.b += p[i+2];
+    buckets.set(key, b);
+  });
+  let best = null;
+  buckets.forEach(b => { if (!best || b.n > best.n) best = b; });
+  const bg = best ? { r: best.r / best.n, g: best.g / best.n, b: best.b / best.n } : null;
+
+  const TOL = 42;
+  const dist = i => {
+    if (!bg) return 999;
+    const dr = p[i] - bg.r, dg = p[i+1] - bg.g, db = p[i+2] - bg.b;
+    return Math.sqrt(dr*dr + dg*dg + db*db);
+  };
+  const isBg = px => { const i = px * 4; return p[i + 3] < 10 || dist(i) < TOL; };
+
+  const seen = new Uint8Array(w * h);
+  const stack = [];
+  const push = px => { if (!seen[px] && isBg(px)) { seen[px] = 1; stack.push(px); } };
+  for (let x = 0; x < w; x++) { push(x); push((h - 1) * w + x); }
+  for (let y = 0; y < h; y++) { push(y * w); push(y * w + w - 1); }
+  let removed = 0;
+  while (stack.length) {
+    const px = stack.pop();
+    p[px * 4 + 3] = 0; removed++;
+    const x = px % w, y = (px - x) / w;
+    if (x > 0)     push(px - 1);
+    if (x < w - 1) push(px + 1);
+    if (y > 0)     push(px - w);
+    if (y < h - 1) push(px + w);
+  }
+
+  if (removed > w * h * 0.93) return trimmed;
+
+  const alpha0 = new Uint8Array(w * h);
+  for (let px = 0; px < w * h; px++) alpha0[px] = seen[px] ? 0 : 1;
+  for (let y = 1; y < h - 1; y++) {
+    for (let x = 1; x < w - 1; x++) {
+      const px = y * w + x;
+      if (!alpha0[px]) continue;
+      if (seen[px - 1] || seen[px + 1] || seen[px - w] || seen[px + w]) {
+        const dd = dist(px * 4);
+        if (dd < TOL * 1.8) {
+          const a = Math.max(0, Math.min(1, (dd - TOL) / (TOL * 0.8)));
+          p[px * 4 + 3] = Math.round(p[px * 4 + 3] * a);
+        }
+      }
+    }
+  }
+  ctx.putImageData(id, 0, 0);
+
+  let x0 = w, y0 = h, x1 = -1, y1 = -1;
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      if (p[(y * w + x) * 4 + 3] > 16) {
+        if (x < x0) x0 = x; if (x > x1) x1 = x;
+        if (y < y0) y0 = y; if (y > y1) y1 = y;
+      }
+    }
+  }
+  if (x1 < 0) return trimmed;
+  x0 = Math.max(0, x0 - 2); y0 = Math.max(0, y0 - 2);
+  x1 = Math.min(w - 1, x1 + 2); y1 = Math.min(h - 1, y1 + 2);
+
+  const out = document.createElement('canvas');
+  out.width = x1 - x0 + 1; out.height = y1 - y0 + 1;
+  out.getContext('2d').drawImage(c2, x0, y0, out.width, out.height, 0, 0, out.width, out.height);
+  return out;
+}
+
+function mtEncodeTransparent(cv, startSize) {
+  let size = startSize, q = 0.8, out = '';
+  for (let i = 0; i < 40; i++) {
+    const k = Math.min(1, size / Math.max(cv.width, cv.height));
+    const c = document.createElement('canvas');
+    c.width  = Math.max(1, Math.round(cv.width  * k));
+    c.height = Math.max(1, Math.round(cv.height * k));
+    c.getContext('2d').drawImage(cv, 0, 0, c.width, c.height);
+    out = c.toDataURL('image/webp', q);
+    const isWebp = out.startsWith('data:image/webp');
+    if (!isWebp) out = c.toDataURL('image/png');
+    if (out.length <= MT_MAX_CHARS) return out;
+    if (isWebp && q > 0.4) q -= 0.1; else size = Math.round(size * 0.85);
+  }
+  return '';
+}
+
+async function mtOnPhoto(e) {
+  const file = e.target.files[0];
+  e.target.value = '';
+  if (!file) return;
+  const f = mtPhotoTarget;
+
+  const setThumb = out => {
+    mtPhotos[f] = out;
+    const el = document.getElementById('mtth_' + f);
+    if (el) el.outerHTML = `<img id="mtth_${f}" class="mt-logo editable" src="${out}" onclick="mtPickPhoto('${f}')" alt="">`;
+  };
+
+  if (!MT_NOBG_FIELDS.includes(f)) { mtResize(file, 600, false, setThumb); return; }
+
+  const logo = (f === 'MatchTeamPhoto' || f === 'MatchTeamVPhoto');
+  const thumbEl = document.getElementById('mtth_' + f);
+  if (thumbEl) thumbEl.style.opacity = '.4';
+
+  try {
+    const img = await mtLoadFileImg(file);
+    const cut = mtCutBackground(img, logo ? 400 : 650);
+    const out = mtEncodeTransparent(cut, logo ? 220 : 600);
+    if (!out) throw new Error('تعذّر تصغير الصورة بما يكفي، اختر صورة أخرى');
+    setThumb(out);
+  } catch (err) {
+    if (thumbEl) thumbEl.style.opacity = '';
+    alert(err.message || 'تعذّرت معالجة الصورة');
+  }
+}
+
+/* ===== محرر الأهداف والكروت ===== */
+function mtSideEdit(v) {
+  const GK = v ? 'vgl' : 'gl', CK = v ? 'vcd' : 'cd', TK = v ? 'vg' : 'g';
+  const dl = v ? '' : 'list="mtPlayersDl"';
+
+  const goals = mtDraft[GK].map((e, i) => `
+    <div class="mt-ent">
+      <input ${dl} placeholder="اللاعب" value="${escAttr(e.name)}" oninput="mtEnt('${GK}',${i},'name',this.value)">
+      <input type="number" min="1" placeholder="أهداف" value="${escAttr(e.n)}" oninput="mtEnt('${GK}',${i},'n',this.value)">
+      <input placeholder="الدقيقة" value="${escAttr(e.min)}" oninput="mtEnt('${GK}',${i},'min',this.value)">
+      <button class="btn small red" onclick="mtDel('${GK}',${i})">✖</button>
+    </div>`).join('');
+
+  const cards = mtDraft[CK].map((e, i) => `
+    <div class="mt-ent card">
+      <input ${dl} placeholder="اللاعب" value="${escAttr(e.name)}" oninput="mtEnt('${CK}',${i},'name',this.value)">
+      <select onchange="mtEnt('${CK}',${i},'type',this.value)">
+        <option value="صفراء" ${e.type !== 'حمراء' ? 'selected' : ''}>🟨 صفراء</option>
+        <option value="حمراء" ${e.type === 'حمراء' ? 'selected' : ''}>🟥 حمراء</option>
+      </select>
+      <input type="number" min="1" placeholder="العدد" value="${escAttr(e.n)}" oninput="mtEnt('${CK}',${i},'n',this.value)">
+      <input placeholder="الدقيقة" value="${escAttr(e.min)}" oninput="mtEnt('${CK}',${i},'min',this.value)">
+      <button class="btn small red" onclick="mtDel('${CK}',${i})">✖</button>
+    </div>`).join('');
+
+  return `<div class="mt-side">
+    <h4 id="mtSideTitle_${v ? 'v' : 'o'}">${v ? '🆚' : '⚽'} ${escAttr(v ? mtDraft.teamV : mtDraft.team) || (v ? 'الخصم' : 'الفريق')}</h4>
+    <div class="mt-sub">⚽ الأهداف (اللاعب - العدد - الدقيقة)</div>${goals}
+    <button class="btn small gold" onclick="mtAdd('${GK}')">➕ هدف</button>
+    <div class="mt-sub">🟨🟥 الكروت (اللاعب - النوع - العدد - الدقيقة)</div>${cards}
+    <button class="btn small gold" onclick="mtAdd('${CK}')">➕ كرت</button>
+    <div class="mt-total"><label>إجمالي الأهداف</label>
+      <input type="number" min="0" id="mtTot_${TK}" value="${escAttr(mtDraft[TK])}" oninput="mtDraft.${TK}=this.value"></div>
+  </div>`;
+}
+
+function mtDetailEditHtml() { return `<div class="mt-sides">${mtSideEdit(false)}${mtSideEdit(true)}</div>`; }
+function mtRerenderDetail() { const c = document.getElementById('mtDetailCell'); if (c) c.innerHTML = mtDetailEditHtml(); }
+function mtTitle() {
+  const o = document.getElementById('mtSideTitle_o'), v = document.getElementById('mtSideTitle_v');
+  if (o) o.textContent = '⚽ ' + (mtDraft.team || 'الفريق');
+  if (v) v.textContent = '🆚 ' + (mtDraft.teamV || 'الخصم');
+}
+function mtTotalKey(k) { return (k === 'gl') ? 'g' : (k === 'vgl') ? 'vg' : null; }
+function mtSyncTotal(k) {
+  const tk = mtTotalKey(k);
+  if (!tk) return;
+  mtDraft[tk] = mtSum(mtDraft[k]);
+  const el = document.getElementById('mtTot_' + tk);
+  if (el) el.value = mtDraft[tk];
+}
+function mtEnt(k, i, f, val) { mtDraft[k][i][f] = val; if (f === 'n') mtSyncTotal(k); }
+function mtAdd(k) {
+  const isCard = (k === 'cd' || k === 'vcd');
+  mtDraft[k].push(isCard ? { name: '', type: 'صفراء', n: 1, min: '' } : { name: '', n: 1, min: '' });
+  mtSyncTotal(k);
+  mtRerenderDetail();
+}
+function mtDel(k, i) { mtDraft[k].splice(i, 1); mtSyncTotal(k); mtRerenderDetail(); }
+
+/* ===== عرض التفاصيل ===== */
+function mtLines(arr, card) {
+  if (!arr.length) return '<div class="mt-view-line" style="color:#999">—</div>';
+  return arr.map(e => `<div class="mt-view-line">${card ? (e.type === 'حمراء' ? '🟥' : '🟨') : '⚽'}
+    ${escAttr(e.name || '-')} ×${escAttr(e.n || 1)}${e.min ? ` <small>(${escAttr(e.min)}')</small>` : ''}</div>`).join('');
+}
+function mtDetailView(r) {
+  const g  = r.MatchTeamGoals  !== '' ? r.MatchTeamGoals  : mtSum(mtParse(r.MatchTeamGoalers));
+  const vg = r.MatchTeamVGoals !== '' ? r.MatchTeamVGoals : mtSum(mtParse(r.MatchTeamVGoalers));
+  const side = (title, gl, cd, tot) => `<div class="mt-side"><h4>${escAttr(title)}</h4>
+    <div class="mt-sub">⚽ الأهداف</div>${mtLines(mtParse(gl), false)}
+    <div class="mt-sub">🟨🟥 الكروت</div>${mtLines(mtParse(cd), true)}
+    <div class="mt-total"><label>إجمالي الأهداف</label><strong>${escAttr(tot)}</strong></div></div>`;
+  return `<div class="mt-sides">
+    ${side(r.MatchTeam, r.MatchTeamGoalers, r.MatchTeamCards, g)}
+    ${side(r.MatchTeamV, r.MatchTeamVGoalers, r.MatchTeamVCards, vg)}</div>`;
+}
+
+function mtKindOpts(cur) {
+  return '<option value="">— اختر —</option>' +
+    MT_KINDS.map(k => `<option value="${k}" ${k === cur ? 'selected' : ''}>${k}</option>`).join('');
+}
+
+function mtRowEdit(r, id) {
+  r = r || {};
+  const sid = escAttr(id);
+  const d = mtDraft;
+  return `<tr class="input-row">
+    <td><strong>${id ? sid : 'جديد'}</strong></td>
+    <td><select id="mt_kind">${mtKindOpts(r.MatchKind)}</select></td>
+    <td><input type="date" id="mt_date" value="${normalizeDate(r.MatchDate) || toDateStr(new Date())}"></td>
+    <td><input type="time" id="mt_time" value="${to24Input(r.MatchTime) || ''}"></td>
+    <td>${mtThumb('MatchTeamPhoto', mtImgVal(r, 'MatchTeamPhoto'), true)}<br>
+        <input type="text" id="mt_team" value="${escAttr(d.team)}" placeholder="الفريق"
+               oninput="mtDraft.team=this.value;mtTitle()"></td>
+    <td>${mtThumb('MatchTeamVPhoto', mtImgVal(r, 'MatchTeamVPhoto'), true)}<br>
+        <input type="text" id="mt_teamv" value="${escAttr(d.teamV)}" placeholder="الفريق الخصم"
+               oninput="mtDraft.teamV=this.value;mtTitle()"></td>
+    <td><input type="text" id="mt_loc" value="${escAttr(r.MatchLocation)}" placeholder="موقع المباراة"></td>
+    <td><div class="mt-photos">
+        <div>${mtThumb('MatchTeamVeiw', mtImgVal(r, 'MatchTeamVeiw'), true)}<small>جماعية الفريق</small></div>
+        <div>${mtThumb('MatchTeamVVeiw', mtImgVal(r, 'MatchTeamVVeiw'), true)}<small>جماعية الخصم</small></div>
+        <div>${mtThumb('MatchPlan', mtImgVal(r, 'MatchPlan'), true)}<small>الخطة</small></div>
+    </div></td>
+    <td>—</td>
+    <td style="white-space:nowrap">
+      <button class="btn small green" onclick="mtSave('${sid}', this)">💾</button>
+      <button class="btn small red" onclick="mtCancel()">✖</button>
+    </td></tr>
+    <tr class="mt-detail"><td colspan="10" id="mtDetailCell">${mtDetailEditHtml()}</td></tr>`;
+}
+
+function renderMatchList() {
+  const box = document.getElementById('mtListBox');
+  let rows = mtCache;
+  const q = mtSearch.trim().toLowerCase();
+  if (q) {
+    rows = rows.filter(r =>
+      String(r.MatchTeam  || '').toLowerCase().includes(q) ||
+      String(r.MatchTeamV || '').toLowerCase().includes(q) ||
+      String(r.MatchKind  || '').toLowerCase().includes(q) ||
+      String(r.MatchID    || '').toLowerCase().includes(q));
+  }
+  document.getElementById('mtCount').textContent = `النتائج: ${rows.length} من ${mtCache.length}`;
+
+  if (!rows.length && !mtAdding) { box.innerHTML = '<div class="bookings-empty">لا توجد مباريات</div>'; return; }
+
+  rows = [...rows].sort((a, b) => {
+    const da = normalizeDate(a.MatchDate) || '', db = normalizeDate(b.MatchDate) || '';
+    if (da !== db) return db.localeCompare(da);
+    return (to24(b.MatchTime) || '').localeCompare(to24(a.MatchTime) || '');
+  });
+
+  let html = `<div style="overflow-x:auto;"><table class="bookings-table users-table mt-table">
+    <thead><tr>
+      <th>رقم المباراة</th><th>النوع</th><th>التاريخ</th><th>الوقت</th>
+      <th>الفريق</th><th>الخصم</th><th>الموقع</th><th>الصور</th><th>النتيجة</th><th>إجراءات</th>
+    </tr></thead><tbody>`;
+
+  if (mtAdding) html += mtRowEdit(null, '');
+
+  rows.forEach(r => {
+    const id = r.MatchID, sid = escAttr(id);
+    if (mtEditingId === id) { html += mtRowEdit(r, id); return; }
+
+    const g  = r.MatchTeamGoals  !== '' ? r.MatchTeamGoals  : mtSum(mtParse(r.MatchTeamGoalers));
+    const vg = r.MatchTeamVGoals !== '' ? r.MatchTeamVGoals : mtSum(mtParse(r.MatchTeamVGoalers));
+    const hasScore = r.MatchTeamGoals !== '' || r.MatchTeamVGoals !== '' ||
+                     mtParse(r.MatchTeamGoalers).length || mtParse(r.MatchTeamVGoalers).length;
+    const d = normalizeDate(r.MatchDate);
+
+    html += `<tr data-matchid="${sid}">
+      <td><strong>${sid}</strong></td>
+      <td>${escAttr(r.MatchKind) || '-'}</td>
+      <td>${d ? fmtDMY(d) : '-'}</td>
+      <td>${escAttr(mtTime(r.MatchTime))}</td>
+      <td>${mtThumb('x1', r.MatchTeamPhoto || getTeamInfoForCard().TeamLogo, false)}<br>${escAttr(r.MatchTeam) || '-'}</td>
+      <td>${mtThumb('x2', r.MatchTeamVPhoto, false)}<br>${escAttr(r.MatchTeamV) || '-'}</td>
+      <td>${escAttr(r.MatchLocation) || '-'}</td>
+      <td><div class="mt-photos">
+        <div>${mtThumb('x3', r.MatchTeamVeiw, false)}<small>جماعية الفريق</small></div>
+        <div>${mtThumb('x4', r.MatchTeamVVeiw, false)}<small>جماعية الخصم</small></div>
+        <div>${mtThumb('x5', r.MatchPlan, false)}<small>الخطة</small></div>
+      </div></td>
+      <td><strong style="font-size:15px;direction:ltr;display:inline-block">${hasScore ? `${escAttr(g)} - ${escAttr(vg)}` : '-'}</strong></td>
+      <td style="white-space:nowrap">
+        <button class="btn small goldEdit" onclick="mtStartEdit('${sid}')" title="تعديل">✏️</button>
+        <button class="btn small" onclick="mtToggle('${sid}')" title="التفاصيل">📋</button>
+        <button class="btn small gold" onclick="openMatchAd('${sid}')" title="إعلان المباراة">📢</button>
+        <button class="btn small red" onclick="mtDelete('${sid}', this)">🗑</button>
+      </td></tr>`;
+
+    if (mtOpen.has(id)) html += `<tr class="mt-detail"><td colspan="10">${mtDetailView(r)}</td></tr>`;
+  });
+
+  box.innerHTML = html + '</tbody></table></div>';
+}
+
+function mtToggle(id) { if (mtOpen.has(id)) mtOpen.delete(id); else mtOpen.add(id); renderMatchList(); }
+
+function mtSetAddMode(on) {
+  mtAdding = on;
+  const b = document.getElementById('mtAddBtn');
+  b.textContent = on ? '✖ إغلاق' : '➕ إضافة مباراة';
+  b.classList.toggle('red', on);
+  b.classList.toggle('green', !on);
+}
+function mtStartAdd() {
+  if (mtAdding) { mtCancel(); return; }
+  mtEditingId = null; mtPhotos = {};
+  mtDraft = mtDraftFrom(null);
+  mtSetAddMode(true);
+  renderMatchList();
+}
+function mtStartEdit(id) {
+  const r = mtCache.find(x => String(x.MatchID) === String(id));
+  if (!r) return;
+  mtSetAddMode(false);
+  mtPhotos = {};
+  mtDraft = mtDraftFrom(r);
+  mtEditingId = id;
+  renderMatchList();
+}
+function mtCancel() {
+  mtEditingId = null; mtPhotos = {}; mtDraft = null;
+  mtSetAddMode(false);
+  if (document.getElementById('matchListModal').classList.contains('active')) renderMatchList();
+}
+
+async function mtSave(id, btn) {
+  const v = i => document.getElementById(i).value.trim();
+  const kind = v('mt_kind'), date = v('mt_date'), time = v('mt_time');
+  const team = v('mt_team'), teamV = v('mt_teamv');
+
+  if (!kind || !date || !team || !teamV) {
+    alert('الرجاء ملء: نوع المباراة، التاريخ، اسم الفريق، اسم الفريق الخصم');
+    return;
+  }
+  if (btn.dataset.busy === '1') return;
+  btn.dataset.busy = '1'; btn.classList.add('loading'); btn.disabled = true;
+
+  try {
+    const old = id ? mtCache.find(x => String(x.MatchID) === String(id)) : null;
+    const clean = arr => arr.filter(e => String(e.name || '').trim());
+    const d = mtDraft;
+
+    const payload = {
+      action: 'save', MatchID: id || '',
+      MatchKind: kind, MatchDate: date, MatchTime: time,
+      MatchTeam: team, MatchTeamV: teamV,
+      MatchLocation: v('mt_loc'),
+      MatchTeamGoalers:  JSON.stringify(clean(d.gl)),
+      MatchTeamVGoalers: JSON.stringify(clean(d.vgl)),
+      MatchTeamCards:    JSON.stringify(clean(d.cd)),
+      MatchTeamVCards:   JSON.stringify(clean(d.vcd)),
+      MatchTeamGoals:  String(d.g  === '' ? mtSum(d.gl)  : (parseInt(d.g, 10)  || 0)),
+      MatchTeamVGoals: String(d.vg === '' ? mtSum(d.vgl) : (parseInt(d.vg, 10) || 0))
+    };
+
+    for (const f of MT_IMG_FIELDS) {
+      const isLogo = (f === 'MatchTeamPhoto' || f === 'MatchTeamVPhoto');
+      let val = mtImgVal(old, f);
+      if (val && !/^data:/.test(val)) val = await mtToBase64(val, isLogo ? 220 : 600, isLogo);
+      payload[f] = val;
+    }
+
+    const res = await fetch(MATCH_API, { method: 'POST', body: JSON.stringify(payload) });
+    const data = await res.json();
+    if (!data.success) throw new Error(data.message);
+
+    const row = Object.assign({}, old || {}, payload, { MatchID: data.MatchID });
+    delete row.action;
+    if (old) Object.assign(old, row); else mtCache.push(row);
+
+    mtEditingId = null; mtPhotos = {}; mtDraft = null;
+    mtSetAddMode(false);
+    renderMatchList();
+  } catch (e) {
+    alert('خطأ: ' + e.message);
+    btn.classList.remove('loading'); btn.disabled = false; btn.dataset.busy = '0';
+  }
+}
+
+async function mtDelete(id, btn) {
+  if (!confirm('هل أنت متأكد من حذف هذه المباراة؟')) return;
+  if (btn.dataset.busy === '1') return;
+  btn.dataset.busy = '1'; btn.classList.add('loading'); btn.disabled = true;
+  try {
+    const res = await fetch(MATCH_API, { method: 'POST', body: JSON.stringify({ action: 'delete', MatchID: id }) });
+    const data = await res.json();
+    if (!data.success) throw new Error(data.message);
+    mtCache = mtCache.filter(x => String(x.MatchID) !== String(id));
+    mtOpen.delete(id);
+    renderMatchList();
+  } catch (e) {
+    alert('خطأ: ' + e.message);
+    btn.classList.remove('loading'); btn.disabled = false; btn.dataset.busy = '0';
+  }
+}
+
+/* تصغير صورة (data URL) */
+function mtShrink(src, startSize, png) {
+  return new Promise((resolve, reject) => {
+    const im = new Image();
+    im.onload = () => {
+      let size = startSize, q = 0.8, out = '';
+      for (let i = 0; i < 30; i++) {
+        const k = Math.min(1, size / Math.max(im.width, im.height));
+        const c = document.createElement('canvas');
+        c.width  = Math.max(1, Math.round(im.width * k));
+        c.height = Math.max(1, Math.round(im.height * k));
+        const x = c.getContext('2d');
+        if (!png) { x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); }
+        x.drawImage(im, 0, 0, c.width, c.height);
+        out = png ? c.toDataURL('image/png') : c.toDataURL('image/jpeg', q);
+        if (out.length <= MT_MAX_CHARS) return resolve(out);
+        if (!png && q > 0.45) q -= 0.1; else size = Math.round(size * 0.85);
+      }
+      reject(new Error('تعذّر تصغير الصورة بما يكفي'));
+    };
+    im.onerror = () => reject(new Error('الصورة غير صالحة'));
+    im.src = src;
+  });
+}
+
+const mtB64Cache = {};
+async function mtToBase64(url, startSize, png) {
+  if (!url) return '';
+  if (/^data:/.test(url)) return url;
+  if (mtB64Cache[url]) return mtB64Cache[url];
+  const d = await fetchJSON(MATCH_API, { method: 'POST', body: JSON.stringify({ action: 'fetchImage', url }) });
+  if (!d || !d.success) throw new Error((d && d.message) || 'تعذّر جلب الصورة');
+  const out = await mtShrink(d.data, startSize, png);
+  mtB64Cache[url] = out;
+  return out;
+}
+
+/* ============================================================
+   إعلان المباراة
+   ============================================================ */
+function mtPlayerSummary(goals, cards) {
+  const m = {};
+  const get = n => (m[n] = m[n] || { g: 0, y: 0, r: 0 });
+  goals.forEach(e => { if (e.name) get(e.name).g += parseInt(e.n, 10) || 1; });
+  cards.forEach(e => {
+    if (!e.name) return;
+    const o = get(e.name), n = parseInt(e.n, 10) || 1;
+    if (e.type === 'حمراء') o.r += n; else o.y += n;
+  });
+  return Object.entries(m).map(([name, o]) => ({ name, ...o }));
+}
+
+async function mtBuildAd(r) {
+  if (document.fonts && document.fonts.ready) await document.fonts.ready;
+
+  const loadAny = async (u, size, png) => {
+    try { return await tcLoadImg(await mtToBase64(u, size, png), false); }
+    catch (e) { console.warn('فشل تحميل صورة الإعلان:', e); return null; }
+  };
+  const [lg1, lg2, v1, v2] = await Promise.all([
+    loadAny(r.MatchTeamPhoto || getTeamInfoForCard().TeamLogo, 220, true),
+    loadAny(r.MatchTeamVPhoto, 220, true),
+    loadAny(r.MatchTeamVeiw, 600, false),
+    loadAny(r.MatchTeamVVeiw, 600, false)
+  ]);
+
+  const gl = mtParse(r.MatchTeamGoalers),  vgl = mtParse(r.MatchTeamVGoalers);
+  const s1 = mtPlayerSummary(gl,  mtParse(r.MatchTeamCards));
+  const s2 = mtPlayerSummary(vgl, mtParse(r.MatchTeamVCards));
+  const g  = r.MatchTeamGoals  !== '' ? parseInt(r.MatchTeamGoals, 10)  || 0 : mtSum(gl);
+  const vg = r.MatchTeamVGoals !== '' ? parseInt(r.MatchTeamVGoals, 10) || 0 : mtSum(vgl);
+  const played = (g + vg > 0) || gl.length || vgl.length;
+
+  const rows = Math.max(s1.length, s2.length);
+  const W = 900, headH = 140;
+  const yName = 195, yPh = 235, phW = 240, phH = 400;
+  const yL = yPh + phH + 35;
+  const listH = rows ? 80 + rows * 46 : 0;
+  const H = yL + listH + 40;
+
+  const cv = document.createElement('canvas');
+  cv.width = W; cv.height = H;
+  const ctx = cv.getContext('2d');
+  ctx.direction = 'rtl'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+
+  const bg = ctx.createLinearGradient(0, 0, 0, H);
+  bg.addColorStop(0, '#0f2027'); bg.addColorStop(1, '#2c5364');
+  ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = '#1e3c72'; ctx.fillRect(0, 0, W, headH);
+
+  const fit = (text, maxW, size, weight = 700) => {
+    ctx.font = `${weight} ${size}px Cairo, Tahoma, sans-serif`;
+    while (size > 14 && ctx.measureText(text).width > maxW) {
+      size -= 2; ctx.font = `${weight} ${size}px Cairo, Tahoma, sans-serif`;
+    }
+  };
+
+  const containClean = (im, cx, cy, box) => {
+    const sc = Math.min(box / im.width, box / im.height);
+    const w = Math.max(1, Math.round(im.width * sc));
+    const h = Math.max(1, Math.round(im.height * sc));
+    const t = document.createElement('canvas');
+    t.width = w; t.height = h;
+    const x = t.getContext('2d');
+    x.drawImage(im, 0, 0, w, h);
+    try {
+      const d = x.getImageData(0, 0, w, h), p = d.data;
+      for (let i = 0; i < p.length; i += 4) {
+        const m = Math.min(p[i], p[i + 1], p[i + 2]);
+        if (m > 245) p[i + 3] = 0;
+        else if (m > 225) p[i + 3] = Math.round(p[i + 3] * (245 - m) / 20);
+      }
+      x.putImageData(d, 0, 0);
+    } catch (e) {}
+    ctx.drawImage(t, cx - w / 2, cy - h / 2);
+  };
+
+  const cutout = (im, x, y, w, h) => {
+    const sc = Math.min(w / im.width, h / im.height);
+    const tw = Math.max(1, Math.round(im.width * sc));
+    const th = Math.max(1, Math.round(im.height * sc));
+    const t = document.createElement('canvas');
+    t.width = tw; t.height = th;
+    const tx = t.getContext('2d');
+    tx.drawImage(im, 0, 0, tw, th);
+    try {
+      const d = tx.getImageData(0, 0, tw, th), p = d.data;
+      const seen = new Uint8Array(tw * th);
+      const isBg = i => p[i + 3] < 10 || Math.min(p[i], p[i + 1], p[i + 2]) > 230;
+      const stack = [];
+      const push = (px, py) => {
+        if (px < 0 || py < 0 || px >= tw || py >= th) return;
+        const k = py * tw + px;
+        if (seen[k] || !isBg(k * 4)) return;
+        seen[k] = 1; stack.push(k);
+      };
+      for (let i = 0; i < tw; i++) { push(i, 0); push(i, th - 1); }
+      for (let j = 0; j < th; j++) { push(0, j); push(tw - 1, j); }
+      while (stack.length) {
+        const k = stack.pop();
+        p[k * 4 + 3] = 0;
+        const px = k % tw, py = (k - px) / tw;
+        push(px + 1, py); push(px - 1, py); push(px, py + 1); push(px, py - 1);
+      }
+      tx.putImageData(d, 0, 0);
+    } catch (e) {}
+    ctx.drawImage(t, x + (w - tw) / 2, y + h - th);
+  };
+
+  ctx.fillStyle = '#f0b90b';
+  const kindTxt = 'مباراة ' + (r.MatchKind || '');
+  fit(kindTxt, W - 60, 54);
+  ctx.fillText(kindTxt, W / 2, headH / 2);
+
+  const x1 = 25, x2 = W - 25 - phW;
+  if (v1) cutout(v1, x1, yPh, phW, phH);
+  if (v2) cutout(v2, x2, yPh, phW, phH);
+
+  const nameAt = (txt, cx) => {
+    fit(txt, 420, 36);
+    const half = ctx.measureText(txt).width / 2;
+    const x = Math.min(W - half - 15, Math.max(half + 15, cx));
+    ctx.fillStyle = '#fff';
+    ctx.fillText(txt, x, yName);
+  };
+  nameAt(r.MatchTeam || '',  x1 + phW / 2);
+  nameAt(r.MatchTeamV || '', x2 + phW / 2);
+
+  ctx.fillStyle = '#f0b90b';
+  ctx.font = '700 70px Cairo, Tahoma, sans-serif';
+  ctx.direction = 'ltr';
+  ctx.fillText(played ? `${g} - ${vg}` : 'VS', W / 2, yPh + 45);
+  ctx.direction = 'rtl';
+
+  const lgY = yPh + 125;
+  if (lg1) containClean(lg1, W / 2 - 100, lgY, 110);
+  if (lg2) containClean(lg2, W / 2 + 100, lgY, 110);
+
+  const infoCard = (text, icon, cx, cy) => {
+    const w = 330, h = 62, x = cx - w / 2, y = cy - h / 2;
+    const tab = 62, sk = 14;
+
+    const g1 = ctx.createLinearGradient(0, y, 0, y + h);
+    g1.addColorStop(0, '#ffffff'); g1.addColorStop(1, '#dfe3ea');
+    ctx.fillStyle = g1;
+    tcRoundRect(ctx, x, y, w, h, 10); ctx.fill();
+
+    ctx.save();
+    tcRoundRect(ctx, x, y, w, h, 10); ctx.clip();
+    const g2 = ctx.createLinearGradient(0, y, 0, y + h);
+    g2.addColorStop(0, '#ffe55c'); g2.addColorStop(1, '#f0b90b');
+    ctx.fillStyle = g2;
+    ctx.beginPath();
+    ctx.moveTo(x + w, y);
+    ctx.lineTo(x + w - tab, y);
+    ctx.lineTo(x + w - tab - sk, y + h);
+    ctx.lineTo(x + w, y + h);
+    ctx.closePath(); ctx.fill();
+    ctx.restore();
+
+    ctx.strokeStyle = 'rgba(80,40,140,.55)'; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(x + 8, y + h + 1); ctx.lineTo(x + w - 8, y + h + 1); ctx.stroke();
+
+    ctx.fillStyle = '#1b1b1b';
+    ctx.font = '30px sans-serif';
+    ctx.fillText(icon, x + w - tab / 2 - 4, cy + 2);
+
+    const maxW = w - tab - sk - 24;
+    fit(text, maxW, 26, 700);
+    ctx.fillStyle = '#1b1b1b';
+    ctx.fillText(text, x + (w - tab - sk) / 2, cy + 1);
+  };
+
+  const ds = normalizeDate(r.MatchDate);
+  const dayName = ds ? DAYS_AR[new Date(ds + 'T00:00:00').getDay()] : '';
+  const dateTxt = `${dayName} ${ds ? fmtDMY(ds) : ''}`.trim();
+  const timeTxt = mtTime(r.MatchTime);
+  const locTxt  = String(r.MatchLocation || '').trim();
+
+  let cardY = yPh + 235;
+  infoCard(dateTxt, '📅', W / 2, cardY);
+  cardY += 82;
+  infoCard('الساعة ' + timeTxt, '⏰', W / 2, cardY);
+  if (locTxt) { cardY += 82; infoCard(locTxt, '📍', W / 2, cardY); }
+
+  if (rows) {
+    ctx.fillStyle = '#f0b90b';
+    ctx.font = '700 34px Cairo, Tahoma, sans-serif';
+    ctx.fillText('الأهداف والكروت', W / 2, yL + 30);
+    ctx.strokeStyle = 'rgba(255,255,255,.3)'; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(W / 2, yL + 65); ctx.lineTo(W / 2, yL + 65 + rows * 46); ctx.stroke();
+
+    const line = o => `${tcShortName(o.name)}  ${o.g ? '⚽' + o.g : ''} ${o.y ? '🟨' + o.y : ''} ${o.r ? '🟥' + o.r : ''}`.trim();
+    [[s1, 225], [s2, 675]].forEach(([list, cx]) => {
+      list.forEach((o, i) => {
+        const t = line(o);
+        ctx.fillStyle = '#fff';
+        fit(t, 400, 28, 600);
+        ctx.fillText(t, cx, yL + 90 + i * 46);
+      });
+    });
+  }
+  return cv;
+}
+
+async function openMatchAd(id) {
+  const r = mtCache.find(x => String(x.MatchID) === String(id));
+  if (!r) return;
+  mtAdMatch = r; mtAdCanvas = null;
+  document.getElementById('mtAdMsg').innerHTML = '';
+  const box = document.getElementById('matchAdBox');
+  box.innerHTML = '<div class="spinner" style="margin:30px auto"></div>';
+  document.getElementById('matchAdModal').classList.add('active');
+  try {
+    mtAdCanvas = await mtBuildAd(r);
+    box.innerHTML = '';
+    box.appendChild(mtAdCanvas);
+  } catch (e) {
+    box.innerHTML = `<div class="error-msg">تعذّر إنشاء الإعلان: ${escAttr(e.message)}</div>`;
+  }
+}
+function closeMatchAd() { document.getElementById('matchAdModal').classList.remove('active'); }
+document.getElementById('matchAdModal').addEventListener('click', function (e) {
+  if (e.target === this) closeMatchAd();
+});
+
+function mtAdDownload() {
+  if (!mtAdCanvas) return;
+  mtAdCanvas.toBlob(blob => {
+    if (!blob) return;
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'اعلان-' + mtAdMatch.MatchID + '.png';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 2000);
+  }, 'image/png');
+}
+
+function mtCanvasFit(cv) {
+  let w = Math.min(cv.width, 900), q = 0.8, out = '';
+  for (let i = 0; i < 30; i++) {
+    const c = document.createElement('canvas');
+    c.width = w; c.height = Math.round(cv.height * w / cv.width);
+    c.getContext('2d').drawImage(cv, 0, 0, c.width, c.height);
+    out = c.toDataURL('image/jpeg', q);
+    if (out.length <= MT_MAX_CHARS) return out;
+    if (q > 0.4) q -= 0.1; else w = Math.round(w * 0.85);
+  }
+  return '';
+}
+
+async function mtAdUpload(btn) {
+  if (!mtAdCanvas || !mtAdMatch) return;
+  const msg = document.getElementById('mtAdMsg');
+  btn.disabled = true; btn.classList.add('loading'); msg.innerHTML = '';
+  try {
+    const url = mtCanvasFit(mtAdCanvas);
+    if (!url) throw new Error('الإعلان كبير جداً للحفظ');
+    const res = await fetch(MATCH_API, {
+      method: 'POST',
+      body: JSON.stringify({ action: 'save', MatchID: mtAdMatch.MatchID, MatchAds: url })
+    });
+    const data = await res.json();
+    if (!data.success) throw new Error(data.message);
+    mtAdMatch.MatchAds = url;
+    msg.innerHTML = '<div class="success-msg">✅ تم حفظ الإعلان</div>';
+  } catch (e) {
+    msg.innerHTML = `<div class="error-msg">خطأ: ${escAttr(e.message)}</div>`;
+  } finally {
+    btn.disabled = false; btn.classList.remove('loading');
+  }
+}
+
 
 
 /* ============================================================
@@ -5343,11 +7437,11 @@ async function seedDemoData() {
       { name: 'يوسف الكندي',   tel: '96894444444', off: 2, idx: 1, state: 'ملغي' },
       { name: 'محمد الشكيلي',  tel: '96895555555', off: 3, idx: 3, state: 'في الإجراء' }
     ];
-    const NOTES = {
-      'تم الحجز':   'تم تأكيد الحجز الرجاء ارسال ايصال الدفع الى الرقم : ',
-      'في الإجراء': 'الطلب في الاجراء سيتم تحديث الحالة بعد الدفع وارسال الايصال',
-      'ملغي':       'نأسف لكم تم الغاء الحجز بسبب: '
-    };
+const NOTES = {
+  'تم الحجز':   'تم تأكيد الحجز الرجاء الالتزام بموعد الحجز ، شكرا لكم',
+  'في الإجراء': 'طلبك في المتابعة سيتم اشعارك بالتحديث الجديد',
+  'ملغي':       'نعتذر عن الغاء الحجز بسبب : '
+};
 
     for (let off = 0; off < 7; off++) {
       const d = dateOf(off);
